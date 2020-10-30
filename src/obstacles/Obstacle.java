@@ -1,0 +1,4 @@
+package obstacles;
+
+class Obstacle {
+}
