@@ -17,11 +17,13 @@ public class RingObstacle extends Obstacle {
     private Rotate rotate;
     private int centreX, centreY, radius, thickness;
     private Timeline timeline;
+    public boolean rotationStatus;
     public RingObstacle(int centreX, int centreY, int radius, int thickness){
         this.centreX = centreX;
         this.centreY = centreY;
         this.radius = radius;
         this.thickness = thickness;
+        rotationStatus = false;
         segments = new ArrayList<Path>();
         rotate = new Rotate();
         timeline = new Timeline();
@@ -66,9 +68,15 @@ public class RingObstacle extends Obstacle {
     }
     public void startRotation(){
         timeline.play();
+        rotationStatus = true;
     }
     public void stopRotation(){
         timeline.stop();
+        rotationStatus = false;
+    }
+    public void pauseRotation(){
+        timeline.pause();
+        rotationStatus = false;
     }
     public void showOnNode(Group group){
         for(int i = 0; i < 4; i++){
@@ -80,5 +88,16 @@ public class RingObstacle extends Obstacle {
         segments.get(1).setFill(c2);
         segments.get(2).setFill(c3);
         segments.get(3).setFill(c4);
+    }
+    // Sets duration to 3 seconds, sets colors to dafault(those found in original game) andstarts timiline
+    // Added to children of root
+    public void quickSetup(Group root){
+        showOnNode(root);
+        makeRotation(3000);
+        setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
+        startRotation();
+    }
+    public boolean getRotationStatus(){
+        return rotationStatus;
     }
 }

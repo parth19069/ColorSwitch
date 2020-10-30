@@ -22,8 +22,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
@@ -33,7 +35,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.util.Duration;
-import obstacles.RingObstacle;
+import obstacles.*;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -45,13 +47,27 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setTitle("Bindings");
-        RingObstacle obs = new RingObstacle(400, 300, 100, 30);
+        RingObstacle obs = new RingObstacle(400, 300, 150, 30);
+        Circle player = new Circle(400, 700, 20);
+        player.setStrokeWidth(0);
+        player.setFill(Color.YELLOW);
+        EventHandler<KeyEvent> eventHandler = new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if(obs.getRotationStatus()){
+                    obs.pauseRotation();
+                }
+                else{
+                    obs.startRotation();
+                }
+            }
+        };
+//        player.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
         Group root = new Group();
-        obs.showOnNode(root);
-        obs.makeRotation(3000);
-        obs.setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
-        obs.startRotation();
+        obs.quickSetup(root);
+        root.getChildren().add(player);
         Scene scene = new Scene(root, 800, 800);
+        scene.addEventFilter(KeyEvent.ANY, eventHandler);
         scene.setFill(Color.rgb(57, 54, 54));
         primaryStage.setScene(scene);
         primaryStage.show();
