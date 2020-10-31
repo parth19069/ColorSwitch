@@ -17,13 +17,15 @@ public class RingObstacle extends Obstacle {
     private Rotate rotate;
     private int centreX, centreY, radius, thickness;
     private Timeline timeline;
-    public boolean rotationStatus;
-    public RingObstacle(int centreX, int centreY, int radius, int thickness){
+    private boolean rotationStatus;
+    private boolean rotationDirection;
+    public RingObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise){
         this.centreX = centreX;
         this.centreY = centreY;
         this.radius = radius;
         this.thickness = thickness;
         rotationStatus = false;
+        rotationDirection = clockwise;
         segments = new ArrayList<Path>();
         rotate = new Rotate();
         timeline = new Timeline();
@@ -36,6 +38,9 @@ public class RingObstacle extends Obstacle {
         segments.add(segment2);
         segments.add(segment3);
         segments.add(segment4);
+        rotate.setPivotX(centreX);
+        rotate.setPivotY(centreY);
+        rotate.setAngle(45);
         for(int i = 0; i < 4; i++){
             segments.get(i).getTransforms().add(rotate);
         }
@@ -61,10 +66,9 @@ public class RingObstacle extends Obstacle {
         return segment;
     }
     public void makeRotation(int durationPerRotation){
-        rotate.setPivotX(centreX);
-        rotate.setPivotY(centreY);
         timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), 360)));
+        if(rotationDirection)timeline.getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), 405)));
+        else timeline.getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), -315)));
     }
     public void startRotation(){
         timeline.play();

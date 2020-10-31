@@ -30,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -46,31 +47,41 @@ public class Main extends Application {
     BooleanBinding pos;
     @Override
     public void start(Stage primaryStage) throws Exception{
-        primaryStage.setTitle("Bindings");
-        RingObstacle obs = new RingObstacle(400, 300, 150, 30);
+        RingObstacle obs = new RingObstacle(400, 300, 150, 30, true);
+        RingObstacle obs2 = new RingObstacle(400, 300, 100, 30, false);
         Circle player = new Circle(400, 700, 20);
         player.setStrokeWidth(0);
         player.setFill(Color.YELLOW);
-        EventHandler<KeyEvent> eventHandler = new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                if(obs.getRotationStatus()){
-                    obs.pauseRotation();
-                }
-                else{
-                    obs.startRotation();
-                }
-            }
-        };
+
 //        player.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
         Group root = new Group();
         obs.quickSetup(root);
+        obs2.quickSetup(root);
         root.getChildren().add(player);
+//        root.getChildren().add(player);
         Scene scene = new Scene(root, 800, 800);
-        scene.addEventFilter(KeyEvent.ANY, eventHandler);
+        Interpolator interpolator = new Interpolator() {
+            @Override
+            protected double curve(double v) {
+                return v*(2 - v);
+            }
+        };
+        scene.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                final Timeline timeline = new Timeline();
+                timeline.setCycleCount(1);
+                System.out.println("Pressed");
+                double temp = player.getCenterY();
+                timeline.getKeyFrames().addAll(new KeyFrame(Duration.millis(300), new KeyValue(player.centerYProperty(),temp - 120, interpolator)), new KeyFrame(Duration.millis((1100 - player.getCenterY())*2), new KeyValue(player.centerYProperty(), 1000)));
+                timeline.play();
+            }
+        });
         scene.setFill(Color.rgb(57, 54, 54));
+        primaryStage.setTitle("Bindings");
         primaryStage.setScene(scene);
         primaryStage.show();
+        //Some changes
     }
     public static void main(String[] args) {
         System.out.println(Color.RED.getClass().getName());
