@@ -76,6 +76,7 @@ public class RingObstacle extends Obstacle {
         inner.setSweepFlag(innerFlag);
         segment.getElements().addAll(begin, inner, horz, outer, vert);
         return segment;
+//        this is a push
     }
     public void makeRotation(int durationPerRotation){
         timeline.setCycleCount(Animation.INDEFINITE);
