@@ -12,6 +12,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import playerinfo.Player;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
@@ -26,8 +27,7 @@ public class RingObstacle extends Obstacle {
     private ArrayList<BooleanBinding> collision;
     private ArrayList<String> colorCode;
     public RingObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise){
-        this.centreX = centreX;
-        this.centreY = centreY;
+        super(centreX, centreY);
         this.radius = radius;
         this.thickness = thickness;
         colorCode = new ArrayList<String>();
