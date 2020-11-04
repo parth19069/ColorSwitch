@@ -73,10 +73,12 @@ public class Main extends Application {
         Obstacle obs = new RingObstacle(400, 300, 190, 30, true);
         Obstacle obs2 = new RingObstacle(400, -300, 190, 30, false);
         Obstacle obs3 = new RingObstacle(400, -1000, 190, 30, false);
+        Obstacle obs4 = new TangentialRingObstacle(400, -1800, 150, 110, 30, true);
         player = new Player(400, 750, 20, 0);
         obs.initBindings(bindings, player);
         obs2.initBindings(bindings, player);
         obs3.initBindings(bindings, player);
+        obs4.initBindings(bindings, player);
         player.setColor(rand.nextInt(4));
 
         /*
@@ -88,6 +90,8 @@ public class Main extends Application {
         obs.quickSetup(sub);
         obs2.quickSetup(sub);
         obs3.quickSetup(sub);
+        obs4.quickSetup(sub);
+
         root.getChildren().add(sub);
         Scene scene = new Scene(root, 800, 800);
 
