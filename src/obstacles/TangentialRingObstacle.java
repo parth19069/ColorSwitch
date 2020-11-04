@@ -30,13 +30,13 @@ public class TangentialRingObstacle extends Obstacle {
         ring1.showOnNode(root);
         ring2.showOnNode(root);
     }
-    public void quickSetup(Group root){
+    public void quickSetup(Group root, int duration){
         showOnNode(root);
-        ring1.makeRotation(4000);
+        ring1.makeRotation(duration);
         ring1.setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
 
-        ring2.makeRotation(4000);
-        ring2.setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
+        ring2.makeRotation(duration);
+        ring2.setColors(Color.CYAN, Color.rgb(250, 22, 151), Color.YELLOW, Color.PURPLE);
 
         start();
     }

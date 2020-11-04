@@ -30,6 +30,7 @@ public class RingObstacle extends Obstacle {
     private int radius, thickness;
     private boolean rotationStatus;
     private boolean rotationDirection;
+    private Color colors[];
 
     public RingObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise){
         super(centreX, centreY);
@@ -44,6 +45,7 @@ public class RingObstacle extends Obstacle {
         rotationDirection = clockwise;
         segments = new ArrayList<Path>();
         rotate = new Rotate();
+        colors = new Color[4];
         setTimeline(new Timeline());
         Path segment1, segment2, segment3, segment4;
         segment1 = makeSegment(centreX, centreY - radius, centreX - radius, centreY, centreX, centreY - radius - thickness, centreY - radius, centreX - radius - thickness, radius, radius + thickness, false, true);
@@ -107,16 +109,20 @@ public class RingObstacle extends Obstacle {
     }
     public void setColors(Color c1, Color c2, Color c3, Color c4){
         segments.get(0).setFill(c1);
+        colors[0] = c1;
         segments.get(1).setFill(c2);
+        colors[1] = c2;
         segments.get(2).setFill(c3);
+        colors[2] = c3;
         segments.get(3).setFill(c4);
+        colors[3] = c4;
     }
     // Sets duration to 3 seconds, sets colors to dafault(those found in original game) andstarts timiline
     // Added to children of root
     @Override
-    public void quickSetup(Group root){
+    public void quickSetup(Group root, int duration){
         showOnNode(root);
-        makeRotation(4000);
+        makeRotation(duration);
         setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         start();
     }
@@ -146,9 +152,9 @@ public class RingObstacle extends Obstacle {
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if(t1){
                     System.out.println(getColorCode().get(0) + " IN");
-                    if(getPlayer().getColor() != 0){
+                    if(getPlayer().getColor() != colors[0]){
                         System.out.println("OVER");
-                        getPlayer().setColor(0);
+                        getPlayer().setColor(colors[0]);
                     }
                 }
                 else{
@@ -170,9 +176,9 @@ public class RingObstacle extends Obstacle {
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if(t1){
                     System.out.println(getColorCode().get(1) + " IN");
-                    if(getPlayer().getColor() != 1){
+                    if(getPlayer().getColor() != colors[1]){
                         System.out.println("OVER");
-                        getPlayer().setColor(1);
+                        getPlayer().setColor(colors[1]);
                     }
                 }
                 else{
@@ -194,9 +200,9 @@ public class RingObstacle extends Obstacle {
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if(t1){
                     System.out.println(getColorCode().get(2) + " IN");
-                    if(getPlayer().getColor() != 2){
+                    if(getPlayer().getColor() != colors[2]){
                         System.out.println("OVER");
-                        getPlayer().setColor(2);
+                        getPlayer().setColor(colors[2]);
                     }
                 }
                 else{
@@ -218,9 +224,9 @@ public class RingObstacle extends Obstacle {
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if(t1){
                     System.out.println(getColorCode().get(3) + " IN");
-                    if(getPlayer().getColor() != 3){
+                    if(getPlayer().getColor() != colors[3]){
                         System.out.println("OVER");
-                        getPlayer().setColor(3);
+                        getPlayer().setColor(colors[3]);
                     }
                 }
                 else{

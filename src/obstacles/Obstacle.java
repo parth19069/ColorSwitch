@@ -18,7 +18,7 @@ public abstract class Obstacle implements Pauseable {
         this.centreY = centreY;
     }
     abstract public void initBindings(ArrayList<BooleanBinding> bindings, Player player);
-    abstract public void quickSetup(Group root);
+    abstract public void quickSetup(Group root, int duration);
     abstract public void showOnNode(Group root);
     public void setPlayer(Player player){
         this.player = player;

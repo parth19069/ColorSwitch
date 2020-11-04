@@ -51,11 +51,13 @@ import playerinfo.*;
 public class Main extends Application {
     private ArrayList<BooleanBinding> bindings;
     private Player player;
-    private ArrayList<String> colorCode;
+    private ArrayList<Color> colorCode;
     private Random rand;
     private BooleanBinding scrollBinding;
     private ArrayList<Obstacle> obstacles;
-    int offset;
+    private int offset;
+    private Group root;
+    private Group sub;
     @Override
     public void start(Stage primaryStage) throws Exception{
 
@@ -63,9 +65,13 @@ public class Main extends Application {
         Initialisations of instance variables
          */
         bindings = new ArrayList<BooleanBinding>();
-        colorCode = new ArrayList<String>();
+        colorCode = new ArrayList<Color>();
         rand = new Random();
         offset = 0;
+        colorCode.add(Color.CYAN);
+        colorCode.add(Color.PURPLE);
+        colorCode.add(Color.YELLOW);
+        colorCode.add(Color.rgb(250, 22, 151));
 
         /*
         Obstacle and player declarations
@@ -73,24 +79,24 @@ public class Main extends Application {
         Obstacle obs = new RingObstacle(400, 300, 190, 30, true);
         Obstacle obs2 = new RingObstacle(400, -300, 190, 30, false);
         Obstacle obs3 = new RingObstacle(400, -1000, 190, 30, false);
-        Obstacle obs4 = new TangentialRingObstacle(400, -1800, 150, 110, 30, true);
-        player = new Player(400, 750, 20, 0);
+        Obstacle obs4 = new TangentialRingObstacle(400, -1800, 150, 150, 30, true);
+        player = new Player(400, 750, 20, null);
         obs.initBindings(bindings, player);
         obs2.initBindings(bindings, player);
         obs3.initBindings(bindings, player);
         obs4.initBindings(bindings, player);
-        player.setColor(rand.nextInt(4));
+        player.setColor(colorCode.get(rand.nextInt(4)));
 
         /*
         Root and sub-root declarations
          */
-        Group root = new Group();
-        Group sub = new Group();
+        root = new Group();
+        sub = new Group();
         root.getChildren().add(player.getIcon());
-        obs.quickSetup(sub);
-        obs2.quickSetup(sub);
-        obs3.quickSetup(sub);
-        obs4.quickSetup(sub);
+        obs.quickSetup(sub, 6000);
+        obs2.quickSetup(sub, 6000);
+        obs3.quickSetup(sub, 6000);
+        obs4.quickSetup(sub, 6000);
 
         root.getChildren().add(sub);
         Scene scene = new Scene(root, 800, 800);
@@ -103,61 +109,44 @@ public class Main extends Application {
         /*
         Event handling
          */
+//        Timeline timeline = new Timeline();
+        Timeline timeline2 = new Timeline();
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                handlePlayerMovement(timeline2);
+            }
+        });
+    }
+    void handlePlayerMovement(Timeline timeline){
+        double temp = player.getIcon().getCenterY();
         Interpolator interpolator = new Interpolator() {
             @Override
             protected double curve(double v) {
                 return v*(2 - v);
             }
         };
-        final Timeline timeline = new Timeline();
-        Timeline timeline2 = new Timeline();
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                double temp = player.getIcon().getCenterY();
-                if(temp - 120 >= 300) {
-                    timeline.stop();
-                    timeline.getKeyFrames().clear();
-                    timeline.setCycleCount(1);
-                    timeline.getKeyFrames().addAll(new KeyFrame(Duration.millis(300), new KeyValue(player.getIcon().centerYProperty(), temp - 120, interpolator)), new KeyFrame(Duration.millis((1100 - player.getIcon().getCenterY()) * 3), new KeyValue(player.getIcon().centerYProperty(), 1000, Interpolator.LINEAR)));
+        if(temp - 120 >= 300) {
+            player.getTimeline().stop();
+            player.getTimeline().getKeyFrames().clear();
+            player.getTimeline().setCycleCount(1);
+            player.getTimeline().getKeyFrames().addAll(new KeyFrame(Duration.millis(300), new KeyValue(player.getIcon().centerYProperty(), temp - 120, interpolator)), new KeyFrame(Duration.millis((1100 - player.getIcon().getCenterY()) * 3), new KeyValue(player.getIcon().centerYProperty(), 1000, Interpolator.LINEAR)));
 //                timeline.getKeyFrames().addAll(new KeyFrame(Duration.millis(300), new KeyValue(player.getIcon().centerYProperty(),temp - 20, interpolator)));
-                    timeline.play();
-                }
-                else{
-                    timeline.stop();
-                    timeline.getKeyFrames().clear();
-                    timeline.setCycleCount(1);
-                    timeline.getKeyFrames().add(new KeyFrame(Duration.millis((1100 - player.getIcon().getCenterY()) * 3), new KeyValue(player.getIcon().centerYProperty(), 1000, Interpolator.LINEAR)));
-                    timeline2.stop();
-                    timeline2.getKeyFrames().clear();
-                    timeline2.setCycleCount(1);
-                    timeline2.getKeyFrames().addAll(new KeyFrame(Duration.millis(300), new KeyValue(sub.layoutYProperty(), sub.getLayoutY() + 120, interpolator)));
-                    timeline2.play();
-                    timeline2.setOnFinished(e -> timeline.play());
-                }
-            }
-        });
-        scrollBinding = Bindings.createBooleanBinding(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return player.getIcon().getCenterY() <= 300 - offset;
-            }
-        }, player.getIcon().centerYProperty());
-        scrollBinding.addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                if(t1){
-                    timeline2.stop();
-                    timeline2.getKeyFrames().clear();
-                    timeline2.setCycleCount(1);
-                    offset += 140;
-                    timeline2.getKeyFrames().add(new KeyFrame(Duration.millis(100), new KeyValue(sub.layoutYProperty(), sub.getLayoutY() + 140)));
-                    timeline2.play();
-                }
-            }
-        });
+            player.getTimeline().play();
+        }
+        else{
+            player.getTimeline().stop();
+            player.getTimeline().getKeyFrames().clear();
+            player.getTimeline().setCycleCount(1);
+            player.getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis((1100 - player.getIcon().getCenterY()) * 3), new KeyValue(player.getIcon().centerYProperty(), 1000, Interpolator.LINEAR)));
+            timeline.stop();
+            timeline.getKeyFrames().clear();
+            timeline.setCycleCount(1);
+            timeline.getKeyFrames().addAll(new KeyFrame(Duration.millis(300), new KeyValue(sub.layoutYProperty(), sub.getLayoutY() + 120, interpolator)));
+            timeline.play();
+            timeline.setOnFinished(e -> player.getTimeline().play());
+        }
     }
-
 
     public static void main(String[] args) {
         launch(args);
