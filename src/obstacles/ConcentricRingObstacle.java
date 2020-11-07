@@ -46,12 +46,18 @@ public class ConcentricRingObstacle extends Obstacle {
             rings.get(i).pause();
         }
     }
-    public void quickSetup(Group root, int duration){
+    public void setColorChanger(){
+        getColorChanger().setColors(rings.get(0).getColors(0), rings.get(0).getColors(2));
+    }
+    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player){
         showOnNode(root);
         for(int i = 0; i < numberOfRings; i++){
             rings.get(i).makeRotation(duration);
             rings.get(i).setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         }
+        setColorChanger();
+        getColorChanger().setChanger(getCentreX(), getCentreY() + rings.get(0).getRadius() + 100, root, bindings, player);
+        initBindings(bindings, player);
         start();
     }
 }

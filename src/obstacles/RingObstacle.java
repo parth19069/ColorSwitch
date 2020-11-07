@@ -19,8 +19,6 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import playerinfo.Player;
 
-import java.lang.reflect.Array;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
@@ -116,14 +114,23 @@ public class RingObstacle extends Obstacle {
         colors[2] = c3;
         segments.get(3).setFill(c4);
         colors[3] = c4;
+        setColorChanger();
+    }
+    public void setColorChanger(){
+        getColorChanger().setColors(colors[0], colors[1], colors[2], colors[3]);
+    }
+    public Color getColors(int i){
+        return colors[i];
     }
     // Sets duration to 3 seconds, sets colors to dafault(those found in original game) andstarts timiline
     // Added to children of root
     @Override
-    public void quickSetup(Group root, int duration){
+    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player){
         showOnNode(root);
         makeRotation(duration);
+        initBindings(bindings, player);
         setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
+        getColorChanger().setChanger(getCentreX(), getCentreY() + radius + 100, root, bindings, player);
         start();
     }
     public boolean getRotationStatus(){
@@ -135,6 +142,9 @@ public class RingObstacle extends Obstacle {
     }
     public Rotate getRotate(){
         return rotate;
+    }
+    public int getRadius(){
+        return radius;
     }
     @Override
     public void initBindings(ArrayList<BooleanBinding> bindings, Player player){

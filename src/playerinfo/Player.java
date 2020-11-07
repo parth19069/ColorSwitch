@@ -11,7 +11,7 @@ public class Player implements Pauseable {
     private Circle icon;
     private ArrayList<Color> colorCode;
     private Color color;
-    Timeline timeline;
+    private Timeline timeline;
     public Player(int centreX, int centreY, int radius, Color color){
         icon = new Circle(centreX, centreY, radius);
         icon.setStrokeWidth(0);

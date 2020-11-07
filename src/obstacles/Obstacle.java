@@ -1,5 +1,6 @@
 package obstacles;
 
+import collectable.ColorChanger;
 import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanBinding;
 import javafx.scene.Group;
@@ -11,15 +12,18 @@ public abstract class Obstacle implements Pauseable {
     private int centreX, centreY;
     private Timeline timeline;
     private Player player;
+    private ColorChanger colorChanger;
 //    private ArrayList<BooleanBinding> collision;
     private ArrayList<String> colorCode;
     public Obstacle(int centreX, int centreY){
         this.centreX = centreX;
         this.centreY = centreY;
+        colorChanger = new ColorChanger();
     }
     abstract public void initBindings(ArrayList<BooleanBinding> bindings, Player player);
-    abstract public void quickSetup(Group root, int duration);
+    abstract public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player);
     abstract public void showOnNode(Group root);
+    abstract public void setColorChanger();
     public void setPlayer(Player player){
         this.player = player;
     }
@@ -47,8 +51,10 @@ public abstract class Obstacle implements Pauseable {
     public void setCentreY(int centreY){
         this.centreY = centreY;
     }
-
     public int getCentreY(){
         return centreY;
+    }
+    public ColorChanger getColorChanger(){
+        return colorChanger;
     }
 }

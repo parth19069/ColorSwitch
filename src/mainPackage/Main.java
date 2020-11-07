@@ -79,12 +79,12 @@ public class Main extends Application {
         Obstacle obs = new RingObstacle(400, 300, 190, 30, true);
         Obstacle obs2 = new RingObstacle(400, -300, 190, 30, false);
         Obstacle obs3 = new RingObstacle(400, -1000, 190, 30, false);
-        Obstacle obs4 = new TangentialRingObstacle(400, -1800, 150, 150, 30, true);
+        Obstacle obs4 = new ConcentricRingObstacle(400, -1800, 290, 30, 2, true, true);
         player = new Player(400, 750, 20, null);
-        obs.initBindings(bindings, player);
-        obs2.initBindings(bindings, player);
-        obs3.initBindings(bindings, player);
-        obs4.initBindings(bindings, player);
+//        obs.initBindings(bindings, player);
+//        obs2.initBindings(bindings, player);
+//        obs3.initBindings(bindings, player);
+//        obs4.initBindings(bindings, player);
         player.setColor(colorCode.get(rand.nextInt(4)));
 
         /*
@@ -93,10 +93,10 @@ public class Main extends Application {
         root = new Group();
         sub = new Group();
         root.getChildren().add(player.getIcon());
-        obs.quickSetup(sub, 6000);
-        obs2.quickSetup(sub, 6000);
-        obs3.quickSetup(sub, 6000);
-        obs4.quickSetup(sub, 6000);
+        obs.quickSetup(sub, 6000, bindings, player);
+        obs2.quickSetup(sub, 6000, bindings, player);
+        obs3.quickSetup(sub, 6000, bindings, player);
+        obs4.quickSetup(sub, 6000, bindings, player);
 
         root.getChildren().add(sub);
         Scene scene = new Scene(root, 800, 800);
@@ -117,6 +117,7 @@ public class Main extends Application {
                 handlePlayerMovement(timeline2);
             }
         });
+        System.out.println(bindings);
     }
     void handlePlayerMovement(Timeline timeline){
         double temp = player.getIcon().getCenterY();
@@ -138,7 +139,7 @@ public class Main extends Application {
             player.getTimeline().stop();
             player.getTimeline().getKeyFrames().clear();
             player.getTimeline().setCycleCount(1);
-            player.getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis((1100 - player.getIcon().getCenterY()) * 3), new KeyValue(player.getIcon().centerYProperty(), 1000, Interpolator.LINEAR)));
+            player.getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis((1000 - player.getIcon().getCenterY()) * 3), new KeyValue(player.getIcon().centerYProperty(), 1000, Interpolator.LINEAR)));
             timeline.stop();
             timeline.getKeyFrames().clear();
             timeline.setCycleCount(1);
