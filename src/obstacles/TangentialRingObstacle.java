@@ -31,7 +31,7 @@ public class TangentialRingObstacle extends Obstacle {
         ring2.showOnNode(root);
     }
     public void setColorChanger(){
-        getColorChanger().setColors(ring1.getColors(0), ring1.getColors(0), ring1.getColors(0), ring1.getColors(0));
+        getColorChanger().setColors(ring1.getColors(0), ring1.getColors(1), ring1.getColors(2), ring1.getColors(3));
     }
     public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player){
         showOnNode(root);
@@ -42,7 +42,7 @@ public class TangentialRingObstacle extends Obstacle {
         ring2.setColors(Color.CYAN, Color.rgb(250, 22, 151), Color.YELLOW, Color.PURPLE);
 
         setColorChanger();
-        getColorChanger().setCollectable(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 300, root, bindings, player);
+        getColorChanger().setCollectable(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 250, root, bindings, player);
         initBindings(bindings, player);
 
         getStar().setCollectable(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 100, root, bindings, player);
