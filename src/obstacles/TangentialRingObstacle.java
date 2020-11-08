@@ -42,8 +42,11 @@ public class TangentialRingObstacle extends Obstacle {
         ring2.setColors(Color.CYAN, Color.rgb(250, 22, 151), Color.YELLOW, Color.PURPLE);
 
         setColorChanger();
-        getColorChanger().setChanger(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 100, root, bindings, player);
+        getColorChanger().setCollectable(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 300, root, bindings, player);
         initBindings(bindings, player);
+
+        getStar().setCollectable(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 100, root, bindings, player);
+        getStar().initBindings(bindings, player, 0);
 
         start();
     }

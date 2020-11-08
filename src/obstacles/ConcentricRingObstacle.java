@@ -56,7 +56,7 @@ public class ConcentricRingObstacle extends Obstacle {
             rings.get(i).setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         }
         setColorChanger();
-        getColorChanger().setChanger(getCentreX(), getCentreY() + rings.get(0).getRadius() + 100, root, bindings, player);
+        getColorChanger().setCollectable(getCentreX(), getCentreY() + rings.get(0).getRadius() + 100, root, bindings, player);
         initBindings(bindings, player);
         start();
     }

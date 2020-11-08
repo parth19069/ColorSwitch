@@ -130,7 +130,9 @@ public class RingObstacle extends Obstacle {
         makeRotation(duration);
         initBindings(bindings, player);
         setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
-        getColorChanger().setChanger(getCentreX(), getCentreY() + radius + 100, root, bindings, player);
+        getColorChanger().setCollectable(getCentreX(), getCentreY() + radius + 100, root, bindings, player);
+        getStar().setCollectable(getCentreX(), getCentreY(), root, bindings, player);
+        getStar().initBindings(bindings, player, 0);
         start();
     }
     public boolean getRotationStatus(){

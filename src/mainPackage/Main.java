@@ -1,5 +1,6 @@
 package mainPackage;
 
+import collectable.Star;
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -77,10 +78,11 @@ public class Main extends Application {
         Obstacle and player declarations
          */
         Obstacle obs = new RingObstacle(400, 300, 190, 30, true);
-        Obstacle obs2 = new RingObstacle(400, -300, 190, 30, false);
-        Obstacle obs3 = new RingObstacle(400, -1000, 190, 30, false);
-        Obstacle obs4 = new ConcentricRingObstacle(400, -1800, 290, 30, 2, true, true);
-        player = new Player(400, 750, 20, null);
+        Obstacle obs2 = new RingObstacle(400, -600, 190, 30, false);
+        Obstacle obs3 = new RingObstacle(400, -1300, 190, 30, false);
+        Obstacle obs4 = new ConcentricRingObstacle(400, -2100, 290, 30, 2, true, true);
+        Obstacle obs5 = new TangentialRingObstacle(400, -2900, 120, 120, 30, true);
+        player = new Player(400, 750, 15, null);
 //        obs.initBindings(bindings, player);
 //        obs2.initBindings(bindings, player);
 //        obs3.initBindings(bindings, player);
@@ -97,6 +99,7 @@ public class Main extends Application {
         obs2.quickSetup(sub, 6000, bindings, player);
         obs3.quickSetup(sub, 6000, bindings, player);
         obs4.quickSetup(sub, 6000, bindings, player);
+        obs5.quickSetup(sub, 6000, bindings, player);
 
         root.getChildren().add(sub);
         Scene scene = new Scene(root, 800, 800);

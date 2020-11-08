@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
+import obstacles.Pauseable;
 import obstacles.RingObstacle;
 import playerinfo.Player;
 
@@ -19,18 +20,18 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
-public class ColorChanger {
+public class ColorChanger extends Collectable implements Pauseable {
     private ArrayList<Color> colors;
     private Circle changer;
     private Random rand;
-    private Group root;
-    private BooleanBinding binding;
-    private ChangeListener<Boolean> listener;
     private Timeline timeline;
     private int colorPtr;
+    private int rvalue, gvalue, bvalue, x, y, z;
     public ColorChanger(Color ... a){
         colors = new ArrayList<Color>();
         colorPtr = 0;
+        rvalue = gvalue = bvalue = 120;
+        x = 1; y = 2; z = 3;
         rand = new Random();
         for(int i = 0; i < a.length; i++){
             colors.add(a[i]);
@@ -42,36 +43,43 @@ public class ColorChanger {
             colors.add(a[i]);
         }
     }
-    public void setChanger(int centreX, int centreY, Group root, ArrayList<BooleanBinding> bindings, Player player){
-        changer = new Circle(centreX, centreY, 30);
+    public void setCollectable(int centreX, int centreY, Group root, ArrayList<BooleanBinding> bindings, Player player){
+        changer = new Circle(centreX, centreY, 25);
         changer.setStrokeWidth(0);
         timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(100), e -> {changer.setFill(colors.get(colorPtr)); colorPtr += 1; colorPtr %= colors.size();}));
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5), e -> {
+            if(rvalue + x > 255 || rvalue + x < 120) x *= -1;
+            if(gvalue + y > 255 || gvalue + y < 120) y *= -1;
+            if(bvalue + z > 255 || bvalue + z < 120) z *= -1;
+            rvalue += x;
+            gvalue += y;
+            bvalue += z;
+            changer.setFill(Color.rgb(rvalue, gvalue, bvalue));
+        }));
         timeline.play();
         root.getChildren().add(changer);
-        this.root = root;
+        setRoot(root);
         initBindings(bindings, player, colors.size());
     }
     public void initBindings(ArrayList<BooleanBinding> bindings, Player player, final int size){
-        System.out.println("here");
         bindings.add(Bindings.createBooleanBinding(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 Shape intersect = Shape.intersect(changer, player.getIcon());
                 return intersect.getBoundsInLocal().getWidth() != -1;
             }
-        }, player.getIcon().centerYProperty()));
-        binding = bindings.get(bindings.size() - 1);
-        listener = new ChangeListener<Boolean>() {
+        }, player.getIcon().centerYProperty(), getRoot().layoutYProperty()));
+        setBinding(bindings.get(bindings.size() - 1));
+        setListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if(t1){
 //                    System.out.println("IN CHANGER");
-                    root.getChildren().remove(changer);
-                    binding.removeListener(listener);
+                    getRoot().getChildren().remove(changer);
+                    getBinding().removeListener(getListener());
                     Color color = colors.get(rand.nextInt(size));
                     timeline.stop();
-                    while(color == player.getColor()) color = colors.get(rand.nextInt(size));
+                    while(color.equals(player.getColor())) color = colors.get(rand.nextInt(size));
                     player.setColor(color);
                 }
                 else{
@@ -79,7 +87,16 @@ public class ColorChanger {
                     System.out.println(size);
                 }
             }
-        };
-        bindings.get(bindings.size() - 1).addListener(listener);
+        });
+        bindings.get(bindings.size() - 1).addListener(getListener());
+    }
+    public void start(){
+        timeline.play();
+    }
+    public void stop(){
+        timeline.stop();
+    }
+    public void pause(){
+        timeline.pause();
     }
 }
