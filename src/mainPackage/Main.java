@@ -102,12 +102,12 @@ public class Main extends Application {
         /*
         Obstacle and player declarations
          */
-        Obstacle obs = new RingObstacle(160, 230, 60, 10, true);
-        Obstacle obs1 = new RingObstacle(640, 230, 60, 10, false);
-        Obstacle obs3 = new RingObstacle(345, 42, 25, 6, true);
-        Obstacle obs4 = new RingObstacle(460, 42, 25, 6, false);
-        Obstacle obs2 = new ConcentricRingObstacle(400, 410, 100, 10, 2, true, true);
+        Obstacle obs = new RingObstacle(160, 390, 70, 22, true);
+        Obstacle obs1 = new RingObstacle(640, 390, 70, 22, false);
 
+        Obstacle obs2 = new ConcentricRingObstacle(400, 390, 100, 22, 2, true, true);
+        Obstacle obs3 = new RingObstacle(347, 97, 23, 8, true);
+        Obstacle obs4 = new RingObstacle(460, 97, 23, 8, false);
 
 
 
@@ -132,23 +132,30 @@ public class Main extends Application {
         //Setting the preserve ratio of the image view
 
         imageView.setPreserveRatio(true);
-        Label tlabel = new Label();
-        tlabel.setText("hello wassup");
-        tlabel.setFont(Font.font("Tahoma"));
-        tlabel.setTextFill(Color.WHITE);
+
+        // making menu circles
+
+        Circle c1,c2,c3,c4,c5,c6;
+        c1 = new Circle(150,190,30,Color.CYAN);
+        c2 = new Circle(650,190,30,Color.CYAN);
+        c3 = new Circle(130,215,22,Color.rgb(46,126,132));
+        c4 = new Circle(670,215,22,Color.rgb(46,126,132));
+        c5 = new Circle(110,240,18,Color.rgb(43,62,62));
+        c6 = new Circle(690,240,18,Color.rgb(43,62,62));
+
         TextFlow textFlow = new TextFlow();
         Text t = new Text(200,440,"C   L   R");
 //        t.setTextAlignment(TextAlignment.CENTER);
-        t.setX(260);
-        t.setY(70);
+        t.setX(258);
+        t.setY(125);
         t.setFill(Color.WHITE);
-        t.setFont(Font.font("Tahoma",80));
+        t.setFont(Font.font("Roboto",80));
         Text t2 = new Text(80,30,"SWITCH");
 //        t.setTextAlignment(TextAlignment.CENTER);
-        t2.setX(255);
-        t2.setY(160);
+        t2.setX(247);
+        t2.setY(190);
         t2.setFill(Color.WHITE);
-        t2.setFont(Font.font("Tahoma",80));
+        t2.setFont(Font.font("Roboto",80));
         textFlow.getChildren().add(t2);
 
         Button newGameButton,resumeButton,exitButton;
@@ -156,14 +163,14 @@ public class Main extends Application {
         resumeButton= new Button("Resume Game");
         exitButton = new Button("Exit Game");
         newGameButton.setLayoutX(360);
-        newGameButton.setLayoutY(360);
-        newGameButton.setMaxSize(100,250);
-        resumeButton.setLayoutX(350);
-        resumeButton.setLayoutY(400);
+        newGameButton.setLayoutY(375);
+        newGameButton.setMaxSize(150,250);
+        resumeButton.setLayoutX(107);
+        resumeButton.setLayoutY(375);
         resumeButton.setMaxSize(150,250);
-        exitButton.setLayoutX(360);
-        exitButton.setLayoutY(440);
-        exitButton.setMaxSize(100,250);
+        exitButton.setLayoutX(600);
+        exitButton.setLayoutY(375);
+        exitButton.setMaxSize(150,250);
         newGameButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
@@ -192,7 +199,8 @@ public class Main extends Application {
                     }
                 });
                 Group root2 = new Group(etm);
-                Scene scene2 = new Scene(root2, 500,500);
+                Scene scene2 = new Scene(root2, 800,540);
+                scene2.setFill(Color.rgb(41,41,41));
                 primaryStage.setScene(scene2);
                 primaryStage.show();
 
@@ -216,6 +224,13 @@ public class Main extends Application {
         root1.getChildren().add(exitButton);
         root1.getChildren().add(t);
         root1.getChildren().add(t2);
+
+        root1.getChildren().add(c6);
+        root1.getChildren().add(c4);
+        root1.getChildren().add(c2);
+        root1.getChildren().add(c5);
+        root1.getChildren().add(c3);
+        root1.getChildren().add(c1);
 
         obs.quickSetup(root1, 6000, bindings, player);
         obs1.quickSetup(root1, 6000, bindings, player);
