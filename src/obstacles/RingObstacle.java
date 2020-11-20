@@ -15,10 +15,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import playerinfo.Player;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
@@ -34,6 +36,7 @@ public class RingObstacle extends Obstacle {
         super(centreX, centreY);
         this.radius = radius;
         this.thickness = thickness;
+
         setColorCode(new ArrayList<String>());
         getColorCode().add("Cyan");
         getColorCode().add("Purple");
