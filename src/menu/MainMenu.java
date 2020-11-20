@@ -86,8 +86,11 @@ public class MainMenu extends Application {
 
 
         newGameButton = new Button("New Game");
+        newGameButton.setFocusTraversable(false);
         resumeButton= new Button("Resume Game");
+        resumeButton.setFocusTraversable(false);
         exitButton = new Button("Exit Game");
+        exitButton.setFocusTraversable(false);
         newGameButton.setLayoutX(360);
         newGameButton.setLayoutY(375);
         newGameButton.setMaxSize(150,250);

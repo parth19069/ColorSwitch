@@ -151,6 +151,7 @@ public class Main extends Application {
     public void game (Stage pms){
 
         Button pauseButton = new Button("Pause");
+        pauseButton.setFocusTraversable(false);
         pauseButton.setMaxSize(100,200);
         pauseButton.setLayoutY(20);
         pauseButton.setLayoutX(700);
@@ -213,12 +214,6 @@ public class Main extends Application {
         System.out.println(bindings);
 
     }
-
-
-
-
-
-
-    }
+}
 
 
