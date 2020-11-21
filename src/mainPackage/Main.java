@@ -130,16 +130,16 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    Button etm = new Button("Exit to main");
+                    Button etm = new Button("Save and Exit");
                     Button resumeGame = new Button("Resume game");
 
-                    resumeGame.setLayoutX(107);
-                    resumeGame.setLayoutY(375);
+                    resumeGame.setLayoutX(350);
+                    resumeGame.setLayoutY(275);
                     resumeGame.setMaxSize(150,250);
                     resumeGame.setFocusTraversable(false);
 
-                    etm.setLayoutX(107);
-                    etm.setLayoutY(475);
+                    etm.setLayoutX(350);
+                    etm.setLayoutY(375);
                     etm.setMaxSize(150,250);
                     etm.setFocusTraversable(false);
 

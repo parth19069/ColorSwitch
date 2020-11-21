@@ -138,11 +138,11 @@ public class MainMenu extends Application{
     public void resumeGame(Stage pms){
         Button etm = new Button("Return to main menu");
         Button loadGame = new Button("Load Game");
-        etm.setLayoutX(40);
+        etm.setLayoutX(350);
         etm.setLayoutY(40);
         etm.setMaxSize(300,350);
         etm.setFocusTraversable(false);
-        loadGame.setLayoutX(40);
+        loadGame.setLayoutX(350);
         loadGame.setLayoutY(100);
         loadGame.setFocusTraversable(false);
         loadGame.setMaxSize(300,350);
