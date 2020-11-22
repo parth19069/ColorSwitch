@@ -63,7 +63,7 @@ import java.util.Random;
 import java.util.concurrent.Callable;
 import playerinfo.*;
 
-public class Main extends Application {
+public class Main extends Application{
     private ArrayList<BooleanBinding> bindings;
     private Player player;
     private ArrayList<Color> colorCode;
@@ -194,6 +194,7 @@ public class Main extends Application {
         Obstacle obs4 = new ConcentricRingObstacle(400, -2100, 290, 30, 2, true, true);
         Obstacle obs5 = new TangentialRingObstacle(400, -2900, 120, 120, 30, true);
         Obstacle obs6 = new PlusObstacle(250, 300, 190, 30, true);
+        LineObstacle obs7 = new LineObstacle(800, 400, 30,  true);
         player = new Player(400, 750, 15, null);
 
         player.setColor(colorCode.get(rand.nextInt(4)));
@@ -206,6 +207,10 @@ public class Main extends Application {
         obs4.quickSetup(sub, 6000, bindings, player, true);
         obs5.quickSetup(sub, 6000, bindings, player, true);
         obs6.quickSetup(sub, 6000, bindings, player, true);
+
+
+
+
 
 
         root.getChildren().add(sub);
