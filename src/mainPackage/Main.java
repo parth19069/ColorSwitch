@@ -193,7 +193,7 @@ public class Main extends Application {
         Obstacle obs3 = new RingObstacle(400, -1300, 190, 30, false);
         Obstacle obs4 = new ConcentricRingObstacle(400, -2100, 290, 30, 2, true, true);
         Obstacle obs5 = new TangentialRingObstacle(400, -2900, 120, 120, 30, true);
-        Obstacle obs6 = new PlusObstacle(200, 400, 190, 30, true);
+        Obstacle obs6 = new PlusObstacle(250, 300, 190, 30, true);
         player = new Player(400, 750, 15, null);
 
         player.setColor(colorCode.get(rand.nextInt(4)));

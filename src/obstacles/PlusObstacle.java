@@ -131,8 +131,8 @@ public class PlusObstacle extends Obstacle{
         initBindings(bindings, player);
         setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         if(showCollectables) {
-            getColorChanger().setCollectable(getCentreX(), getCentreY() + radius + 100, root, bindings, player);
-            getStar().setCollectable(400, 400, root, bindings, player);
+            getColorChanger().setCollectable(400, getCentreY() + radius + 100, root, bindings, player);
+            getStar().setCollectable(400, getCentreY(), root, bindings, player);
             getStar().initBindings(bindings, player, 0);
         }
         start();
