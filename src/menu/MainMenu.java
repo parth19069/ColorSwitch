@@ -22,7 +22,7 @@ import playerinfo.Player;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MainMenu extends Application{
+public class MainMenu extends Application {
 
     private ArrayList<BooleanBinding> bindings;
     private Player player;
@@ -46,6 +46,10 @@ public class MainMenu extends Application{
         colorCode.add(Color.PURPLE);
         colorCode.add(Color.YELLOW);
         colorCode.add(Color.rgb(250, 22, 151));
+
+        /*
+        Obstacle and player declarations
+         */
         Obstacle obs = new RingObstacle(160, 390, 70, 22, true);
         Obstacle obs1 = new RingObstacle(640, 390, 70, 22, false);
 
@@ -54,6 +58,9 @@ public class MainMenu extends Application{
         Obstacle obs4 = new RingObstacle(460, 97, 23, 8, false);
 
         player = new Player(400, 750, 15, null);
+//
+        // making menu circles
+
         Circle c1,c2,c3,c4,c5,c6;
         c1 = new Circle(150,190,30,Color.CYAN);
         c2 = new Circle(650,190,30,Color.CYAN);
@@ -64,6 +71,7 @@ public class MainMenu extends Application{
 
         TextFlow textFlow = new TextFlow();
         Text t = new Text(200,440,"C   L   R");
+//        t.setTextAlignment(TextAlignment.CENTER);
         t.setX(258);
         t.setY(125);
         t.setFill(Color.WHITE);
@@ -75,21 +83,23 @@ public class MainMenu extends Application{
         t2.setFill(Color.WHITE);
         t2.setFont(Font.font("Roboto",80));
         textFlow.getChildren().add(t2);
+
+
         newGameButton = new Button("New Game");
+        newGameButton.setFocusTraversable(false);
         resumeButton= new Button("Resume Game");
+        resumeButton.setFocusTraversable(false);
         exitButton = new Button("Exit Game");
+        exitButton.setFocusTraversable(false);
         newGameButton.setLayoutX(360);
         newGameButton.setLayoutY(375);
         newGameButton.setMaxSize(150,250);
-        newGameButton.setFocusTraversable(false);
         resumeButton.setLayoutX(107);
         resumeButton.setLayoutY(375);
         resumeButton.setMaxSize(150,250);
-        resumeButton.setFocusTraversable(false);
         exitButton.setLayoutX(600);
         exitButton.setLayoutY(375);
         exitButton.setMaxSize(150,250);
-        exitButton.setFocusTraversable(false);
         newGameButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
@@ -116,20 +126,24 @@ public class MainMenu extends Application{
         root1.getChildren().add(exitButton);
         root1.getChildren().add(t);
         root1.getChildren().add(t2);
+
         root1.getChildren().add(c6);
         root1.getChildren().add(c4);
         root1.getChildren().add(c2);
         root1.getChildren().add(c5);
         root1.getChildren().add(c3);
         root1.getChildren().add(c1);
-//
-        obs.quickSetup(root1, 6000, bindings, player);
-        obs1.quickSetup(root1, 6000, bindings, player);
-        obs2.quickSetup(root1, 6000, bindings, player);
-        obs3.quickSetup(root1, 6000, bindings, player);
-        obs4.quickSetup(root1, 6000, bindings, player);
+
+        obs.quickSetup(root1, 6000, bindings, player, false);
+        obs1.quickSetup(root1, 6000, bindings, player, false);
+        obs2.quickSetup(root1, 6000, bindings, player, false);
+        obs3.quickSetup(root1, 6000, bindings, player, false);
+        obs4.quickSetup(root1, 6000, bindings, player, false);
         Scene scene1 = new Scene(root1, 800,540);
         scene1.setFill(Color.rgb(41, 41, 41));
+
+
+
         primaryStage.setScene(scene1);
         primaryStage.show();
 
@@ -156,6 +170,8 @@ public class MainMenu extends Application{
                 catch(Exception e){
 
                 }
+
+
             }
         });
         Group root2 = new Group(etm);
@@ -176,3 +192,4 @@ public class MainMenu extends Application{
         System.exit(0);
     }
 }
+

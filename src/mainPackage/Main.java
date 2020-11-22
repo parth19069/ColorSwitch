@@ -193,17 +193,20 @@ public class Main extends Application {
         Obstacle obs3 = new RingObstacle(400, -1300, 190, 30, false);
         Obstacle obs4 = new ConcentricRingObstacle(400, -2100, 290, 30, 2, true, true);
         Obstacle obs5 = new TangentialRingObstacle(400, -2900, 120, 120, 30, true);
+        Obstacle obs6 = new PlusObstacle(200, 400, 190, 30, true);
         player = new Player(400, 750, 15, null);
 
         player.setColor(colorCode.get(rand.nextInt(4)));
         root = new Group();
         sub = new Group();
         root.getChildren().add(player.getIcon());
-        obs.quickSetup(sub, 6000, bindings, player);
-        obs2.quickSetup(sub, 6000, bindings, player);
-        obs3.quickSetup(sub, 6000, bindings, player);
-        obs4.quickSetup(sub, 6000, bindings, player);
-        obs5.quickSetup(sub, 6000, bindings, player);
+//        obs.quickSetup(sub, 6000, bindings, player, true);
+        obs2.quickSetup(sub, 6000, bindings, player, true);
+        obs3.quickSetup(sub, 6000, bindings, player, true);
+        obs4.quickSetup(sub, 6000, bindings, player, true);
+        obs5.quickSetup(sub, 6000, bindings, player, true);
+        obs6.quickSetup(sub, 6000, bindings, player, true);
+
 
         root.getChildren().add(sub);
         root.getChildren().add(pauseButton);

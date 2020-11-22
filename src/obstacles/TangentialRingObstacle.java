@@ -33,7 +33,7 @@ public class TangentialRingObstacle extends Obstacle {
     public void setColorChanger(){
         getColorChanger().setColors(ring1.getColors(0), ring1.getColors(1), ring1.getColors(2), ring1.getColors(3));
     }
-    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player){
+    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables){
         showOnNode(root);
         ring1.makeRotation(duration);
         ring1.setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
@@ -41,13 +41,15 @@ public class TangentialRingObstacle extends Obstacle {
         ring2.makeRotation(duration);
         ring2.setColors(Color.CYAN, Color.rgb(250, 22, 151), Color.YELLOW, Color.PURPLE);
 
-        setColorChanger();
-        getColorChanger().setCollectable(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 250, root, bindings, player);
+        if(showCollectables) {
+            setColorChanger();
+            getColorChanger().setCollectable(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 250, root, bindings, player);
+
+            getStar().setCollectable(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 100, root, bindings, player);
+            getStar().initBindings(bindings, player, 0);
+        }
+
         initBindings(bindings, player);
-
-        getStar().setCollectable(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 100, root, bindings, player);
-        getStar().initBindings(bindings, player, 0);
-
         start();
     }
     public void initBindings(ArrayList<BooleanBinding> bindings, Player player){

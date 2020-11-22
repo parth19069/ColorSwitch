@@ -1,115 +1,89 @@
 package obstacles;
 
-/*
-    Cyan: 1
-    Purple: 2
-    Yellow: 3
-    Pink (rgb): 4
-*/
-
-import javafx.animation.*;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import playerinfo.Player;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-public class RingObstacle extends Obstacle {
-    private ArrayList<Path> segments;
+public class PlusObstacle extends Obstacle{
+
+    public ArrayList<Polygon> segments;
     private Rotate rotate;
     private int radius, thickness;
     private boolean rotationStatus;
     private boolean rotationDirection;
     private Color colors[];
 
-    public RingObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise){
+    public PlusObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise){
         super(centreX, centreY);
         this.radius = radius;
         this.thickness = thickness;
-
+        this.rotationDirection = clockwise;
+        this.rotationStatus = false;
+        this.rotate = new Rotate();
+        this.colors = new Color[4];
         setColorCode(new ArrayList<String>());
         getColorCode().add("Cyan");
         getColorCode().add("Purple");
         getColorCode().add("Yellow");
         getColorCode().add("Pink");
-        rotationStatus = false;
-        rotationDirection = clockwise;
-        segments = new ArrayList<Path>();
-        rotate = new Rotate();
-        colors = new Color[4];
         setTimeline(new Timeline());
-        Path segment1, segment2, segment3, segment4;
-        segment1 = makeSegment(centreX, centreY - radius, centreX - radius, centreY, centreX, centreY - radius - thickness, centreY - radius, centreX - radius - thickness, radius, radius + thickness, false, true);
-        segment2 = makeSegment(centreX, centreY + radius, centreX - radius, centreY, centreX, centreY + radius + thickness, centreY + radius, centreX - radius - thickness, radius, radius + thickness, true, false);
-        segment3 = makeSegment(centreX, centreY + radius, centreX + radius, centreY, centreX, centreY + radius + thickness, centreY + radius, centreX + radius + thickness, radius, radius + thickness, false, true);
-        segment4 = makeSegment(centreX, centreY - radius, centreX + radius, centreY, centreX, centreY - radius - thickness, centreY - radius, centreX + radius + thickness, radius, radius + thickness, true, false);
+
+        segments = new ArrayList<Polygon>();
+
+        double points1[] = {centreX, centreY,
+                centreX + thickness/2, centreY - thickness/2,
+                centreX + thickness/2 + radius, centreY - thickness/2,
+                centreX + thickness/2 + radius, centreY + thickness/2,
+                centreX + thickness/2, centreY + thickness/2};
+        double points2[] = {centreX, centreY,
+                centreX + thickness/2, centreY + thickness/2,
+                centreX + thickness/2, centreY + thickness/2 + radius,
+                centreX - thickness/2, centreY + thickness/2 + radius,
+                centreX - thickness/2, centreY + thickness/2};
+        double points3[] = {centreX, centreY,
+                centreX - thickness/2, centreY - thickness/2,
+                centreX - thickness/2 - radius, centreY - thickness/2,
+                centreX - thickness/2 - radius, centreY + thickness/2,
+                centreX - thickness/2, centreY + thickness/2};
+        double points4[] = {centreX, centreY,
+                centreX - thickness/2, centreY - thickness/2,
+                centreX - thickness/2, centreY - thickness/2 - radius,
+                centreX + thickness/2, centreY - thickness/2 - radius,
+                centreX + thickness/2, centreY - thickness/2};
+        Polygon segment1 = makeSegment(points1);
+        Polygon segment2 = makeSegment(points2);
+        Polygon segment3 = makeSegment(points3);
+        Polygon segment4 = makeSegment(points4);
         segments.add(segment1);
         segments.add(segment2);
         segments.add(segment3);
         segments.add(segment4);
         rotate.setPivotX(centreX);
         rotate.setPivotY(centreY);
-        rotate.setAngle(45);
         for(int i = 0; i < 4; i++){
             segments.get(i).getTransforms().add(rotate);
         }
     }
-    private Path makeSegment(int startx, int starty, int innerx, int innery, int outerx, int outery, int vLine, int hLine, int innerRadius, int outerRadius, boolean innerFlag, boolean outerFlag){
-        Path segment = new Path();
-        segment.setStrokeWidth(0);
-        MoveTo begin = new MoveTo(startx, starty);
-        ArcTo inner = new ArcTo(), outer = new ArcTo();
-        VLineTo vert = new VLineTo(vLine);
-        HLineTo horz = new HLineTo(hLine);
-        inner.setX(innerx);
-        inner.setY(innery);
-        inner.setRadiusX(innerRadius);
-        inner.setRadiusY(innerRadius);
-        outer.setRadiusX(outerRadius);
-        outer.setRadiusY(outerRadius);
-        outer.setX(outerx);
-        outer.setY(outery);
-        outer.setSweepFlag(outerFlag);
-        inner.setSweepFlag(innerFlag);
-        segment.getElements().addAll(begin, inner, horz, outer, vert);
-        return segment;
-//        this is a push
-    }
     public void makeRotation(int durationPerRotation){
         getTimeline().setCycleCount(Animation.INDEFINITE);
-        if(rotationDirection)getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), 405)));
-        else getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), -315)));
-    }
-    @Override
-    public void start(){
-        getTimeline().play();
-        rotationStatus = true;
-    }
-    @Override
-    public void stop(){
-        getTimeline().stop();
-        rotationStatus = false;
-    }
-    @Override
-    public void pause(){
-        getTimeline().pause();
-        rotationStatus = false;
-    }
-    @Override
-    public void showOnNode(Group group){
-        for(int i = 0; i < 4; i++){
-            group.getChildren().add(segments.get(i));
-        }
+        if(rotationDirection)getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), 360)));
+        else getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), -360)));
     }
     public void setColors(Color c1, Color c2, Color c3, Color c4){
         segments.get(0).setFill(c1);
@@ -122,15 +96,34 @@ public class RingObstacle extends Obstacle {
         colors[3] = c4;
         setColorChanger();
     }
+
+    private Polygon makeSegment(double points[]){
+        Polygon segment = new Polygon(points);
+        return segment;
+    }
+    public void q(){
+        setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
+    }
+    public Polygon getSegment(int i){
+        return segments.get(i);
+    }
+    public Rotate getRotate(){
+        return this.rotate;
+    }
+
+
+    @Override
+    public void showOnNode(Group group){
+        for(int i = 0; i < 4; i++){
+            group.getChildren().add(segments.get(i));
+        }
+    }
+
     @Override
     public void setColorChanger(){
         getColorChanger().setColors(colors[0], colors[1], colors[2], colors[3]);
     }
-    public Color getColors(int i){
-        return colors[i];
-    }
-    // Sets duration to 3 seconds, sets colors to dafault(those found in original game) andstarts timiline
-    // Added to children of root
+
     @Override
     public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables){
         showOnNode(root);
@@ -139,24 +132,12 @@ public class RingObstacle extends Obstacle {
         setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         if(showCollectables) {
             getColorChanger().setCollectable(getCentreX(), getCentreY() + radius + 100, root, bindings, player);
-            getStar().setCollectable(getCentreX(), getCentreY(), root, bindings, player);
+            getStar().setCollectable(400, 400, root, bindings, player);
             getStar().initBindings(bindings, player, 0);
         }
         start();
     }
-    public boolean getRotationStatus(){
-        return rotationStatus;
-    }
 
-    public Path getSegment(int i){
-        return segments.get(i);
-    }
-    public Rotate getRotate(){
-        return rotate;
-    }
-    public int getRadius(){
-        return radius;
-    }
     @Override
     public void initBindings(ArrayList<BooleanBinding> bindings, Player player){
         setPlayer(player);
@@ -256,5 +237,20 @@ public class RingObstacle extends Obstacle {
             }
         });
     }
-}
 
+    @Override
+    public void start(){
+        getTimeline().play();
+        rotationStatus = true;
+    }
+    @Override
+    public void stop(){
+        getTimeline().stop();
+        rotationStatus = false;
+    }
+    @Override
+    public void pause(){
+        getTimeline().pause();
+        rotationStatus = false;
+    }
+}

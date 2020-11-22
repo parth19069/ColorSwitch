@@ -24,7 +24,7 @@ public abstract class Obstacle implements Pauseable {
         star = new Star();
     }
     abstract public void initBindings(ArrayList<BooleanBinding> bindings, Player player);
-    abstract public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player);
+    abstract public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables);
     abstract public void showOnNode(Group root);
     abstract public void setColorChanger();
     public void setPlayer(Player player){
