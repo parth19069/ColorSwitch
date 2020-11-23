@@ -12,6 +12,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import mainPackage.Main;
 import obstacles.ConcentricRingObstacle;
@@ -50,12 +51,12 @@ public class MainMenu extends Application {
         /*
         Obstacle and player declarations
          */
-        Obstacle obs = new RingObstacle(160, 390, 70, 22, true);
-        Obstacle obs1 = new RingObstacle(640, 390, 70, 22, false);
+        Obstacle obs = new RingObstacle(160, 390, 70, 22, true, new Translate());
+        Obstacle obs1 = new RingObstacle(640, 390, 70, 22, false, new Translate());
 
-        Obstacle obs2 = new ConcentricRingObstacle(400, 390, 100, 22, 2, true, true);
-        Obstacle obs3 = new RingObstacle(347, 97, 23, 8, true);
-        Obstacle obs4 = new RingObstacle(460, 97, 23, 8, false);
+        Obstacle obs2 = new ConcentricRingObstacle(400, 390, 100, 22, 2, true, true, new Translate());
+        Obstacle obs3 = new RingObstacle(347, 97, 23, 8, true, new Translate());
+        Obstacle obs4 = new RingObstacle(460, 97, 23, 8, false, new Translate());
 
         player = new Player(400, 750, 15, null);
 //

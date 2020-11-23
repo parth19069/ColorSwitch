@@ -14,6 +14,7 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import playerinfo.Player;
 
@@ -29,33 +30,33 @@ public class PlusObstacle extends Obstacle{
     private boolean rotationDirection;
     private Color colors[];
 
-    public PlusObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise){
-            super(centreX, centreY);
-            this.radius = radius;
-            this.thickness = thickness;
-            this.rotationDirection = clockwise;
-            this.rotationStatus = false;
-            this.rotate = new Rotate();
-            this.colors = new Color[4];
-            setColorCode(new ArrayList<String>());
-            getColorCode().add("Cyan");
-            getColorCode().add("Purple");
-            getColorCode().add("Yellow");
-            getColorCode().add("Pink");
-            setTimeline(new Timeline());
+    public PlusObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise, Translate initialTranslate){
+        super(centreX, centreY);
+        this.radius = radius;
+        this.thickness = thickness;
+        this.rotationDirection = clockwise;
+        this.rotationStatus = false;
+        this.rotate = new Rotate();
+        this.colors = new Color[4];
+        setColorCode(new ArrayList<String>());
+        getColorCode().add("Cyan");
+        getColorCode().add("Purple");
+        getColorCode().add("Yellow");
+        getColorCode().add("Pink");
+        setTimeline(new Timeline());
 
-            segments = new ArrayList<Polygon>();
+        segments = new ArrayList<Polygon>();
 
-            double points1[] = {centreX, centreY,
-                    centreX + thickness/2, centreY - thickness/2,
-                    centreX + thickness/2 + radius, centreY - thickness/2,
-                    centreX + thickness/2 + radius, centreY + thickness/2,
-                    centreX + thickness/2, centreY + thickness/2};
-            double points2[] = {centreX, centreY,
-                    centreX + thickness/2, centreY + thickness/2,
-                    centreX + thickness/2, centreY + thickness/2 + radius,
-                    centreX - thickness/2, centreY + thickness/2 + radius,
-                centreX - thickness/2, centreY + thickness/2};
+        double points1[] = {centreX, centreY,
+                centreX + thickness/2, centreY - thickness/2,
+                centreX + thickness/2 + radius, centreY - thickness/2,
+                centreX + thickness/2 + radius, centreY + thickness/2,
+                centreX + thickness/2, centreY + thickness/2};
+        double points2[] = {centreX, centreY,
+                centreX + thickness/2, centreY + thickness/2,
+                centreX + thickness/2, centreY + thickness/2 + radius,
+                centreX - thickness/2, centreY + thickness/2 + radius,
+            centreX - thickness/2, centreY + thickness/2};
         double points3[] = {centreX, centreY,
                 centreX - thickness/2, centreY - thickness/2,
                 centreX - thickness/2 - radius, centreY - thickness/2,
@@ -76,8 +77,10 @@ public class PlusObstacle extends Obstacle{
         segments.add(segment4);
         rotate.setPivotX(centreX);
         rotate.setPivotY(centreY);
+        setInitialTranslate(initialTranslate);
         for(int i = 0; i < 4; i++){
             segments.get(i).getTransforms().add(rotate);
+            segments.get(i).getTransforms().add(initialTranslate);
         }
     }
     public void makeRotation(int durationPerRotation){
@@ -96,7 +99,10 @@ public class PlusObstacle extends Obstacle{
         colors[3] = c4;
         setColorChanger();
     }
-
+    public void setYTranslate(int y){
+        getInitialTranslate().setY(y);
+        getRotate().setPivotY(getRotate().getPivotY() + y);
+    }
     private Polygon makeSegment(double points[]){
         Polygon segment = new Polygon(points);
         return segment;
@@ -132,7 +138,10 @@ public class PlusObstacle extends Obstacle{
         setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         if(showCollectables) {
             getColorChanger().setCollectable(400, getCentreY() + radius + 100, root, bindings, player);
+            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
+
             getStar().setCollectable(400, getCentreY(), root, bindings, player);
+            getStar().getStar().getTransforms().add(getInitialTranslate());
             getStar().initBindings(bindings, player, 0);
         }
         start();

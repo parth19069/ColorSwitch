@@ -38,6 +38,11 @@ public class Star extends Collectable{
         setRoot(root);
         root.getChildren().add(star);
     }
+
+    public Polygon getStar() {
+        return star;
+    }
+
     public void initBindings(ArrayList<BooleanBinding> bindings, Player player, final int size){
         bindings.add(Bindings.createBooleanBinding(new Callable<Boolean>() {
             @Override

@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import playerinfo.Player;
 
@@ -32,7 +33,7 @@ public class RingObstacle extends Obstacle {
     private boolean rotationDirection;
     private Color colors[];
 
-    public RingObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise){
+    public RingObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise, Translate initialTranslate){
         super(centreX, centreY);
         this.radius = radius;
         this.thickness = thickness;
@@ -60,8 +61,10 @@ public class RingObstacle extends Obstacle {
         rotate.setPivotX(centreX);
         rotate.setPivotY(centreY);
         rotate.setAngle(45);
+        setInitialTranslate(initialTranslate);
         for(int i = 0; i < 4; i++){
             segments.get(i).getTransforms().add(rotate);
+            segments.get(i).getTransforms().add(initialTranslate);
         }
     }
     private Path makeSegment(int startx, int starty, int innerx, int innery, int outerx, int outery, int vLine, int hLine, int innerRadius, int outerRadius, boolean innerFlag, boolean outerFlag){
@@ -129,6 +132,10 @@ public class RingObstacle extends Obstacle {
     public Color getColors(int i){
         return colors[i];
     }
+    public void setYTranslate(int y){
+        getInitialTranslate().setY(y);
+        getRotate().setPivotY(getRotate().getPivotY() + y);
+    }
     // Sets duration to 3 seconds, sets colors to dafault(those found in original game) andstarts timiline
     // Added to children of root
     @Override
@@ -139,7 +146,9 @@ public class RingObstacle extends Obstacle {
         setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         if(showCollectables) {
             getColorChanger().setCollectable(getCentreX(), getCentreY() + radius + 100, root, bindings, player);
+            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
             getStar().setCollectable(getCentreX(), getCentreY(), root, bindings, player);
+            getStar().getStar().getTransforms().add(getInitialTranslate());
             getStar().initBindings(bindings, player, 0);
         }
         start();

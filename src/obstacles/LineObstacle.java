@@ -29,7 +29,7 @@ public class LineObstacle extends Obstacle {
     private Color colors[];
     private Translate translate;
 
-    public LineObstacle(int centreX, int centreY, int thickness, boolean toLeft){
+    public LineObstacle(int centreX, int centreY, int thickness, boolean toLeft, Translate initialTranslate){
         super(centreX, centreY);
 
         this.thickness = thickness;
@@ -120,11 +120,15 @@ public class LineObstacle extends Obstacle {
         segments.add(segment7);
         segments.add(segment8);
 
+        setInitialTranslate(initialTranslate);
         for(int i = 0; i < 8; i++){
             segments.get(i).getTransforms().add(translate);
+            segments.get(i).getTransforms().add(initialTranslate);
         }
     }
-
+    public void setYTranslate(int y){
+        getInitialTranslate().setY(y);
+    }
     public void makeTranslation(int durationPerRotation){
         getTimeline().setCycleCount(Animation.INDEFINITE);
         if(translationDirection)getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(translate.xProperty(), -800)));
@@ -164,7 +168,10 @@ public class LineObstacle extends Obstacle {
         setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         if(showCollectables) {
             getColorChanger().setCollectable(400, getCentreY() + 100, root, bindings, player);
+            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
+
             getStar().setCollectable(400, getCentreY() - 100, root, bindings, player);
+            getStar().getStar().getTransforms().add(getInitialTranslate());
             getStar().initBindings(bindings, player, 0);
         }
         start();

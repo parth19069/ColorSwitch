@@ -43,6 +43,9 @@ public class ColorChanger extends Collectable implements Pauseable {
             colors.add(a[i]);
         }
     }
+    public Circle getChanger(){
+        return changer;
+    }
     public void setCollectable(int centreX, int centreY, Group root, ArrayList<BooleanBinding> bindings, Player player){
         changer = new Circle(centreX, centreY, 25);
         changer.setStrokeWidth(0);

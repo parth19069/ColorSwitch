@@ -22,22 +22,6 @@ import javafx.beans.Observable;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import javafx.beans.binding.*;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableBooleanValue;
-import javafx.beans.value.ObservableValue;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point3D;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.effect.Glow;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -115,14 +99,13 @@ public class Main extends Application{
         launch(args);
     }
 
-    public void game (Stage pms){
+    public void game (Stage primaryStage){
 
         Button pauseButton = new Button("Pause");
         pauseButton.setFocusTraversable(false);
         pauseButton.setMaxSize(100,200);
         pauseButton.setLayoutY(20);
         pauseButton.setLayoutX(700);
-        pauseButton.setFocusTraversable(false);
 
 
         pauseButton.setOnAction(new EventHandler<ActionEvent>(){
@@ -146,7 +129,7 @@ public class Main extends Application{
                         @Override
                         public void handle(ActionEvent event) {
                             try {
-                                start(pms);
+                                start(primaryStage);
                             }
                             catch(Exception e){
 
@@ -158,7 +141,7 @@ public class Main extends Application{
                         @Override
                         public void handle(ActionEvent event) {
                             try {
-                                game(pms);
+                                game(primaryStage);
                             }
                             catch(Exception e){
 
@@ -170,8 +153,8 @@ public class Main extends Application{
                     root.getChildren().add(resumeGame);
                     Scene s = new Scene(root, 800,800);
                     s.setFill(Color.rgb(41,41,41));
-                    pms.setScene(s);
-                    pms.show();
+                    primaryStage.setScene(s);
+                    primaryStage.show();
                 }
                 catch(Exception e){
 
@@ -187,25 +170,26 @@ public class Main extends Application{
         colorCode.add(Color.PURPLE);
         colorCode.add(Color.YELLOW);
         colorCode.add(Color.rgb(250, 22, 151));
-        Obstacle obs = new RingObstacle(400, 300, 190, 30, true);
-        Obstacle obs2 = new RingObstacle(400, -600, 190, 30, false);
-        Obstacle obs3 = new RingObstacle(400, -1300, 190, 30, false);
-        Obstacle obs4 = new ConcentricRingObstacle(400, -2100, 290, 30, 2, true, true);
-        Obstacle obs5 = new TangentialRingObstacle(400, -2900, 120, 120, 30, true);
-        Obstacle obs6 = new SquareObstacle(400, 300, 90, 20, true);
-//        LineObstacle obs7 = new LineObstacle(800, 400, 30,  true);
+        Obstacle obs = new RingObstacle(400, 300, 190, 30, true, new Translate());
+        Obstacle obs2 = new RingObstacle(400, 300, 190, 30, false, new Translate());
+        Obstacle obs3 = new RingObstacle(400, 300, 190, 30, false, new Translate());
+        Obstacle obs4 = new ConcentricRingObstacle(400, 300, 290, 30, 2, true, true, new Translate());
+        Obstacle obs5 = new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate());
+        Obstacle obs6 = new SquareObstacle(400, 300, 90, 20, true, new Translate());
+        Obstacle obs7 = new LineObstacle(800, 400, 30,  true, new Translate());
         player = new Player(400, 750, 15, null);
 
         player.setColor(colorCode.get(rand.nextInt(4)));
         root = new Group();
         sub = new Group();
         root.getChildren().add(player.getIcon());
-//        obs.quickSetup(sub, 6000, bindings, player, true);
-        obs2.quickSetup(sub, 6000, bindings, player, true);
-        obs3.quickSetup(sub, 6000, bindings, player, true);
-        obs4.quickSetup(sub, 6000, bindings, player, true);
-        obs5.quickSetup(sub, 6000, bindings, player, true);
-        obs6.quickSetup(sub, 6000, bindings, player, true);
+        obs7.quickSetup(sub, 6000, bindings, player, true);
+        obs7.setYTranslate(-300);
+//        obs2.quickSetup(sub, 6000, bindings, player, true);
+//        obs3.quickSetup(sub, 6000, bindings, player, true);
+//        obs4.quickSetup(sub, 6000, bindings, player, true);
+//        obs5.quickSetup(sub, 6000, bindings, player, true);
+//        obs6.quickSetup(sub, 6000, bindings, player, true);
 //        obs7.quickSetup(sub,6000,bindings,player,true);
 
         root.getChildren().add(sub);
@@ -213,9 +197,9 @@ public class Main extends Application{
         Scene scene = new Scene(root, 800, 800);
 
         scene.setFill(Color.rgb(57, 54, 54));
-        pms.setTitle("Bindings");
-        pms.setScene(scene);
-        pms.show();
+        primaryStage.setTitle("Bindings");
+        primaryStage.setScene(scene);
+        primaryStage.show();
         Timeline timeline2 = new Timeline();
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override

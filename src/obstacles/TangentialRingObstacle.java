@@ -3,16 +3,18 @@ package obstacles;
 import javafx.beans.binding.BooleanBinding;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Translate;
 import playerinfo.Player;
 
 import java.util.ArrayList;
 
 public class TangentialRingObstacle extends Obstacle {
     private RingObstacle ring1, ring2;
-    public TangentialRingObstacle(int centreX, int centreY, int radius1, int radius2, int thickness, boolean clockwise){
+    public TangentialRingObstacle(int centreX, int centreY, int radius1, int radius2, int thickness, boolean clockwise, Translate initialTranslate){
         super(centreX, centreY);
-        ring1 = new RingObstacle(centreX - thickness - radius1, centreY, radius1, thickness, clockwise);
-        ring2 = new RingObstacle(centreX + thickness + radius2, centreY, radius2, thickness, !clockwise);
+        ring1 = new RingObstacle(centreX - thickness - radius1, centreY, radius1, thickness, clockwise, initialTranslate);
+        ring2 = new RingObstacle(centreX + thickness + radius2, centreY, radius2, thickness, !clockwise, initialTranslate);
+        setInitialTranslate(initialTranslate);
     }
     public void start(){
         ring1.start();
@@ -25,6 +27,10 @@ public class TangentialRingObstacle extends Obstacle {
     public void pause(){
         ring1.pause();
         ring2.pause();
+    }
+    public void setYTranslate(int y){
+        ring1.setYTranslate(y);
+        ring2.setYTranslate(y);
     }
     public void showOnNode(Group root){
         ring1.showOnNode(root);
@@ -44,8 +50,10 @@ public class TangentialRingObstacle extends Obstacle {
         if(showCollectables) {
             setColorChanger();
             getColorChanger().setCollectable(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 250, root, bindings, player);
+            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
 
             getStar().setCollectable(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 100, root, bindings, player);
+            getStar().getStar().getTransforms().add(getInitialTranslate());
             getStar().initBindings(bindings, player, 0);
         }
 

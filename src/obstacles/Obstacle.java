@@ -5,6 +5,7 @@ import collectable.Star;
 import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanBinding;
 import javafx.scene.Group;
+import javafx.scene.transform.Translate;
 import playerinfo.Player;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public abstract class Obstacle implements Pauseable {
     private Player player;
     private ColorChanger colorChanger;
     private Star star;
+    private Translate initialTranslate;
 //    private ArrayList<BooleanBinding> collision;
     private ArrayList<String> colorCode;
     public Obstacle(int centreX, int centreY){
@@ -27,6 +29,7 @@ public abstract class Obstacle implements Pauseable {
     abstract public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables);
     abstract public void showOnNode(Group root);
     abstract public void setColorChanger();
+    abstract public void setYTranslate(int y);
     public void setPlayer(Player player){
         this.player = player;
     }
@@ -65,5 +68,11 @@ public abstract class Obstacle implements Pauseable {
     }
     public Star getStar(){
         return star;
+    }
+    public Translate getInitialTranslate(){
+        return initialTranslate;
+    }
+    public void setInitialTranslate(Translate initialTranslate){
+        this.initialTranslate = initialTranslate;
     }
 }
