@@ -30,31 +30,31 @@ public class PlusObstacle extends Obstacle{
     private Color colors[];
 
     public PlusObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise){
-        super(centreX, centreY);
-        this.radius = radius;
-        this.thickness = thickness;
-        this.rotationDirection = clockwise;
-        this.rotationStatus = false;
-        this.rotate = new Rotate();
-        this.colors = new Color[4];
-        setColorCode(new ArrayList<String>());
-        getColorCode().add("Cyan");
-        getColorCode().add("Purple");
-        getColorCode().add("Yellow");
-        getColorCode().add("Pink");
-        setTimeline(new Timeline());
+            super(centreX, centreY);
+            this.radius = radius;
+            this.thickness = thickness;
+            this.rotationDirection = clockwise;
+            this.rotationStatus = false;
+            this.rotate = new Rotate();
+            this.colors = new Color[4];
+            setColorCode(new ArrayList<String>());
+            getColorCode().add("Cyan");
+            getColorCode().add("Purple");
+            getColorCode().add("Yellow");
+            getColorCode().add("Pink");
+            setTimeline(new Timeline());
 
-        segments = new ArrayList<Polygon>();
+            segments = new ArrayList<Polygon>();
 
-        double points1[] = {centreX, centreY,
-                centreX + thickness/2, centreY - thickness/2,
-                centreX + thickness/2 + radius, centreY - thickness/2,
-                centreX + thickness/2 + radius, centreY + thickness/2,
-                centreX + thickness/2, centreY + thickness/2};
-        double points2[] = {centreX, centreY,
-                centreX + thickness/2, centreY + thickness/2,
-                centreX + thickness/2, centreY + thickness/2 + radius,
-                centreX - thickness/2, centreY + thickness/2 + radius,
+            double points1[] = {centreX, centreY,
+                    centreX + thickness/2, centreY - thickness/2,
+                    centreX + thickness/2 + radius, centreY - thickness/2,
+                    centreX + thickness/2 + radius, centreY + thickness/2,
+                    centreX + thickness/2, centreY + thickness/2};
+            double points2[] = {centreX, centreY,
+                    centreX + thickness/2, centreY + thickness/2,
+                    centreX + thickness/2, centreY + thickness/2 + radius,
+                    centreX - thickness/2, centreY + thickness/2 + radius,
                 centreX - thickness/2, centreY + thickness/2};
         double points3[] = {centreX, centreY,
                 centreX - thickness/2, centreY - thickness/2,
