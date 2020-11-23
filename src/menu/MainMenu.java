@@ -141,12 +141,8 @@ public class MainMenu extends Application {
         obs4.quickSetup(root1, 6000, bindings, player, false);
         Scene scene1 = new Scene(root1, 800,540);
         scene1.setFill(Color.rgb(41, 41, 41));
-
-
-
         primaryStage.setScene(scene1);
         primaryStage.show();
-
 
     }
     public void resumeGame(Stage pms){
@@ -170,14 +166,13 @@ public class MainMenu extends Application {
                 catch(Exception e){
 
                 }
-
-
             }
         });
         Group root2 = new Group(etm);
         root2.getChildren().add(loadGame);
         Scene scene2 = new Scene(root2, 800,540);
         scene2.setFill(Color.rgb(41,41,41));
+//        scene2.getStylesheets().add("/Users/sjohari/Desktop/styles.css");
         pms.setScene(scene2);
         pms.show();
 
@@ -187,7 +182,6 @@ public class MainMenu extends Application {
         m.game(pms);
 
     }
-
     public void exitGame(){
         System.exit(0);
     }

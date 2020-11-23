@@ -2,6 +2,7 @@ package collectable;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -21,6 +22,7 @@ import java.util.concurrent.Callable;
 
 public class Star extends Collectable{
     Polygon star;
+
     public void setCollectable(int centreX, int centreY, Group root, ArrayList<BooleanBinding> bindings, Player player){
         double points[] = {5, -10, 20, -60, 35, -10, 0, -40, 40, -40};
         for(int i = 0; i < points.length; i++){
@@ -32,6 +34,7 @@ public class Star extends Collectable{
         star.setFill(Color.WHITE);
         star.setLayoutX(centreX - 20);
         star.setLayoutY(centreY + 40);
+
         setRoot(root);
         root.getChildren().add(star);
     }
