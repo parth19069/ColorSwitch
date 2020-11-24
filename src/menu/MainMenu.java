@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import mainPackage.Main;
 import obstacles.ConcentricRingObstacle;
 import obstacles.Obstacle;
+import obstacles.PlusObstacle;
 import obstacles.RingObstacle;
 import playerinfo.Player;
 
@@ -47,40 +48,37 @@ public class MainMenu extends Application {
         colorCode.add(Color.PURPLE);
         colorCode.add(Color.YELLOW);
         colorCode.add(Color.rgb(250, 22, 151));
-
         /*
         Obstacle and player declarations
          */
-        Obstacle obs = new RingObstacle(160, 390, 70, 22, true, new Translate());
-        Obstacle obs1 = new RingObstacle(640, 390, 70, 22, false, new Translate());
+        Obstacle obs = new RingObstacle(160, 510, 70, 22, true, new Translate());
+        Obstacle obs1 = new RingObstacle(640, 510, 70, 22, false, new Translate());
 
-        Obstacle obs2 = new ConcentricRingObstacle(400, 390, 100, 22, 2, true, true, new Translate());
-        Obstacle obs3 = new RingObstacle(347, 97, 23, 8, true, new Translate());
-        Obstacle obs4 = new RingObstacle(460, 97, 23, 8, false, new Translate());
-
+        Obstacle obs2 = new ConcentricRingObstacle(400, 510, 100, 22, 2, true, true, new Translate());
+        Obstacle obs3 = new RingObstacle(347, 107, 23, 8, true, new Translate());
+        Obstacle obs4 = new RingObstacle(460, 107, 23, 8, false, new Translate());
+        Obstacle obs5 = new PlusObstacle(120,150,80,17,true,new Translate());
+        Obstacle obs6 = new PlusObstacle(680,150,80,17,false,new Translate());
         player = new Player(400, 750, 15, null);
-//
-        // making menu circles
-
         Circle c1,c2,c3,c4,c5,c6;
-        c1 = new Circle(150,190,30,Color.CYAN);
-        c2 = new Circle(650,190,30,Color.CYAN);
-        c3 = new Circle(130,215,22,Color.rgb(46,126,132));
-        c4 = new Circle(670,215,22,Color.rgb(46,126,132));
-        c5 = new Circle(110,240,18,Color.rgb(43,62,62));
-        c6 = new Circle(690,240,18,Color.rgb(43,62,62));
+        c1 = new Circle(150,300,30,Color.CYAN);
+        c2 = new Circle(650,300,30,Color.CYAN);
+        c3 = new Circle(130,325,22,Color.rgb(46,126,132));
+        c4 = new Circle(670,325,22,Color.rgb(46,126,132));
+        c5 = new Circle(110,350,18,Color.rgb(43,62,62));
+        c6 = new Circle(690,350,18,Color.rgb(43,62,62));
 
         TextFlow textFlow = new TextFlow();
         Text t = new Text(200,440,"C   L   R");
 //        t.setTextAlignment(TextAlignment.CENTER);
         t.setX(258);
-        t.setY(125);
+        t.setY(135);
         t.setFill(Color.WHITE);
         t.setFont(Font.font("Roboto",80));
         Text t2 = new Text(80,30,"SWITCH");
 
         t2.setX(247);
-        t2.setY(190);
+        t2.setY(200);
         t2.setFill(Color.WHITE);
         t2.setFont(Font.font("Roboto",80));
         textFlow.getChildren().add(t2);
@@ -93,13 +91,13 @@ public class MainMenu extends Application {
         exitButton = new Button("Exit Game");
         exitButton.setFocusTraversable(false);
         newGameButton.setLayoutX(360);
-        newGameButton.setLayoutY(375);
+        newGameButton.setLayoutY(495);
         newGameButton.setMaxSize(150,250);
         resumeButton.setLayoutX(107);
-        resumeButton.setLayoutY(375);
+        resumeButton.setLayoutY(495);
         resumeButton.setMaxSize(150,250);
         exitButton.setLayoutX(600);
-        exitButton.setLayoutY(375);
+        exitButton.setLayoutY(495);
         exitButton.setMaxSize(150,250);
         newGameButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override
@@ -121,67 +119,63 @@ public class MainMenu extends Application {
             }
         });
 
-        Group root1 = new Group();
-        root1.getChildren().add(newGameButton);
-        root1.getChildren().add(resumeButton);
-        root1.getChildren().add(exitButton);
-        root1.getChildren().add(t);
-        root1.getChildren().add(t2);
+        Group menuRoot = new Group();
+        menuRoot.getChildren().add(newGameButton);
+        menuRoot.getChildren().add(resumeButton);
+        menuRoot.getChildren().add(exitButton);
+        menuRoot.getChildren().add(t);
+        menuRoot.getChildren().add(t2);
+        menuRoot.getChildren().add(c6);
+        menuRoot.getChildren().add(c4);
+        menuRoot.getChildren().add(c2);
+        menuRoot.getChildren().add(c5);
+        menuRoot.getChildren().add(c3);
+        menuRoot.getChildren().add(c1);
+        obs.quickSetup(menuRoot, 6000, bindings, player, false);
+        obs1.quickSetup(menuRoot, 6000, bindings, player, false);
+        obs2.quickSetup(menuRoot, 6000, bindings, player, false);
+        obs3.quickSetup(menuRoot, 6000, bindings, player, false);
+        obs4.quickSetup(menuRoot, 6000, bindings, player, false);
+        obs5.quickSetup(menuRoot,6000,bindings,player,false);
+        obs6.quickSetup(menuRoot,6000,bindings,player,false);
 
-        root1.getChildren().add(c6);
-        root1.getChildren().add(c4);
-        root1.getChildren().add(c2);
-        root1.getChildren().add(c5);
-        root1.getChildren().add(c3);
-        root1.getChildren().add(c1);
-
-        obs.quickSetup(root1, 6000, bindings, player, false);
-        obs1.quickSetup(root1, 6000, bindings, player, false);
-        obs2.quickSetup(root1, 6000, bindings, player, false);
-        obs3.quickSetup(root1, 6000, bindings, player, false);
-        obs4.quickSetup(root1, 6000, bindings, player, false);
-        Scene scene1 = new Scene(root1, 800,540);
-        scene1.setFill(Color.rgb(41, 41, 41));
-        primaryStage.setScene(scene1);
+        Scene menuScene = new Scene(menuRoot, 800,800);
+        menuScene.setFill(Color.rgb(41, 41, 41));
+        primaryStage.setScene(menuScene);
         primaryStage.show();
 
     }
     public void resumeGame(Stage pms){
-        Button etm = new Button("Return to main menu");
+        Button exitToMain = new Button("Return to main menu");
         Button loadGame = new Button("Load Game");
-        etm.setLayoutX(350);
-        etm.setLayoutY(40);
-        etm.setMaxSize(300,350);
-        etm.setFocusTraversable(false);
+        exitToMain.setLayoutX(350);
+        exitToMain.setLayoutY(40);
+        exitToMain.setMaxSize(300,350);
+        exitToMain.setFocusTraversable(false);
         loadGame.setLayoutX(350);
         loadGame.setLayoutY(100);
         loadGame.setFocusTraversable(false);
         loadGame.setMaxSize(300,350);
-        etm.setOnAction(new EventHandler<ActionEvent>(){
+        exitToMain.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
                 try {
-
                     start(pms);
                 }
                 catch(Exception e){
-
                 }
             }
         });
-        Group root2 = new Group(etm);
+        Group root2 = new Group(exitToMain);
         root2.getChildren().add(loadGame);
         Scene scene2 = new Scene(root2, 800,540);
         scene2.setFill(Color.rgb(41,41,41));
-//        scene2.getStylesheets().add("/Users/sjohari/Desktop/styles.css");
         pms.setScene(scene2);
         pms.show();
-
     }
-    public void newGame(Stage pms){
+    public void newGame(Stage primaryStage){
         Main m = new Main();
-        m.game(pms);
-
+        m.game(primaryStage);
     }
     public void exitGame(){
         System.exit(0);

@@ -118,7 +118,7 @@ public class Main extends Application{
         launch(args);
     }
 
-    public void game (Stage pms){
+    public void game (Stage gameStage){
 
 
         Button pauseButton = new Button("Pause");
@@ -133,26 +133,26 @@ public class Main extends Application{
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    Stage pms2 = new Stage();
+                    Stage pauseStage = new Stage();
                     enableBlur(true);
-                    Button etm = new Button("Save and Exit");
+                    Button exitToMain = new Button("Save and Exit");
                     Button resumeGame = new Button("Resume game");
                     Obstacle obs = new ConcentricRingObstacle(400, 400, 150, 22, 2, true,true ,new Translate());
                     resumeGame.setLayoutX(350);
                     resumeGame.setLayoutY(345);
                     resumeGame.setMaxSize(150,250);
                     resumeGame.setFocusTraversable(false);
-                    etm.setLayoutX(350);
-                    etm.setLayoutY(415);
-                    etm.setMaxSize(150,250);
-                    etm.setFocusTraversable(false);
+                    exitToMain.setLayoutX(350);
+                    exitToMain.setLayoutY(415);
+                    exitToMain.setMaxSize(150,250);
+                    exitToMain.setFocusTraversable(false);
 
-                    etm.setOnAction(new EventHandler<ActionEvent>(){
+                    exitToMain.setOnAction(new EventHandler<ActionEvent>(){
                         @Override
                         public void handle(ActionEvent event) {
                             try {
-                                pms2.hide();
-                                start(pms);
+                                pauseStage.hide();
+                                start(gameStage);
                             }
                             catch(Exception e){
 
@@ -165,8 +165,8 @@ public class Main extends Application{
                         public void handle(ActionEvent event) {
                             try {
                                 enableBlur(false);
-                                pms2.hide();
-                                pms.show();
+                                pauseStage.hide();
+                                gameStage.show();
                             }
                             catch(Exception e){
 
@@ -175,15 +175,15 @@ public class Main extends Application{
                     });
                     Group tempRoot = new Group();
                     obs.quickSetup(tempRoot, 6000,bindings,player, false);
-                    tempRoot.getChildren().add(etm);
+                    tempRoot.getChildren().add(exitToMain);
                     tempRoot.getChildren().add(resumeGame);
                     Scene s = new Scene(tempRoot, 800,800);
                     s.setFill(Color.rgb(41,41,41));
                     s.setFill(Color.TRANSPARENT);
-                    pms2.initStyle(StageStyle.TRANSPARENT);
-                    pms2.setScene(s);
+                    pauseStage.initStyle(StageStyle.TRANSPARENT);
+                    pauseStage.setScene(s);
 
-                    pms2.show();
+                    pauseStage.show();
 
                 }
                 catch(Exception e){
@@ -223,14 +223,14 @@ public class Main extends Application{
 
         root.getChildren().add(sub);
         root.getChildren().add(pauseButton);
-//        root.setEffect(blur);
+
         Scene scene = new Scene(root, 800, 800);
 
         scene.setFill(Color.rgb(57, 54, 54));
 
-        pms.setTitle("Bindings");
-        pms.setScene(scene);
-        pms.show();
+        gameStage.setTitle("Bindings");
+        gameStage.setScene(scene);
+        gameStage.show();
         Timeline timeline2 = new Timeline();
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
