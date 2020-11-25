@@ -51,12 +51,12 @@ public class MainMenu extends Application {
         /*
         Obstacle and player declarations
          */
-        Obstacle obs = new RingObstacle(160, 510, 70, 22, true, new Translate());
-        Obstacle obs1 = new RingObstacle(640, 510, 70, 22, false, new Translate());
+        Obstacle obs = new RingObstacle(160, 560, 70, 22, true, new Translate());
+        Obstacle obs1 = new RingObstacle(640, 560, 70, 22, false, new Translate());
 
-        Obstacle obs2 = new ConcentricRingObstacle(400, 510, 100, 22, 2, true, true, new Translate());
+        Obstacle obs2 = new ConcentricRingObstacle(400, 560, 100, 22, 2, true, true, new Translate());
         Obstacle obs3 = new RingObstacle(347, 107, 23, 8, true, new Translate());
-        Obstacle obs4 = new RingObstacle(460, 107, 23, 8, false, new Translate());
+        Obstacle obs4 = new RingObstacle(475, 107, 23, 8, false, new Translate());
         Obstacle obs5 = new PlusObstacle(120,150,80,17,true,new Translate());
         Obstacle obs6 = new PlusObstacle(680,150,80,17,false,new Translate());
         player = new Player(400, 750, 15, null);
@@ -91,13 +91,13 @@ public class MainMenu extends Application {
         exitButton = new Button("Exit Game");
         exitButton.setFocusTraversable(false);
         newGameButton.setLayoutX(360);
-        newGameButton.setLayoutY(495);
+        newGameButton.setLayoutY(545);
         newGameButton.setMaxSize(150,250);
         resumeButton.setLayoutX(107);
-        resumeButton.setLayoutY(495);
+        resumeButton.setLayoutY(545);
         resumeButton.setMaxSize(150,250);
         exitButton.setLayoutX(600);
-        exitButton.setLayoutY(495);
+        exitButton.setLayoutY(545);
         exitButton.setMaxSize(150,250);
         newGameButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override
@@ -131,13 +131,13 @@ public class MainMenu extends Application {
         menuRoot.getChildren().add(c5);
         menuRoot.getChildren().add(c3);
         menuRoot.getChildren().add(c1);
-        obs.quickSetup(menuRoot, 6000, bindings, player, false);
-        obs1.quickSetup(menuRoot, 6000, bindings, player, false);
-        obs2.quickSetup(menuRoot, 6000, bindings, player, false);
-        obs3.quickSetup(menuRoot, 6000, bindings, player, false);
-        obs4.quickSetup(menuRoot, 6000, bindings, player, false);
-        obs5.quickSetup(menuRoot,6000,bindings,player,false);
-        obs6.quickSetup(menuRoot,6000,bindings,player,false);
+        obs.quickSetup(menuRoot, 6000, bindings, player, false, false);
+        obs1.quickSetup(menuRoot, 6000, bindings, player, false, false);
+        obs2.quickSetup(menuRoot, 6000, bindings, player, false, false);
+        obs3.quickSetup(menuRoot, 6000, bindings, player, false, false);
+        obs4.quickSetup(menuRoot, 6000, bindings, player, false, false);
+        obs5.quickSetup(menuRoot,6000,bindings,player,false, false);
+        obs6.quickSetup(menuRoot,6000,bindings,player,false, false);
 
         Scene menuScene = new Scene(menuRoot, 800,800);
         menuScene.setFill(Color.rgb(41, 41, 41));

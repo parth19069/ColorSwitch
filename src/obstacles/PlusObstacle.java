@@ -101,7 +101,7 @@ public class PlusObstacle extends Obstacle{
     }
     public void setYTranslate(int y){
         getInitialTranslate().setY(y);
-        getRotate().setPivotY(getRotate().getPivotY() + y);
+        getRotate().setPivotY(getCentreY() + getInitialTranslate().getY());
     }
     private Polygon makeSegment(double points[]){
         Polygon segment = new Polygon(points);
@@ -131,11 +131,13 @@ public class PlusObstacle extends Obstacle{
     }
 
     @Override
-    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables){
-        showOnNode(root);
-        makeRotation(duration);
-        initBindings(bindings, player);
-        setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
+    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted){
+        if(!isShifted) {
+            showOnNode(root);
+            makeRotation(duration);
+            initBindings(bindings, player);
+            setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
+        }
         if(showCollectables) {
             getColorChanger().setCollectable(400, getCentreY() + radius + 100, root, bindings, player);
             getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
@@ -144,7 +146,7 @@ public class PlusObstacle extends Obstacle{
             getStar().getStar().getTransforms().add(getInitialTranslate());
             getStar().initBindings(bindings, player, 0);
         }
-        start();
+        if(!isShifted) start();
     }
 
     @Override

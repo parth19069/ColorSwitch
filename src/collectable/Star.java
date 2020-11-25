@@ -15,6 +15,7 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
+import mainPackage.Main;
 import playerinfo.Player;
 
 import java.util.ArrayList;
@@ -60,6 +61,9 @@ public class Star extends Collectable{
                     getRoot().getChildren().remove(star);
                     getBinding().removeListener(getListener());
                     System.out.println("IN STAR");
+                    Main.numberOfStars++;
+                    Main.obstacleShiftCounter++;
+                    System.out.println("Number of stars is " + Main.numberOfStars);
                 }
             }
         });

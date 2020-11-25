@@ -49,6 +49,8 @@ public class ColorChanger extends Collectable implements Pauseable {
     public void setCollectable(int centreX, int centreY, Group root, ArrayList<BooleanBinding> bindings, Player player){
         changer = new Circle(centreX, centreY, 25);
         changer.setStrokeWidth(0);
+        timeline.stop();
+        timeline.getKeyFrames().clear();
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5), e -> {
             if(rvalue + x > 255 || rvalue + x < 120) x *= -1;

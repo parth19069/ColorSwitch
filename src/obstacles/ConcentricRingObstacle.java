@@ -56,11 +56,14 @@ public class ConcentricRingObstacle extends Obstacle {
     public void setColorChanger(){
         getColorChanger().setColors(rings.get(0).getColors(0), rings.get(0).getColors(2));
     }
-    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables){
-        showOnNode(root);
-        for(int i = 0; i < numberOfRings; i++){
-            rings.get(i).makeRotation(duration);
-            rings.get(i).setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
+    @Override
+    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted){
+        if(!isShifted) {
+            showOnNode(root);
+            for (int i = 0; i < numberOfRings; i++) {
+                rings.get(i).makeRotation(duration);
+                rings.get(i).setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
+            }
         }
         if(showCollectables) {
             setColorChanger();
@@ -71,7 +74,9 @@ public class ConcentricRingObstacle extends Obstacle {
             getStar().initBindings(bindings, player, 0);
             getStar().getStar().getTransforms().add(getInitialTranslate());
         }
-        initBindings(bindings, player);
-        start();
+        if(!isShifted) {
+            initBindings(bindings, player);
+            start();
+        }
     }
 }

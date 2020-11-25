@@ -122,24 +122,32 @@ public class LineObstacle extends Obstacle {
 
         setInitialTranslate(initialTranslate);
         for(int i = 0; i < 8; i++){
-            segments.get(i).getTransforms().add(translate);
-            segments.get(i).getTransforms().add(initialTranslate);
+//            segments.get(i).getTransforms().add(translate);
+//            segments.get(i).getTransforms().add(initialTranslate);
         }
     }
     public void setYTranslate(int y){
         getInitialTranslate().setY(y);
+        for(int i = 0; i < 8; i++){
+            segments.get(i).setTranslateY(y);
+        }
     }
     public void makeTranslation(int durationPerRotation){
         getTimeline().setCycleCount(Animation.INDEFINITE);
-        if(translationDirection)getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(translate.xProperty(), -800)));
-        else getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(translate.xProperty(), 800)));
+        for(int i = 0; i < 8; i++) {
+            if (translationDirection) {
+                getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(segments.get(i).layoutXProperty(), segments.get(i).getLayoutX() - 800)));
+            }
+            else {
+                getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(segments.get(i).layoutXProperty(), segments.get(i).getLayoutX() + 800)));
+            }
+        }
     }
 
     private Polygon makeSegment(double points[]){
         Polygon segment = new Polygon(points);
         return segment;
     }
-
     public void setColors(Color c1, Color c2, Color c3, Color c4){
         segments.get(0).setFill(c1);
         colors[0] = c1;
@@ -161,11 +169,13 @@ public class LineObstacle extends Obstacle {
     }
 
     @Override
-    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables){
-        showOnNode(root);
-        makeTranslation(duration);
-        initBindings(bindings, player);
-        setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
+    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted){
+        if(!isShifted) {
+            showOnNode(root);
+            makeTranslation(duration);
+            initBindings(bindings, player);
+            setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
+        }
         if(showCollectables) {
             getColorChanger().setCollectable(400, getCentreY() + 100, root, bindings, player);
             getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
@@ -174,7 +184,7 @@ public class LineObstacle extends Obstacle {
             getStar().getStar().getTransforms().add(getInitialTranslate());
             getStar().initBindings(bindings, player, 0);
         }
-        start();
+        if(!isShifted) start();
     }
     public Translate getTranslate(){
         return translate;
