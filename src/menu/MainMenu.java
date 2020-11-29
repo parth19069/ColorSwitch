@@ -51,12 +51,12 @@ public class MainMenu extends Application {
         /*
         Obstacle and player declarations
          */
-        Obstacle obs = new RingObstacle(160, 560, 70, 22, true, new Translate());
-        Obstacle obs1 = new RingObstacle(640, 560, 70, 22, false, new Translate());
+        Obstacle obs = new RingObstacle(160, 560, 70, 22, true, new Translate(), 0);
+        Obstacle obs1 = new RingObstacle(640, 560, 70, 22, false, new Translate(), 0);
 
-        Obstacle obs2 = new ConcentricRingObstacle(400, 560, 100, 22, 2, true, true, new Translate());
-        Obstacle obs3 = new RingObstacle(347, 107, 23, 8, true, new Translate());
-        Obstacle obs4 = new RingObstacle(475, 107, 23, 8, false, new Translate());
+        Obstacle obs2 = new ConcentricRingObstacle(400, 560, 100, 22, 2, true, true, new Translate(), 0);
+        Obstacle obs3 = new RingObstacle(347, 107, 23, 8, true, new Translate(), 0);
+        Obstacle obs4 = new RingObstacle(475, 107, 23, 8, false, new Translate(), 0);
         Obstacle obs5 = new PlusObstacle(120,150,80,17,true,new Translate());
         Obstacle obs6 = new PlusObstacle(680,150,80,17,false,new Translate());
         player = new Player(400, 750, 15, null);

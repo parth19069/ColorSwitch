@@ -11,17 +11,29 @@ import java.util.ArrayList;
 public class ConcentricRingObstacle extends Obstacle {
     private ArrayList<RingObstacle> rings;
     private int numberOfRings;
-    public ConcentricRingObstacle(int centreX, int centreY, int radius, int thickness, int numberOfRings, boolean outerClockwise, boolean alternateRotation, Translate initialTranslate){
+    public ConcentricRingObstacle(int centreX, int centreY, int radius, int thickness, int numberOfRings, boolean outerClockwise, boolean alternateRotation, Translate initialTranslate, int initialTransformState){
         super(centreX, centreY);
         this.numberOfRings = numberOfRings;
         rings = new ArrayList<RingObstacle>();
         int offset = 0;
         for(int i = 0; i < numberOfRings; i++){
-            if(alternateRotation) rings.add(new RingObstacle(centreX, centreY, radius - offset, thickness, i % 2 == 0 ? outerClockwise : !outerClockwise, initialTranslate));
-            else rings.add(new RingObstacle(centreX, centreY, radius - offset, thickness, outerClockwise, initialTranslate));
+            if(alternateRotation) rings.add(new RingObstacle(centreX, centreY, radius - offset, thickness, i % 2 == 0 ? outerClockwise : !outerClockwise, initialTranslate, initialTransformState));
+            else rings.add(new RingObstacle(centreX, centreY, radius - offset, thickness, outerClockwise, initialTranslate, initialTransformState));
             offset += thickness + 5;
         }
+        setInitialTransformState(initialTransformState);
         setInitialTranslate(initialTranslate);
+    }
+    @Override
+    public double getSpecialValue(){
+        return rings.get(0).getSpecialValue();
+    }
+    @Override
+    public void setSpecialValue(double angle){
+        for(int i = 0; i < numberOfRings; i++){
+            if(rings.get(i).getRotationDirection())rings.get(i).setSpecialValue(angle);
+            else rings.get(i).setSpecialValue(90 - angle);
+        }
     }
     public void initBindings(ArrayList<BooleanBinding> bindings, Player player){
         for(int i = 0; i < numberOfRings; i++){
@@ -48,7 +60,7 @@ public class ConcentricRingObstacle extends Obstacle {
             rings.get(i).pause();
         }
     }
-    public void setYTranslate(int y){
+    public void setYTranslate(double y){
         for(int i = 0; i < numberOfRings; i++){
             rings.get(i).setYTranslate(y);
         }

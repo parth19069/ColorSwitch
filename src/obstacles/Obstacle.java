@@ -17,8 +17,7 @@ public abstract class Obstacle implements Pauseable {
     private ColorChanger colorChanger;
     private Star star;
     private Translate initialTranslate;
-    private int lowerBound, upperBound;
-//    private ArrayList<BooleanBinding> collision;
+    private double initialTransformState;
     private ArrayList<String> colorCode;
     public Obstacle(int centreX, int centreY){
         this.centreX = centreX;
@@ -30,7 +29,9 @@ public abstract class Obstacle implements Pauseable {
     abstract public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted);
     abstract public void showOnNode(Group root);
     abstract public void setColorChanger();
-    abstract public void setYTranslate(int y);
+    abstract public void setYTranslate(double y);
+    abstract public double getSpecialValue();
+    abstract public void setSpecialValue(double value);
     public void setPlayer(Player player){
         this.player = player;
     }
@@ -76,16 +77,11 @@ public abstract class Obstacle implements Pauseable {
     public void setInitialTranslate(Translate initialTranslate){
         this.initialTranslate = initialTranslate;
     }
-    public void setLowerBound(int lowerBound){
-        this.lowerBound = lowerBound;
+    public double getInitialTransformState() {
+        return initialTransformState;
     }
-    public int getLowerBound(){
-        return lowerBound;
-    }
-    public void setUpperBound(int upperBound){
-        this.upperBound = upperBound;
-    }
-    public int getUpperBound(){
-        return upperBound;
+
+    public void setInitialTransformState(double initialTransformState) {
+        this.initialTransformState = initialTransformState;
     }
 }

@@ -10,10 +10,10 @@ import java.util.ArrayList;
 
 public class TangentialRingObstacle extends Obstacle {
     private RingObstacle ring1, ring2;
-    public TangentialRingObstacle(int centreX, int centreY, int radius1, int radius2, int thickness, boolean clockwise, Translate initialTranslate){
+    public TangentialRingObstacle(int centreX, int centreY, int radius1, int radius2, int thickness, boolean clockwise, Translate initialTranslate, int initialTransformState){
         super(centreX, centreY);
-        ring1 = new RingObstacle(centreX - thickness - radius1, centreY, radius1, thickness, clockwise, initialTranslate);
-        ring2 = new RingObstacle(centreX + thickness + radius2, centreY, radius2, thickness, !clockwise, initialTranslate);
+        ring1 = new RingObstacle(centreX - thickness - radius1, centreY, radius1, thickness, clockwise, initialTranslate, initialTransformState);
+        ring2 = new RingObstacle(centreX + thickness + radius2, centreY, radius2, thickness, !clockwise, initialTranslate, initialTransformState);
         setInitialTranslate(initialTranslate);
     }
     public void start(){
@@ -28,7 +28,7 @@ public class TangentialRingObstacle extends Obstacle {
         ring1.pause();
         ring2.pause();
     }
-    public void setYTranslate(int y){
+    public void setYTranslate(double y){
         ring1.setYTranslate(y);
         ring2.setYTranslate(y);
     }
@@ -38,6 +38,15 @@ public class TangentialRingObstacle extends Obstacle {
     }
     public void setColorChanger(){
         getColorChanger().setColors(ring1.getColors(0), ring1.getColors(1), ring1.getColors(2), ring1.getColors(3));
+    }
+    @Override
+    public double getSpecialValue(){
+        return ring1.getSpecialValue();
+    }
+    @Override
+    public void setSpecialValue(double angle){
+        ring1.setSpecialValue(angle);
+        ring2.setSpecialValue(90-angle);
     }
     public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted){
         if(!isShifted) {

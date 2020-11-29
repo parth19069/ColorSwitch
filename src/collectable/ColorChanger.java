@@ -37,6 +37,7 @@ public class ColorChanger extends Collectable implements Pauseable {
             colors.add(a[i]);
         }
         timeline = new Timeline();
+        changer = null;
     }
     public void setColors(Color ... a){
         for(int i = 0; i < a.length; i++){
@@ -47,6 +48,8 @@ public class ColorChanger extends Collectable implements Pauseable {
         return changer;
     }
     public void setCollectable(int centreX, int centreY, Group root, ArrayList<BooleanBinding> bindings, Player player){
+        Circle tempCircle = changer;
+        if(changer != null) root.getChildren().remove(changer);
         changer = new Circle(centreX, centreY, 25);
         changer.setStrokeWidth(0);
         timeline.stop();
@@ -79,8 +82,8 @@ public class ColorChanger extends Collectable implements Pauseable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if(t1){
-//                    System.out.println("IN CHANGER");
-                    getRoot().getChildren().remove(changer);
+                    boolean debug = getRoot().getChildren().remove(changer);
+                    System.out.println("DEBUG: " + debug);
                     getBinding().removeListener(getListener());
                     Color color = colors.get(rand.nextInt(size));
                     timeline.stop();

@@ -21,7 +21,6 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import playerinfo.Player;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
@@ -33,7 +32,7 @@ public class RingObstacle extends Obstacle {
     private boolean rotationDirection;
     private Color colors[];
 
-    public RingObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise, Translate initialTranslate){
+    public RingObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise, Translate initialTranslate, int initialTransformState){
         super(centreX, centreY);
         this.radius = radius;
         this.thickness = thickness;
@@ -60,12 +59,27 @@ public class RingObstacle extends Obstacle {
         segments.add(segment4);
         rotate.setPivotX(centreX);
         rotate.setPivotY(centreY);
-        rotate.setAngle(45);
         setInitialTranslate(initialTranslate);
+        if(clockwise)setInitialTransformState(initialTransformState);
+        else setInitialTransformState(initialTransformState);
+        rotate.setAngle(getInitialTransformState());
         for(int i = 0; i < 4; i++){
             segments.get(i).getTransforms().add(rotate);
             segments.get(i).getTransforms().add(initialTranslate);
         }
+    }
+    @Override
+    public double getSpecialValue(){
+        System.out.println(rotate.getAngle());
+        if(rotationDirection)return rotate.getAngle();
+        return rotate.getAngle();
+    }
+    @Override
+    public void setSpecialValue(double angle){
+        if(rotationDirection)setInitialTransformState(angle);
+        else setInitialTransformState(angle);
+        rotate.setAngle(getInitialTransformState());
+        makeRotation(6000);
     }
     private Path makeSegment(int startx, int starty, int innerx, int innery, int outerx, int outery, int vLine, int hLine, int innerRadius, int outerRadius, boolean innerFlag, boolean outerFlag){
         Path segment = new Path();
@@ -86,12 +100,16 @@ public class RingObstacle extends Obstacle {
         inner.setSweepFlag(innerFlag);
         segment.getElements().addAll(begin, inner, horz, outer, vert);
         return segment;
-//        this is a push
     }
     public void makeRotation(int durationPerRotation){
+        getTimeline().stop();
+        getTimeline().getKeyFrames().clear();
         getTimeline().setCycleCount(Animation.INDEFINITE);
-        if(rotationDirection)getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), 405)));
-        else getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), -315)));
+        if(rotationDirection)getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), rotate.getAngle() + 360)));
+        else getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), rotate.getAngle() - 360)));
+    }
+    public boolean getRotationDirection(){
+        return rotationDirection;
     }
     @Override
     public void start(){
@@ -132,7 +150,7 @@ public class RingObstacle extends Obstacle {
     public Color getColors(int i){
         return colors[i];
     }
-    public void setYTranslate(int y){
+    public void setYTranslate(double y){
         getInitialTranslate().setY(y);
         getRotate().setPivotY(getCentreY() + getInitialTranslate().getY());
     }
@@ -171,6 +189,7 @@ public class RingObstacle extends Obstacle {
     @Override
     public void initBindings(ArrayList<BooleanBinding> bindings, Player player){
         setPlayer(player);
+//        System.out.println((player == null));
         //Segment 1
         bindings.add(Bindings.createBooleanBinding(new Callable<Boolean>() {
             @Override

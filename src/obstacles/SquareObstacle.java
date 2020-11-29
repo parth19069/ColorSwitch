@@ -10,7 +10,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Path;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
@@ -88,9 +87,11 @@ public class SquareObstacle extends Obstacle{
         }
     }
     public void makeRotation(int durationPerRotation){
+        getTimeline().stop();
+        getTimeline().getKeyFrames().clear();
         getTimeline().setCycleCount(Animation.INDEFINITE);
-        if(rotationDirection)getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), 360)));
-        else getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), -360)));
+        if(rotationDirection)getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), rotate.getAngle() + 360)));
+        else getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), rotate.getAngle() - 360)));
     }
     public void setColors(Color c1, Color c2, Color c3, Color c4){
         segments.get(0).setFill(c1);
@@ -103,7 +104,7 @@ public class SquareObstacle extends Obstacle{
         colors[3] = c4;
         setColorChanger();
     }
-    public void setYTranslate(int y){
+    public void setYTranslate(double y){
         getInitialTranslate().setY(y);
         getRotate().setPivotY(getCentreY() + getInitialTranslate().getY());
     }
@@ -152,7 +153,16 @@ public class SquareObstacle extends Obstacle{
         }
         if(!isShifted)start();
     }
-
+    @Override
+    public double getSpecialValue(){
+        return rotate.getAngle();
+    }
+    @Override
+    public void setSpecialValue(double angle){
+        setInitialTransformState(angle);
+        rotate.setAngle(angle);
+        makeRotation(6000);
+    }
     @Override
     public void initBindings(ArrayList<BooleanBinding> bindings, Player player){
         setPlayer(player);

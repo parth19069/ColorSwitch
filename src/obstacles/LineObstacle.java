@@ -12,7 +12,6 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
-import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import playerinfo.Player;
@@ -29,13 +28,13 @@ public class LineObstacle extends Obstacle {
     private Color colors[];
     private Translate translate;
 
-    public LineObstacle(int centreX, int centreY, int thickness, boolean toLeft, Translate initialTranslate){
+    public LineObstacle(int centreX, int centreY, int thickness, boolean toLeft, Translate initialTranslate, int initialTransformState){
         super(centreX, centreY);
 
         this.thickness = thickness;
         this.translationDirection = toLeft;
         this.translate = new Translate();
-        this.colors = new Color[8];
+        this.colors = new Color[12];
         setColorCode(new ArrayList<String>());
         getColorCode().add("Cyan");
         getColorCode().add("Purple");
@@ -99,6 +98,32 @@ public class LineObstacle extends Obstacle {
                 centreX + 800 ,centreY + thickness/2,
                 centreX - 800/4 +800 , centreY + thickness/2
         };
+        double points9[] = {
+                centreX + 800, centreY - thickness/2,
+                centreX - (800/4)*3+800 + 800 , centreY - thickness/2,
+                centreX - (800/4)*3+800 + 800,centreY + thickness/2,
+                centreX + 800, centreY + thickness/2
+
+        };
+        double points10[] = {
+                centreX - (800/4)*3+800 + 800, centreY - thickness/2,
+                centreX - 800/2+ 800 + 800, centreY - thickness/2 ,
+                centreX - 800/2 +800 + 800, centreY + thickness/2 ,
+                centreX - (800/4)*3 +800 + 800, centreY + thickness/2
+
+        };
+        double points11[] = {
+                centreX - 800/2 +800 + 800, centreY - thickness/2,
+                centreX - 800/4 +800 + 800, centreY - thickness/2,
+                centreX - 800/4 +800 + 800,centreY + thickness/2,
+                centreX - 800/2 +800 + 800, centreY + thickness/2
+        };
+        double points12[] = {
+                centreX - 800/4 +800 + 800, centreY - thickness/2,
+                centreX + 800 + 800, centreY - thickness/2,
+                centreX + 800 + 800,centreY + thickness/2,
+                centreX - 800/4 +800 + 800 , centreY + thickness/2
+        };
         translationStatus = false;
 
         Polygon segment1 = makeSegment(points1);
@@ -109,6 +134,10 @@ public class LineObstacle extends Obstacle {
         Polygon segment6 = makeSegment(points6);
         Polygon segment7 = makeSegment(points7);
         Polygon segment8 = makeSegment(points8);
+        Polygon segment9 = makeSegment(points9);
+        Polygon segment10 = makeSegment(points10);
+        Polygon segment11 = makeSegment(points11);
+        Polygon segment12 = makeSegment(points12);
 
 
         segments.add(segment1);
@@ -119,28 +148,46 @@ public class LineObstacle extends Obstacle {
         segments.add(segment6);
         segments.add(segment7);
         segments.add(segment8);
+        segments.add(segment9);
+        segments.add(segment10);
+        segments.add(segment11);
+        segments.add(segment12);
 
         setInitialTranslate(initialTranslate);
-        for(int i = 0; i < 8; i++){
-//            segments.get(i).getTransforms().add(translate);
-//            segments.get(i).getTransforms().add(initialTranslate);
+        setInitialTransformState(initialTransformState);
+        translate = new Translate();
+        translate.setX(initialTransformState);
+        for(int i = 0; i < 12; i++){
+            segments.get(i).getTransforms().add(translate);
+            segments.get(i).getTransforms().add(initialTranslate);
         }
     }
-    public void setYTranslate(int y){
+    @Override
+    public double getSpecialValue(){
+        return translate.getX();
+    }
+    @Override
+    public void setSpecialValue(double x){
+        while(x < -800) x += 800;
+        setInitialTransformState(x);
+        translate.setX(x);
+        makeTranslation(6000);
+    }
+    public void setYTranslate(double y){
         getInitialTranslate().setY(y);
-        for(int i = 0; i < 8; i++){
-            segments.get(i).setTranslateY(y);
-        }
     }
     public void makeTranslation(int durationPerRotation){
+        getTimeline().stop();
+        getTimeline().getKeyFrames().clear();
         getTimeline().setCycleCount(Animation.INDEFINITE);
-        for(int i = 0; i < 8; i++) {
+        for(int i = 0; i < 12; i++) {
             if (translationDirection) {
-                getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(segments.get(i).layoutXProperty(), segments.get(i).getLayoutX() - 800)));
+                getTimeline().getKeyFrames().addAll(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(translate.xProperty(), translate.getX() - 800)));
             }
             else {
-                getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(segments.get(i).layoutXProperty(), segments.get(i).getLayoutX() + 800)));
+                getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(translate.xProperty(), translate.getX() + 800)));
             }
+//            getTimeline().setOnFinished(e -> translate.setX(0));
         }
     }
 
@@ -165,6 +212,14 @@ public class LineObstacle extends Obstacle {
         colors[6] = c3;
         segments.get(7).setFill(c4);
         colors[7] = c4;
+        segments.get(8).setFill(c1);
+        colors[8] = c1;
+        segments.get(9).setFill(c2);
+        colors[9] = c2;
+        segments.get(10).setFill(c3);
+        colors[10] = c3;
+        segments.get(11).setFill(c4);
+        colors[11] = c4;
         setColorChanger();
     }
 
@@ -390,7 +445,7 @@ public class LineObstacle extends Obstacle {
 
     @Override
     public void showOnNode(Group group){
-        for(int i = 0; i < 8; i++){
+        for(int i = 0; i < 12; i++){
             group.getChildren().add(segments.get(i));
         }
     }

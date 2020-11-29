@@ -20,6 +20,8 @@ import javafx.event.EventHandler;
 import javafx.util.Duration;
 import menu.MainMenu;
 import obstacles.*;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -41,11 +43,30 @@ public class Main extends Application implements Pauseable{
     private ArrayList<Pauseable> pauseables;
 //    private BoxBlur blur;
     private Timeline timeline;
-    private int obsYTranslate;
+    private double obsYTranslate;
     private BooleanBinding starsBinding;
     private Translate translateSub;
     private Scene scene;
+    private ArrayList<Integer> saveObstacles;
+    private ArrayList<Double> saveInitialTransform, saveInitialTranslates;
+    private ArrayList<Obstacle> obstaclesOrderList;
+    private Data loadData;
 
+    public int getColorCode(Color color){
+        int code = -1;
+        int idx = 0;
+        for(Color c: colorCode){
+            if(c.equals(color)){
+                code = idx;
+                break;
+            }
+            idx++;
+        }
+        return code;
+    }
+    public Color getColor(int code){
+        return colorCode.get(code);
+    }
     public void game (Stage gameStage){
         Button pauseButton = new Button("Pause");
         pauseButton.setFocusTraversable(false);
@@ -53,6 +74,12 @@ public class Main extends Application implements Pauseable{
         pauseButton.setLayoutY(20);
         pauseButton.setLayoutX(700);
         pauseButton.setFocusTraversable(false);
+        saveObstacles = new ArrayList<Integer>();
+        obstacles = new ArrayList<Obstacle>();
+        saveInitialTransform = new ArrayList<Double>();
+        saveInitialTranslates = new ArrayList<Double>();
+        obstaclesOrderList = new ArrayList<Obstacle>();
+        createObstaclesOrderList();
 
 
         pauseButton.setOnAction(new EventHandler<ActionEvent>(){
@@ -79,6 +106,26 @@ public class Main extends Application implements Pauseable{
                         @Override
                         public void handle(ActionEvent event) {
                             try {
+                                for(Obstacle obs: obstacles){
+                                    saveObstacles.add(obstaclesOrderList.indexOf(obs));
+                                    saveInitialTransform.add(obs.getSpecialValue());
+                                    saveInitialTranslates.add(obs.getInitialTranslate().getY());
+                                }
+                                System.out.println(saveObstacles);
+                                System.out.println(saveInitialTransform);
+                                System.out.println(saveInitialTranslates);
+                                Data saveData = new Data(saveInitialTranslates, saveObstacles, saveInitialTransform, (int)sub.getLayoutY(), (int)player.getIcon().getCenterX(), (int)player.getIcon().getCenterY(), getColorCode(player.getColor()));
+                                try{
+                                    FileOutputStream outputStream = new FileOutputStream("/home/parth20/Desktop/ColorSwitchData/slot1.ser");
+                                    ObjectOutputStream out = new ObjectOutputStream(outputStream);
+                                    out.writeObject(saveData);
+                                    out.close();
+                                    outputStream.close();
+                                    System.out.println("Data serialized");
+                                }
+                                catch (Exception e){
+//                                    throw e;
+                                }
                                 pauseStage.hide();
                                 start(gameStage);
                             }
@@ -125,11 +172,28 @@ public class Main extends Application implements Pauseable{
         bindings = new ArrayList<BooleanBinding>();
         pauseables = new ArrayList<Pauseable>();
         colorCode = new ArrayList<Color>();
-        obstacles = new ArrayList<Obstacle>();
+        loadData = new Data(new ArrayList<Double>(), new ArrayList<Integer>(), new ArrayList<Double>(), 0, 400, 750, 0);
+        try{
+            FileInputStream inputStream = new FileInputStream("/home/parth20/Desktop/ColorSwitchData/slot1.ser");
+            ObjectInputStream in = new ObjectInputStream(inputStream);
+            System.out.println("working");
+            loadData = (Data) in.readObject();
+            in.close();
+            inputStream.close();
+        }
+        catch (IOException i){
+            System.out.println("IO");
+            i.printStackTrace();
+        }
+        catch (ClassNotFoundException c){
+            System.out.println("ClassNotFound");
+            c.printStackTrace();
+        }
+        if(loadData.getInitialTranslates().size() != 0)obsYTranslate = loadData.getInitialTranslates().get(0);
+        System.out.println("After loading: " + obsYTranslate);
         rand = new Random();
         translateSub = new Translate();
         offset = 0;
-        obsYTranslate = 0;
         numberOfStars = 0;
         obstacleShiftCounterValue = 4;
         obstacleShiftCounter = 0;
@@ -137,16 +201,16 @@ public class Main extends Application implements Pauseable{
         colorCode.add(Color.PURPLE);
         colorCode.add(Color.YELLOW);
         colorCode.add(Color.rgb(250, 22, 151));
-        player = new Player(400, 750, 15, null);
-        int si = pauseables.size();
-        for(int i = 0; i < si; i++){
-            Obstacle ob = (Obstacle)pauseables.get(i);
-            pauseables.add(ob.getColorChanger());
-        }
-        pauseables.add(player);
-        pauseables.add(this);
+        player = new Player(loadData.getPlayerX(), loadData.getPlayerY(), 15, null);
+//        int si = pauseables.size();
+//        for(int i = 0; i < si; i++){
+//            Obstacle ob = (Obstacle)pauseables.get(i);
+//            pauseables.add(ob.getColorChanger());
+//        }
+//        pauseables.add(player);
+//        pauseables.add(this);
 
-        player.setColor(colorCode.get(rand.nextInt(4)));
+        player.setColor(getColor(loadData.getPlayerColor()));
         root = new Group();
         sub = new Group();
         sub.getTransforms().add(translateSub);
@@ -164,8 +228,9 @@ public class Main extends Application implements Pauseable{
         root.getChildren().add(player.getIcon());
         root.getChildren().add(sub);
         root.getChildren().add(pauseButton);
+        System.out.println(root + " " + sub);
 
-        scene = new Scene(root, 800, 800);
+        scene = new Scene(root, 800, 1000);
 
         scene.setFill(Color.rgb(57, 54, 54));
 
@@ -192,7 +257,7 @@ public class Main extends Application implements Pauseable{
                     for(Obstacle obs: obstacles){
                         System.out.println(obs.getInitialTranslate().getY());
                     }
-                    System.out.println("shift = " + obstacleShiftCounter);
+                    System.out.println("obsYtrans = " + obsYTranslate);
                     shiftObstacles(sub);
                     obstacleShiftCounter = obstacleShiftCounterValue/2;
                 }
@@ -264,16 +329,24 @@ public class Main extends Application implements Pauseable{
         /*
         Add any new obstacle here. Everything else is taken care of.
          */
-        obstacles.add(new PlusObstacle(200, 300, 190, 30, false, new Translate()));
-        obstacles.add(new LineObstacle(800, 300, 30,  true, new Translate()));
-        obstacles.add(new RingObstacle(400, 300, 190, 30, true, new Translate()));
-        obstacles.add(new ConcentricRingObstacle(400, 300, 290, 30, 2, true, true, new Translate()));
-        obstacles.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate()));
-        obstacles.add(new SquareObstacle(400, 300, 90, 20, true , new Translate()));
-//        obstacles.add(new RingObstacle(400, 300, 190, 30, true, new Translate()));
-//        obstacles.add(new ConcentricRingObstacle(400, 300, 290, 30, 2, true, true, new Translate()));
-//        obstacles.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate()));
-//        obstacles.add(new SquareObstacle(400, 300, 90, 20, true , new Translate()));
+//        player = new Player(400, 900, 15, null);
+//        player.setColor(Color.CYAN);
+        if(loadData.isSaved()){
+            ArrayList<Integer> indices = loadData.getIndices();
+            ArrayList<Double> transformState = loadData.getInitialTransforms();
+            ArrayList<Double> translateY = loadData.getInitialTranslates();
+            System.out.println(indices);
+            System.out.println(transformState);
+            System.out.println(translateY);
+            sub.setLayoutY(loadData.getSubLayoutY());
+            for(int i = 0; i < indices.size(); i++){
+                obstacles.add(obstaclesOrderList.get(indices.get(i)));
+                obstacles.get(obstacles.size() - 1).setSpecialValue(transformState.get(i));
+//                obstacles.get(obstacles.size() - 1).setYTranslate(translateY.get(i));
+            }
+        }
+
+
     }
     public void addPauseables(){
         /*
@@ -286,18 +359,19 @@ public class Main extends Application implements Pauseable{
             pauseables.add(obs.getColorChanger());
         }
         pauseables.add(player);
+        pauseables.add(this);
     }
-    public void quickSetupAllObstacles(Group root){
+    public void quickSetupAllObstacles(Group sub){
         /*
         Only sets up obstacles that are added in addObstacles function
          */
         for(Obstacle obs: obstacles){
-            obs.quickSetup(root, 6000, bindings, player, true, false);
+            obs.quickSetup(sub, 8000, bindings, player, true, false);
             obs.setYTranslate(obsYTranslate);
             obsYTranslate -= 800;
         }
     }
-    public void shiftObstacles(Group root){
+    public void shiftObstacles(Group sub){
         ArrayList<Obstacle> shiftedObstacles = new ArrayList<Obstacle>();
         for(int i = 0; i < obstacleShiftCounterValue/2; i++){
             shiftedObstacles.add(obstacles.get(i));
@@ -305,17 +379,38 @@ public class Main extends Application implements Pauseable{
         for(Obstacle obs: shiftedObstacles){
             obstacles.remove(obs);
         }
-        for(Obstacle obs: shiftedObstacles){
-            obs.setYTranslate(obsYTranslate);
-        }
         Collections.shuffle(shiftedObstacles);
         for(Obstacle obs: shiftedObstacles){
             obstacles.add(obs);
             obs.setYTranslate(obsYTranslate);
-            obs.quickSetup(root, 6000, bindings, player, true, true);
+            obs.quickSetup(sub, 6000, bindings, player, true, true);
             obsYTranslate -= 800;
         }
         System.out.println(obsYTranslate);
+    }
+    public void createObstaclesOrderList(){
+        obstaclesOrderList.add(new RingObstacle(400, 300, 10, 30, true, new Translate(),0));
+        obstaclesOrderList.add(new RingObstacle(400, 300, 20, 30, true, new Translate(),0));
+        obstaclesOrderList.add(new RingObstacle(400, 300, 30, 30, true, new Translate(),0));
+        obstaclesOrderList.add(new RingObstacle(400, 300, 40, 30, true, new Translate(),0));
+        obstaclesOrderList.add(new RingObstacle(400, 300, 50, 30, true, new Translate(),0));
+        obstaclesOrderList.add(new RingObstacle(400, 300, 60, 30, true, new Translate(),0));
+        obstaclesOrderList.add(new RingObstacle(400, 300, 70, 30, true, new Translate(),0));
+        obstaclesOrderList.add(new RingObstacle(400, 300, 80, 30, true, new Translate(),0));
+        obstaclesOrderList.add(new RingObstacle(400, 300, 90, 30, true, new Translate(),0));
+        obstaclesOrderList.add(new RingObstacle(400, 300, 100, 30, true, new Translate(),0));
+//        obstaclesOrderList.add(new LineObstacle(800, 300, 30,  true, new Translate(), 0));
+//        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
+//        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 2, true, true, new Translate(), 45));
+//        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 3, false, true, new Translate(), 45));
+//        obstaclesOrderList.add(new PlusObstacle(200, 300, 190, 30, false, new Translate()));
+//        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
+//        obstaclesOrderList.add(new SquareObstacle(400, 300, 90, 20, true , new Translate()));
+//        obstaclesOrderList.add(new RingObstacle(400, 300, 190, 30, true, new Translate(), 0));
+//        obstaclesOrderList.add(new SquareObstacle(400, 300, 90, 20, true , new Translate()));
+//        for(Obstacle obs: obstaclesOrderList){
+//            obstacles.add(obs);
+//        }
     }
     public void start(){
         timeline.play();
