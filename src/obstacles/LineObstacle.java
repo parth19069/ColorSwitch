@@ -224,7 +224,7 @@ public class LineObstacle extends Obstacle {
     }
 
     @Override
-    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted){
+    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted, boolean showChanger, boolean showStar){
         if(!isShifted) {
             showOnNode(root);
             makeTranslation(duration);
@@ -232,12 +232,14 @@ public class LineObstacle extends Obstacle {
             setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         }
         if(showCollectables) {
-            getColorChanger().setCollectable(400, getCentreY() + 100, root, bindings, player);
-            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
+//            getColorChanger().setCollectable(400, getCentreY() + 100, root, bindings, player);
+//            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
+//
+//            getStar().setCollectable(400, getCentreY() - 100, root, bindings, player);
+//            getStar().getStar().getTransforms().add(getInitialTranslate());
+//            getStar().initBindings(bindings, player, 0);
 
-            getStar().setCollectable(400, getCentreY() - 100, root, bindings, player);
-            getStar().getStar().getTransforms().add(getInitialTranslate());
-            getStar().initBindings(bindings, player, 0);
+            setCollectables(400, getCentreY() + 100, 400, getCentreY() - 100, player, bindings, root, showChanger, showStar);
         }
         if(!isShifted) start();
     }

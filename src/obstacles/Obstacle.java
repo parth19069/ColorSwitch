@@ -19,6 +19,7 @@ public abstract class Obstacle implements Pauseable {
     private Translate initialTranslate;
     private double initialTransformState;
     private ArrayList<String> colorCode;
+    private boolean changerPresent, starPresent;
     public Obstacle(int centreX, int centreY){
         this.centreX = centreX;
         this.centreY = centreY;
@@ -26,12 +27,28 @@ public abstract class Obstacle implements Pauseable {
         star = new Star();
     }
     abstract public void initBindings(ArrayList<BooleanBinding> bindings, Player player);
-    abstract public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted);
+    abstract public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted, boolean showChanger, boolean showStar);
     abstract public void showOnNode(Group root);
     abstract public void setColorChanger();
     abstract public void setYTranslate(double y);
     abstract public double getSpecialValue();
     abstract public void setSpecialValue(double value);
+    public void setCollectables(int changerCentreX, int changerCentreY,
+                                int starCentreX, int starCentreY,
+                                Player player, ArrayList<BooleanBinding> bindings, Group root,
+                                boolean showChanger, boolean showStar){
+        if(isChangerPresent()) {
+            getColorChanger().setCollectable(changerCentreX, changerCentreY, root, bindings, player, this);
+            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
+            changerPresent = true;
+        }
+        if(isStarPresent()) {
+            getStar().setCollectable(starCentreX, starCentreY, root, bindings, player, this);
+            getStar().getStar().getTransforms().add(getInitialTranslate());
+            getStar().initBindings(bindings, player, 0);
+            starPresent = true;
+        }
+    }
     public void setPlayer(Player player){
         this.player = player;
     }
@@ -83,5 +100,21 @@ public abstract class Obstacle implements Pauseable {
 
     public void setInitialTransformState(double initialTransformState) {
         this.initialTransformState = initialTransformState;
+    }
+
+    public boolean isStarPresent() {
+        return starPresent;
+    }
+
+    public void setStarPresent(boolean starPresent) {
+        this.starPresent = starPresent;
+    }
+
+    public boolean isChangerPresent() {
+        return changerPresent;
+    }
+
+    public void setChangerPresent(boolean changerPresent) {
+        this.changerPresent = changerPresent;
     }
 }

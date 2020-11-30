@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
+import obstacles.Obstacle;
 import obstacles.Pauseable;
 import obstacles.RingObstacle;
 import playerinfo.Player;
@@ -27,6 +28,7 @@ public class ColorChanger extends Collectable implements Pauseable {
     private Timeline timeline;
     private int colorPtr;
     private int rvalue, gvalue, bvalue, x, y, z;
+    private Obstacle obstacle;
     public ColorChanger(Color ... a){
         colors = new ArrayList<Color>();
         colorPtr = 0;
@@ -47,7 +49,8 @@ public class ColorChanger extends Collectable implements Pauseable {
     public Circle getChanger(){
         return changer;
     }
-    public void setCollectable(int centreX, int centreY, Group root, ArrayList<BooleanBinding> bindings, Player player){
+    @Override
+    public void setCollectable(int centreX, int centreY, Group root, ArrayList<BooleanBinding> bindings, Player player, Obstacle obstacle){
         Circle tempCircle = changer;
         if(changer != null) root.getChildren().remove(changer);
         changer = new Circle(centreX, centreY, 25);
@@ -55,6 +58,7 @@ public class ColorChanger extends Collectable implements Pauseable {
         timeline.stop();
         timeline.getKeyFrames().clear();
         timeline.setCycleCount(Timeline.INDEFINITE);
+        this.obstacle = obstacle;
         timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5), e -> {
             if(rvalue + x > 255 || rvalue + x < 120) x *= -1;
             if(gvalue + y > 255 || gvalue + y < 120) y *= -1;
@@ -87,6 +91,7 @@ public class ColorChanger extends Collectable implements Pauseable {
                     getBinding().removeListener(getListener());
                     Color color = colors.get(rand.nextInt(size));
                     timeline.stop();
+                    obstacle.setChangerPresent(false);
                     while(color.equals(player.getColor())) color = colors.get(rand.nextInt(size));
                     player.setColor(color);
                 }

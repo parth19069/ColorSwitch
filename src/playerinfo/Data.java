@@ -11,14 +11,23 @@ public class Data implements Serializable {
     private int subLayoutY, playerX, playerY;
     private int playerColor;
     private boolean isSaved;
-    public Data(ArrayList<Double> initialTranslates, ArrayList<Integer> indices, ArrayList<Double> initialTransforms, int subLayoutY, int playerX, int playerY, int playerColor){
+    private int numberOfStars, obstacleShiftCounter;
+    private ArrayList<Boolean> changerStatus, starStatus;
+    public Data(ArrayList<Double> initialTranslates, ArrayList<Integer> indices,
+                ArrayList<Boolean> changerStatus, ArrayList<Boolean> starStatus,
+                ArrayList<Double> initialTransforms, int subLayoutY, int playerX,
+                int playerY, int playerColor, int numberOfStars, int obstacleShiftCounter){
         this.indices = indices;
         this.initialTransforms = initialTransforms;
+        this.changerStatus = changerStatus;
+        this.starStatus = starStatus;
         this.subLayoutY = subLayoutY;
         this.playerX = playerX;
         this.playerY = playerY;
         this.playerColor = playerColor;
         this.initialTranslates = initialTranslates;
+        this.numberOfStars = numberOfStars;
+        this.obstacleShiftCounter = obstacleShiftCounter;
         isSaved = true;
     }
 
@@ -53,5 +62,21 @@ public class Data implements Serializable {
 
     public ArrayList<Double> getInitialTranslates() {
         return initialTranslates;
+    }
+
+    public int getNumberOfStars() {
+        return numberOfStars;
+    }
+
+    public int getObstacleShiftCounter() {
+        return obstacleShiftCounter;
+    }
+
+    public ArrayList<Boolean> getChangerStatus() {
+        return changerStatus;
+    }
+
+    public ArrayList<Boolean> getStarStatus() {
+        return starStatus;
     }
 }

@@ -136,7 +136,7 @@ public class SquareObstacle extends Obstacle{
     }
 
     @Override
-    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted){
+    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted, boolean showChanger, boolean showStar){
         if(!isShifted) {
             showOnNode(root);
             makeRotation(duration);
@@ -144,12 +144,13 @@ public class SquareObstacle extends Obstacle{
             setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         }
         if(showCollectables) {
-            getColorChanger().setCollectable(400, getCentreY() + radius + 200, root, bindings, player);
-            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
-
-            getStar().setCollectable(400, getCentreY(), root, bindings, player);
-            getStar().getStar().getTransforms().add(getInitialTranslate());
-            getStar().initBindings(bindings, player, 0);
+//            getColorChanger().setCollectable(400, getCentreY() + radius + 200, root, bindings, player);
+//            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
+//
+//            getStar().setCollectable(400, getCentreY(), root, bindings, player);
+//            getStar().getStar().getTransforms().add(getInitialTranslate());
+//            getStar().initBindings(bindings, player, 0);
+            setCollectables(400, getCentreY() + radius + 200, 400, getCentreY(), player, bindings, root, showChanger, showStar);
         }
         if(!isShifted)start();
     }

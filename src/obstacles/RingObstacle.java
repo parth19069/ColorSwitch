@@ -157,7 +157,7 @@ public class RingObstacle extends Obstacle {
     // Sets duration to 3 seconds, sets colors to dafault(those found in original game) andstarts timiline
     // Added to children of root
     @Override
-    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted){
+    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted, boolean showChanger, boolean showStar){
         if(!isShifted) {
             showOnNode(root);
             makeRotation(duration);
@@ -165,11 +165,12 @@ public class RingObstacle extends Obstacle {
             setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         }
         if(showCollectables) {
-            getColorChanger().setCollectable(getCentreX(), getCentreY() + radius + 100, root, bindings, player);
-            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
-            getStar().setCollectable(getCentreX(), getCentreY(), root, bindings, player);
-            getStar().getStar().getTransforms().add(getInitialTranslate());
-            getStar().initBindings(bindings, player, 0);
+//            getColorChanger().setCollectable(getCentreX(), getCentreY() + radius + 100, root, bindings, player);
+//            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
+//            getStar().setCollectable(getCentreX(), getCentreY(), root, bindings, player);
+//            getStar().getStar().getTransforms().add(getInitialTranslate());
+//            getStar().initBindings(bindings, player, 0);
+            setCollectables(getCentreX(), getCentreY() + radius + 100, getCentreX(), getCentreY(), player, bindings, root, showChanger, showStar);
         }
         if(!isShifted)start();
     }

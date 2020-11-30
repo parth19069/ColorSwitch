@@ -3,6 +3,7 @@ package collectable;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
+import obstacles.Obstacle;
 import playerinfo.Player;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ abstract public class Collectable {
     private BooleanBinding binding;
     private ChangeListener<Boolean> listener;
 
-    abstract public void setCollectable(int centreX, int centreY, Group root, ArrayList<BooleanBinding> bindings, Player player);
+    abstract public void setCollectable(int centreX, int centreY, Group root, ArrayList<BooleanBinding> bindings, Player player, Obstacle obstacle);
     abstract public void initBindings(ArrayList<BooleanBinding> bindings, Player player, final int size);
 
     public void setRoot(Group root){

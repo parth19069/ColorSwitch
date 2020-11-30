@@ -32,6 +32,7 @@ import playerinfo.*;
 
 public class Main extends Application implements Pauseable{
     public static int numberOfStars, obstacleShiftCounter, obstacleShiftCounterValue;
+    public static String savePath = "/home/parth20/Desktop/slot1.ser";
     private ArrayList<BooleanBinding> bindings;
     private Player player;
     private ArrayList<Color> colorCode;
@@ -50,9 +51,10 @@ public class Main extends Application implements Pauseable{
     private Scene scene;
     private ArrayList<Integer> saveObstacles;
     private ArrayList<Double> saveInitialTransform, saveInitialTranslates;
+    private ArrayList<Boolean> saveChangerStatus, saveStarStatus;
     private ArrayList<Obstacle> obstaclesOrderList;
     private Data loadData;
-
+    private boolean isLoaded;
     public int getColorCode(Color color){
         int code = -1;
         int idx = 0;
@@ -68,7 +70,8 @@ public class Main extends Application implements Pauseable{
     public Color getColor(int code){
         return colorCode.get(code);
     }
-    public void game (Stage gameStage){
+    public void game (Stage gameStage, boolean loaded){
+        this.isLoaded = loaded;
         Button pauseButton = new Button("Pause");
         pauseButton.setFocusTraversable(false);
         pauseButton.setMaxSize(100,200);
@@ -80,6 +83,8 @@ public class Main extends Application implements Pauseable{
         saveInitialTransform = new ArrayList<Double>();
         saveInitialTranslates = new ArrayList<Double>();
         obstaclesOrderList = new ArrayList<Obstacle>();
+        saveChangerStatus = new ArrayList<Boolean>();
+        saveStarStatus = new ArrayList<Boolean>();
         createObstaclesOrderList();
 
 
@@ -111,13 +116,15 @@ public class Main extends Application implements Pauseable{
                                     saveObstacles.add(obstaclesOrderList.indexOf(obs));
                                     saveInitialTransform.add(obs.getSpecialValue());
                                     saveInitialTranslates.add(obs.getInitialTranslate().getY());
+                                    saveChangerStatus.add(obs.isChangerPresent());
+                                    saveStarStatus.add(obs.isStarPresent());
                                 }
                                 System.out.println(saveObstacles);
                                 System.out.println(saveInitialTransform);
                                 System.out.println(saveInitialTranslates);
-                                Data saveData = new Data(saveInitialTranslates, saveObstacles, saveInitialTransform, (int)sub.getLayoutY(), (int)player.getIcon().getCenterX(), (int)player.getIcon().getCenterY(), getColorCode(player.getColor()));
+                                Data saveData = new Data(saveInitialTranslates, saveObstacles, saveChangerStatus, saveStarStatus, saveInitialTransform, (int)sub.getLayoutY(), (int)player.getIcon().getCenterX(), (int)player.getIcon().getCenterY(), getColorCode(player.getColor()), numberOfStars, obstacleShiftCounter);
                                 try{
-                                    FileOutputStream outputStream = new FileOutputStream("/Users/sjohari/Desktop/slot1.ser");
+                                    FileOutputStream outputStream = new FileOutputStream(savePath);
                                     ObjectOutputStream out = new ObjectOutputStream(outputStream);
                                     out.writeObject(saveData);
                                     out.close();
@@ -173,31 +180,31 @@ public class Main extends Application implements Pauseable{
         bindings = new ArrayList<BooleanBinding>();
         pauseables = new ArrayList<Pauseable>();
         colorCode = new ArrayList<Color>();
-        loadData = new Data(new ArrayList<Double>(), new ArrayList<Integer>(), new ArrayList<Double>(), 0, 400, 750, 0);
-        try{
-            FileInputStream inputStream = new FileInputStream("/Users/sjohari/Desktop/slot1.ser");
-            ObjectInputStream in = new ObjectInputStream(inputStream);
-            System.out.println("working");
-            loadData = (Data) in.readObject();
-            in.close();
-            inputStream.close();
-        }
-        catch (IOException i){
-            System.out.println("IO");
-            i.printStackTrace();
-        }
-        catch (ClassNotFoundException c){
-            System.out.println("ClassNotFound");
-            c.printStackTrace();
+        loadData = new Data(new ArrayList<Double>(), new ArrayList<Integer>(), new ArrayList<Boolean>(), new ArrayList<Boolean>(), new ArrayList<Double>(), 0, 400, 750, 0, 0, 0);
+        if(isLoaded) {
+            try {
+                FileInputStream inputStream = new FileInputStream(savePath);
+                ObjectInputStream in = new ObjectInputStream(inputStream);
+                System.out.println("working");
+                loadData = (Data) in.readObject();
+                in.close();
+                inputStream.close();
+            } catch (IOException i) {
+                System.out.println("IO");
+                i.printStackTrace();
+            } catch (ClassNotFoundException c) {
+                System.out.println("ClassNotFound");
+                c.printStackTrace();
+            }
         }
         if(loadData.getInitialTranslates().size() != 0)obsYTranslate = loadData.getInitialTranslates().get(0);
+        numberOfStars = loadData.getNumberOfStars();
+        obstacleShiftCounter = loadData.getObstacleShiftCounter();
         System.out.println("After loading: " + obsYTranslate);
         rand = new Random();
         translateSub = new Translate();
         offset = 0;
-        numberOfStars = 0;
         obstacleShiftCounterValue = 4;
-        obstacleShiftCounter = 0;
         colorCode.add(Color.CYAN);
         colorCode.add(Color.PURPLE);
         colorCode.add(Color.YELLOW);
@@ -332,10 +339,12 @@ public class Main extends Application implements Pauseable{
          */
 //        player = new Player(400, 900, 15, null);
 //        player.setColor(Color.CYAN);
-        if(loadData.isSaved()){
+        if(isLoaded && loadData.isSaved()){
             ArrayList<Integer> indices = loadData.getIndices();
             ArrayList<Double> transformState = loadData.getInitialTransforms();
             ArrayList<Double> translateY = loadData.getInitialTranslates();
+            ArrayList<Boolean> changerStatus = loadData.getChangerStatus();
+            ArrayList<Boolean> starStatus = loadData.getStarStatus();
             System.out.println(indices);
             System.out.println(transformState);
             System.out.println(translateY);
@@ -343,6 +352,8 @@ public class Main extends Application implements Pauseable{
             for(int i = 0; i < indices.size(); i++){
                 obstacles.add(obstaclesOrderList.get(indices.get(i)));
                 obstacles.get(obstacles.size() - 1).setSpecialValue(transformState.get(i));
+                obstacles.get(obstacles.size() - 1).setChangerPresent(changerStatus.get(i));
+                obstacles.get(obstacles.size() - 1).setStarPresent(starStatus.get(i));
 //                obstacles.get(obstacles.size() - 1).setYTranslate(translateY.get(i));
             }
         }
@@ -367,7 +378,12 @@ public class Main extends Application implements Pauseable{
         Only sets up obstacles that are added in addObstacles function
          */
         for(Obstacle obs: obstacles){
-            obs.quickSetup(sub, 8000, bindings, player, true, false);
+            if(isLoaded)obs.quickSetup(sub, 8000, bindings, player, true, false, obs.isChangerPresent(), obs.isStarPresent());
+            else {
+                obs.setChangerPresent(true);
+                obs.setStarPresent(true);
+                obs.quickSetup(sub, 8000, bindings, player, true, false, true, true);
+            }
             obs.setYTranslate(obsYTranslate);
             obsYTranslate -= 800;
         }
@@ -384,7 +400,9 @@ public class Main extends Application implements Pauseable{
         for(Obstacle obs: shiftedObstacles){
             obstacles.add(obs);
             obs.setYTranslate(obsYTranslate);
-            obs.quickSetup(sub, 6000, bindings, player, true, true);
+            obs.setChangerPresent(true);
+            obs.setStarPresent(true);
+            obs.quickSetup(sub, 6000, bindings, player, true, true, true, true);
             obsYTranslate -= 800;
         }
         System.out.println(obsYTranslate);
@@ -409,9 +427,11 @@ public class Main extends Application implements Pauseable{
 //        obstaclesOrderList.add(new SquareObstacle(400, 300, 90, 20, true , new Translate()));
 //        obstaclesOrderList.add(new RingObstacle(400, 300, 190, 30, true, new Translate(), 0));
 //        obstaclesOrderList.add(new SquareObstacle(400, 300, 90, 20, true , new Translate()));
-//        for(Obstacle obs: obstaclesOrderList){
-//            obstacles.add(obs);
-//        }
+        if(!isLoaded) {
+            for (Obstacle obs : obstaclesOrderList) {
+                obstacles.add(obs);
+            }
+        }
     }
     public void start(){
         timeline.play();

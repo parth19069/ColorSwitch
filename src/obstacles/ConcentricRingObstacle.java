@@ -69,7 +69,7 @@ public class ConcentricRingObstacle extends Obstacle {
         getColorChanger().setColors(rings.get(0).getColors(0), rings.get(0).getColors(2));
     }
     @Override
-    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted){
+    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted, boolean showChanger, boolean showStar){
         if(!isShifted) {
             showOnNode(root);
             for (int i = 0; i < numberOfRings; i++) {
@@ -79,12 +79,14 @@ public class ConcentricRingObstacle extends Obstacle {
         }
         if(showCollectables) {
             setColorChanger();
-            getColorChanger().setCollectable(getCentreX(), getCentreY() + rings.get(0).getRadius() + 100, root, bindings, player);
-            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
-
-            getStar().setCollectable(getCentreX(), getCentreY(), root, bindings, player);
-            getStar().initBindings(bindings, player, 0);
+//            getColorChanger().setCollectable(getCentreX(), getCentreY() + rings.get(0).getRadius() + 100, root, bindings, player);
+//            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
+//
+//            getStar().setCollectable(getCentreX(), getCentreY(), root, bindings, player);
+//            getStar().initBindings(bindings, player, 0);
             getStar().getStar().getTransforms().add(getInitialTranslate());
+
+            setCollectables(getCentreX(), getCentreY() + rings.get(0).getRadius() + 100, getCentreX(), getCentreY(), player, bindings, root, showChanger, showStar);
         }
         if(!isShifted) {
             initBindings(bindings, player);

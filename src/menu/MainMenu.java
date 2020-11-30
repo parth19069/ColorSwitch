@@ -102,7 +102,7 @@ public class MainMenu extends Application {
         newGameButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
-                newGame(primaryStage);
+                newGame(primaryStage, false);
             }
         });
         resumeButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -131,13 +131,13 @@ public class MainMenu extends Application {
         menuRoot.getChildren().add(c5);
         menuRoot.getChildren().add(c3);
         menuRoot.getChildren().add(c1);
-        obs.quickSetup(menuRoot, 6000, bindings, player, false, false);
-        obs1.quickSetup(menuRoot, 6000, bindings, player, false, false);
-        obs2.quickSetup(menuRoot, 6000, bindings, player, false, false);
-        obs3.quickSetup(menuRoot, 6000, bindings, player, false, false);
-        obs4.quickSetup(menuRoot, 6000, bindings, player, false, false);
-        obs5.quickSetup(menuRoot,6000,bindings,player,false, false);
-        obs6.quickSetup(menuRoot,6000,bindings,player,false, false);
+        obs.quickSetup(menuRoot, 6000, bindings, player, false, false, false, false);
+        obs1.quickSetup(menuRoot, 6000, bindings, player, false, false, false, false);
+        obs2.quickSetup(menuRoot, 6000, bindings, player, false, false, false, false);
+        obs3.quickSetup(menuRoot, 6000, bindings, player, false, false, false, false);
+        obs4.quickSetup(menuRoot, 6000, bindings, player, false, false, false, false);
+        obs5.quickSetup(menuRoot,6000,bindings,player,false, false, false, false);
+        obs6.quickSetup(menuRoot,6000,bindings,player,false, false, false, false);
 
         Scene menuScene = new Scene(menuRoot, 800,800);
         menuScene.setFill(Color.rgb(41, 41, 41));
@@ -145,7 +145,7 @@ public class MainMenu extends Application {
         primaryStage.show();
 
     }
-    public void resumeGame(Stage pms){
+    public void resumeGame(Stage primaryStage){
         Button exitToMain = new Button("Return to main menu");
         Button loadGame = new Button("Load Game");
         exitToMain.setLayoutX(350);
@@ -160,7 +160,7 @@ public class MainMenu extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    start(pms);
+                    start(primaryStage);
                 }
                 catch(Exception e){
                 }
@@ -169,7 +169,7 @@ public class MainMenu extends Application {
         loadGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                pms.hide();
+                primaryStage.hide();
                 Button slot1 = new Button("Slot1");
                 Button slot2 = new Button("Slot2");
                 Button slot3 = new Button("Slot3");
@@ -185,11 +185,21 @@ public class MainMenu extends Application {
                 slot1.setFocusTraversable(false);
                 slot2.setFocusTraversable(false);
                 slot3.setFocusTraversable(false);
-
+                Group loadGameGroup = new Group();
+                loadGameGroup.getChildren().add(slot1);
+                loadGameGroup.getChildren().add(slot2);
+                loadGameGroup.getChildren().add(slot3);
+                Stage loadGameStage = new Stage();
+                Scene loadGameScene = new Scene(loadGameGroup,800, 800);
+                loadGameScene.setFill(Color.rgb(41,41,41));
+                loadGameStage.setTitle("Load Game");
+                loadGameStage.setScene(loadGameScene);
+                loadGameStage.show();
                 slot1.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-
+                        newGame(primaryStage, true);
+                        loadGameStage.hide();
                     }
                 });
                 slot2.setOnAction(new EventHandler<ActionEvent>() {
@@ -204,17 +214,6 @@ public class MainMenu extends Application {
 
                     }
                 });
-                Group loadGameGroup = new Group();
-                loadGameGroup.getChildren().add(slot1);
-                loadGameGroup.getChildren().add(slot2);
-                loadGameGroup.getChildren().add(slot3);
-                Stage loadGameStage = new Stage();
-                Scene loadGameScene = new Scene(loadGameGroup,800, 800);
-                loadGameScene.setFill(Color.rgb(41,41,41));
-                loadGameStage.setTitle("Load Game");
-                loadGameStage.setScene(loadGameScene);
-                loadGameStage.show();
-
             }
         });
 
@@ -222,12 +221,12 @@ public class MainMenu extends Application {
         root2.getChildren().add(loadGame);
         Scene scene2 = new Scene(root2, 800,540);
         scene2.setFill(Color.rgb(41,41,41));
-        pms.setScene(scene2);
-        pms.show();
+        primaryStage.setScene(scene2);
+        primaryStage.show();
     }
-    public void newGame(Stage primaryStage){
-        Main m = new Main();
-        m.game(primaryStage);
+    public void newGame(Stage primaryStage, boolean isLoaded){
+        Main mainGame = new Main();
+        mainGame.game(primaryStage, isLoaded);
     }
     public void exitGame(){
         System.exit(0);

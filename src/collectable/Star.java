@@ -16,29 +16,28 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import mainPackage.Main;
+import obstacles.Obstacle;
 import playerinfo.Player;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 public class Star extends Collectable{
-    Polygon star;
-
+    private Polygon star;
+    private Obstacle obstacle;
     public Star(){
         star = null;
     }
-    public void setCollectable(int centreX, int centreY, Group root, ArrayList<BooleanBinding> bindings, Player player){
+    @Override
+    public void setCollectable(int centreX, int centreY, Group root, ArrayList<BooleanBinding> bindings, Player player, Obstacle obstacle){
         double points[] = {5, -10, 20, -60, 35, -10, 0, -40, 40, -40};
-        for(int i = 0; i < points.length; i++){
-//            if(i % 2 == 0) points[i] += 200;
-//            else points[i] += 200;
-        }
         if(star != null) root.getChildren().remove(star);
         star = new Polygon(points);
         star.setScaleX(1.3);
         star.setFill(Color.WHITE);
         star.setLayoutX(centreX - 20);
         star.setLayoutY(centreY + 40);
+        this.obstacle = obstacle;
 
         setRoot(root);
         root.getChildren().add(star);
@@ -67,6 +66,7 @@ public class Star extends Collectable{
                     System.out.println("IN STAR");
                     Main.numberOfStars++;
                     Main.obstacleShiftCounter++;
+                    obstacle.setStarPresent(false);
                     System.out.println("Number of stars is " + Main.numberOfStars);
                 }
             }
