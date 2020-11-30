@@ -1,5 +1,6 @@
 package mainPackage;
 
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
@@ -26,8 +27,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.Callable;
-
 import playerinfo.*;
+
 
 public class Main extends Application implements Pauseable{
     public static int numberOfStars, obstacleShiftCounter, obstacleShiftCounterValue;
@@ -116,7 +117,7 @@ public class Main extends Application implements Pauseable{
                                 System.out.println(saveInitialTranslates);
                                 Data saveData = new Data(saveInitialTranslates, saveObstacles, saveInitialTransform, (int)sub.getLayoutY(), (int)player.getIcon().getCenterX(), (int)player.getIcon().getCenterY(), getColorCode(player.getColor()));
                                 try{
-                                    FileOutputStream outputStream = new FileOutputStream("/home/parth20/Desktop/ColorSwitchData/slot1.ser");
+                                    FileOutputStream outputStream = new FileOutputStream("/Users/sjohari/Desktop/slot1.ser");
                                     ObjectOutputStream out = new ObjectOutputStream(outputStream);
                                     out.writeObject(saveData);
                                     out.close();
@@ -174,7 +175,7 @@ public class Main extends Application implements Pauseable{
         colorCode = new ArrayList<Color>();
         loadData = new Data(new ArrayList<Double>(), new ArrayList<Integer>(), new ArrayList<Double>(), 0, 400, 750, 0);
         try{
-            FileInputStream inputStream = new FileInputStream("/home/parth20/Desktop/ColorSwitchData/slot1.ser");
+            FileInputStream inputStream = new FileInputStream("/Users/sjohari/Desktop/slot1.ser");
             ObjectInputStream in = new ObjectInputStream(inputStream);
             System.out.println("working");
             loadData = (Data) in.readObject();

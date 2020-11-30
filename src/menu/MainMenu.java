@@ -51,12 +51,12 @@ public class MainMenu extends Application {
         /*
         Obstacle and player declarations
          */
-        Obstacle obs = new RingObstacle(160, 560, 70, 22, true, new Translate(), 0);
+        Obstacle obs = new RingObstacle(160, 560, 70, 22, true, new Translate(),0);
         Obstacle obs1 = new RingObstacle(640, 560, 70, 22, false, new Translate(), 0);
 
-        Obstacle obs2 = new ConcentricRingObstacle(400, 560, 100, 22, 2, true, true, new Translate(), 0);
-        Obstacle obs3 = new RingObstacle(347, 107, 23, 8, true, new Translate(), 0);
-        Obstacle obs4 = new RingObstacle(475, 107, 23, 8, false, new Translate(), 0);
+        Obstacle obs2 = new ConcentricRingObstacle(400, 560, 100, 22, 2, true, true, new Translate(),0);
+        Obstacle obs3 = new RingObstacle(347, 107, 23, 8, true, new Translate(),0);
+        Obstacle obs4 = new RingObstacle(475, 107, 23, 8, false, new Translate(),0);
         Obstacle obs5 = new PlusObstacle(120,150,80,17,true,new Translate());
         Obstacle obs6 = new PlusObstacle(680,150,80,17,false,new Translate());
         player = new Player(400, 750, 15, null);
@@ -166,6 +166,58 @@ public class MainMenu extends Application {
                 }
             }
         });
+        loadGame.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                pms.hide();
+                Button slot1 = new Button("Slot1");
+                Button slot2 = new Button("Slot2");
+                Button slot3 = new Button("Slot3");
+                slot1.setLayoutX(350);
+                slot1.setLayoutY(100);
+                slot2.setLayoutX(350);
+                slot2.setLayoutY(150);
+                slot3.setLayoutX(350);
+                slot3.setLayoutY(200);
+                slot1.setMaxSize(300,350);
+                slot2.setMaxSize(300,350);
+                slot3.setMaxSize(300,350);
+                slot1.setFocusTraversable(false);
+                slot2.setFocusTraversable(false);
+                slot3.setFocusTraversable(false);
+
+                slot1.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+
+                    }
+                });
+                slot2.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+
+                    }
+                });
+                slot3.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+
+                    }
+                });
+                Group loadGameGroup = new Group();
+                loadGameGroup.getChildren().add(slot1);
+                loadGameGroup.getChildren().add(slot2);
+                loadGameGroup.getChildren().add(slot3);
+                Stage loadGameStage = new Stage();
+                Scene loadGameScene = new Scene(loadGameGroup,800, 800);
+                loadGameScene.setFill(Color.rgb(41,41,41));
+                loadGameStage.setTitle("Load Game");
+                loadGameStage.setScene(loadGameScene);
+                loadGameStage.show();
+
+            }
+        });
+
         Group root2 = new Group(exitToMain);
         root2.getChildren().add(loadGame);
         Scene scene2 = new Scene(root2, 800,540);
