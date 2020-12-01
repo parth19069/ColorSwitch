@@ -25,6 +25,7 @@ import javafx.event.EventHandler;
 import javafx.util.Duration;
 import javafx.util.converter.NumberStringConverter;
 import menu.MainMenu;
+import menu.RestartMenu;
 import obstacles.*;
 
 import java.io.*;
@@ -79,7 +80,7 @@ public class Main extends Application implements Pauseable{
     }
     public void game (Stage gameStage, boolean loaded, String slot){
         this.isLoaded = loaded;
-        savePath = "/home/parth20/Desktop/";
+        savePath = "/Users/sjohari/Desktop/";
         saveSlot = slot;
         finalPath = savePath + slot;
         Button pauseButton = new Button("Pause");
@@ -311,8 +312,10 @@ public class Main extends Application implements Pauseable{
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        MainMenu mainmenu = new MainMenu();
-        mainmenu.start(primaryStage);
+//        MainMenu mainmenu = new MainMenu();
+//        mainmenu.start(primaryStage);
+        RestartMenu restartMenu = new RestartMenu();
+        restartMenu.start(primaryStage);
 
     }
 
