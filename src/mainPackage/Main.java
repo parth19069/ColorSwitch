@@ -1,6 +1,8 @@
 package mainPackage;
 
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
@@ -8,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
@@ -19,10 +23,12 @@ import javafx.scene.transform.Translate;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
+import javafx.util.converter.NumberStringConverter;
 import menu.MainMenu;
 import obstacles.*;
 
 import java.io.*;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -43,7 +49,6 @@ public class Main extends Application implements Pauseable{
     private Group root;
     private Group sub;
     private ArrayList<Pauseable> pauseables;
-//    private BoxBlur blur;
     private Timeline timeline;
     private double obsYTranslate;
     private BooleanBinding starsBinding;
@@ -55,6 +60,8 @@ public class Main extends Application implements Pauseable{
     private ArrayList<Obstacle> obstaclesOrderList;
     private Data loadData;
     private boolean isLoaded;
+    private Text starText;
+    private IntegerProperty starsProperty;
     public int getColorCode(Color color){
         int code = -1;
         int idx = 0;
@@ -83,13 +90,6 @@ public class Main extends Application implements Pauseable{
         pauseButton.setFocusTraversable(false);
         obstaclesOrderList = new ArrayList<Obstacle>();
         obstacles = new ArrayList<Obstacle>();
-//        saveObstacles = new ArrayList<Integer>();
-//        obstacles = new ArrayList<Obstacle>();
-//        saveInitialTransform = new ArrayList<Double>();
-//        saveInitialTranslates = new ArrayList<Double>();
-//        obstaclesOrderList = new ArrayList<Obstacle>();
-//        saveChangerStatus = new ArrayList<Boolean>();
-//        saveStarStatus = new ArrayList<Boolean>();
         createObstaclesOrderList();
 
 
@@ -229,6 +229,18 @@ public class Main extends Application implements Pauseable{
         if(loadData.getInitialTranslates().size() != 0)obsYTranslate = loadData.getInitialTranslates().get(0);
         numberOfStars = loadData.getNumberOfStars();
         obstacleShiftCounter = loadData.getObstacleShiftCounter();
+
+        starText = new Text(20, 60, Integer.toString(numberOfStars));
+        starText.setFont(Font.font("Roboto", 60));
+        starText.setFill(Color.WHITE);
+//        starsProperty = new SimpleIntegerProperty(numberOfStars);
+//        starText.textProperty().bind(Bindings.convert(starsProperty));
+        Timeline updateStarCountOnScreen = new Timeline(new KeyFrame(Duration.millis(10), (ActionEvent e) -> {
+            starText.setText(Integer.toString(numberOfStars));
+        }));
+        updateStarCountOnScreen.setCycleCount(Timeline.INDEFINITE);
+        updateStarCountOnScreen.play();
+
         System.out.println("After loading: " + obsYTranslate);
         rand = new Random();
         translateSub = new Translate();
@@ -239,13 +251,6 @@ public class Main extends Application implements Pauseable{
         colorCode.add(Color.YELLOW);
         colorCode.add(Color.rgb(250, 22, 151));
         player = new Player(loadData.getPlayerX(), loadData.getPlayerY(), 15, null);
-//        int si = pauseables.size();
-//        for(int i = 0; i < si; i++){
-//            Obstacle ob = (Obstacle)pauseables.get(i);
-//            pauseables.add(ob.getColorChanger());
-//        }
-//        pauseables.add(player);
-//        pauseables.add(this);
 
         player.setColor(getColor(loadData.getPlayerColor()));
         root = new Group();
@@ -265,6 +270,7 @@ public class Main extends Application implements Pauseable{
         root.getChildren().add(player.getIcon());
         root.getChildren().add(sub);
         root.getChildren().add(pauseButton);
+        root.getChildren().add(starText);
         System.out.println(root + " " + sub);
 
         scene = new Scene(root, 800, 1000);
@@ -323,9 +329,16 @@ public class Main extends Application implements Pauseable{
             player.getTimeline().stop();
             player.getTimeline().getKeyFrames().clear();
             player.getTimeline().setCycleCount(1);
-            player.getTimeline().getKeyFrames().addAll(new KeyFrame(Duration.millis(300), new KeyValue(player.getIcon().centerYProperty(), temp - 120, interpolator)), new KeyFrame(Duration.millis((1100 - player.getIcon().getCenterY()) * 3), new KeyValue(player.getIcon().centerYProperty(), 1000, Interpolator.LINEAR)));
+            player.getTimeline().getKeyFrames().addAll(new KeyFrame(Duration.millis(300), new KeyValue(player.getIcon().centerYProperty(), temp - 120, interpolator)));
 //                timeline.getKeyFrames().addAll(new KeyFrame(Duration.millis(300), new KeyValue(player.getIcon().centerYProperty(),temp - 20, interpolator)));
             player.getTimeline().play();
+            player.getTimeline().setOnFinished(actionEvent -> {
+                player.getTimeline().stop();
+                player.getTimeline().getKeyFrames().clear();
+                player.getTimeline().setCycleCount(1);
+                player.getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis((1100 - player.getIcon().getCenterY()) * 3), new KeyValue(player.getIcon().centerYProperty(), 1000, interpolator)));
+                player.getTimeline().play();
+            });
         }
         else{
             player.getTimeline().stop();
@@ -366,8 +379,6 @@ public class Main extends Application implements Pauseable{
         /*
         Add any new obstacle here. Everything else is taken care of.
          */
-//        player = new Player(400, 900, 15, null);
-//        player.setColor(Color.CYAN);
         if(isLoaded && loadData.isSaved()){
             ArrayList<Integer> indices = loadData.getIndices();
             ArrayList<Double> transformState = loadData.getInitialTransforms();
@@ -383,7 +394,6 @@ public class Main extends Application implements Pauseable{
                 obstacles.get(obstacles.size() - 1).setSpecialValue(transformState.get(i));
                 obstacles.get(obstacles.size() - 1).setChangerPresent(changerStatus.get(i));
                 obstacles.get(obstacles.size() - 1).setStarPresent(starStatus.get(i));
-//                obstacles.get(obstacles.size() - 1).setYTranslate(translateY.get(i));
             }
         }
 
@@ -437,25 +447,25 @@ public class Main extends Application implements Pauseable{
         System.out.println(obsYTranslate);
     }
     public void createObstaclesOrderList(){
-        obstaclesOrderList.add(new RingObstacle(400, 300, 10, 30, true, new Translate(),0));
-        obstaclesOrderList.add(new RingObstacle(400, 300, 20, 30, true, new Translate(),0));
-        obstaclesOrderList.add(new RingObstacle(400, 300, 30, 30, true, new Translate(),0));
-        obstaclesOrderList.add(new RingObstacle(400, 300, 40, 30, true, new Translate(),0));
-        obstaclesOrderList.add(new RingObstacle(400, 300, 50, 30, true, new Translate(),0));
-        obstaclesOrderList.add(new RingObstacle(400, 300, 60, 30, true, new Translate(),0));
-        obstaclesOrderList.add(new RingObstacle(400, 300, 70, 30, true, new Translate(),0));
-        obstaclesOrderList.add(new RingObstacle(400, 300, 80, 30, true, new Translate(),0));
-        obstaclesOrderList.add(new RingObstacle(400, 300, 90, 30, true, new Translate(),0));
-        obstaclesOrderList.add(new RingObstacle(400, 300, 100, 30, true, new Translate(),0));
-//        obstaclesOrderList.add(new LineObstacle(800, 300, 30,  true, new Translate(), 0));
-//        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
-//        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 2, true, true, new Translate(), 45));
-//        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 3, false, true, new Translate(), 45));
-//        obstaclesOrderList.add(new PlusObstacle(200, 300, 190, 30, false, new Translate()));
-//        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
-//        obstaclesOrderList.add(new SquareObstacle(400, 300, 90, 20, true , new Translate()));
-//        obstaclesOrderList.add(new RingObstacle(400, 300, 190, 30, true, new Translate(), 0));
-//        obstaclesOrderList.add(new SquareObstacle(400, 300, 90, 20, true , new Translate()));
+//        obstaclesOrderList.add(new RingObstacle(400, 300, 10, 30, true, new Translate(),0));
+//        obstaclesOrderList.add(new RingObstacle(400, 300, 20, 30, true, new Translate(),0));
+//        obstaclesOrderList.add(new RingObstacle(400, 300, 30, 30, true, new Translate(),0));
+//        obstaclesOrderList.add(new RingObstacle(400, 300, 40, 30, true, new Translate(),0));
+//        obstaclesOrderList.add(new RingObstacle(400, 300, 50, 30, true, new Translate(),0));
+//        obstaclesOrderList.add(new RingObstacle(400, 300, 60, 30, true, new Translate(),0));
+//        obstaclesOrderList.add(new RingObstacle(400, 300, 70, 30, true, new Translate(),0));
+//        obstaclesOrderList.add(new RingObstacle(400, 300, 80, 30, true, new Translate(),0));
+//        obstaclesOrderList.add(new RingObstacle(400, 300, 90, 30, true, new Translate(),0));
+//        obstaclesOrderList.add(new RingObstacle(400, 300, 100, 30, true, new Translate(),0));
+        obstaclesOrderList.add(new LineObstacle(800, 300, 30,  true, new Translate(), 0));
+        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
+        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 2, true, true, new Translate(), 45));
+        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 3, false, true, new Translate(), 45));
+        obstaclesOrderList.add(new PlusObstacle(200, 300, 190, 30, false, new Translate()));
+        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
+        obstaclesOrderList.add(new SquareObstacle(400, 300, 190, 30, true , new Translate()));
+        obstaclesOrderList.add(new RingObstacle(400, 300, 190, 30, true, new Translate(), 0));
+        obstaclesOrderList.add(new SquareObstacle(400, 300, 90, 20, true , new Translate()));
         if(!isLoaded) {
             for (Obstacle obs : obstaclesOrderList) {
                 obstacles.add(obs);
