@@ -102,7 +102,53 @@ public class MainMenu extends Application {
         newGameButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
-                newGame(primaryStage, false);
+//                newGame(primaryStage, false);
+
+                Stage slotsStage = new Stage();
+                primaryStage.hide();
+                Button saveSlot1 = new Button("Save Slot1");
+                Button saveSlot2 = new Button("Save Slot2");
+                Button saveSlot3 = new Button("Save Slot3");
+                saveSlot1.setLayoutX(350);
+                saveSlot1.setLayoutY(100);
+                saveSlot2.setLayoutX(350);
+                saveSlot2.setLayoutY(150);
+                saveSlot3.setLayoutX(350);
+                saveSlot3.setLayoutY(200);
+                saveSlot1.setMaxSize(300,350);
+                saveSlot2.setMaxSize(300,350);
+                saveSlot3.setMaxSize(300,350);
+                saveSlot1.setFocusTraversable(false);
+                saveSlot2.setFocusTraversable(false);
+                saveSlot3.setFocusTraversable(false);
+                saveSlot1.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+
+                    }
+                });
+                saveSlot2.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+
+                    }
+                });
+                saveSlot3.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+
+                    }
+                });
+                Group slotSaveGroup = new Group();
+                slotSaveGroup.getChildren().add(saveSlot1);
+                slotSaveGroup.getChildren().add(saveSlot2);
+                slotSaveGroup.getChildren().add(saveSlot3);
+                Scene slotSaveScene = new Scene(slotSaveGroup, 800,800);
+                slotSaveScene.setFill(Color.rgb(41,41,41));
+                slotsStage.setTitle("Slot Stage");
+                slotsStage.setScene(slotSaveScene);
+                slotsStage.show();
+
             }
         });
         resumeButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -232,4 +278,3 @@ public class MainMenu extends Application {
         System.exit(0);
     }
 }
-

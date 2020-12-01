@@ -32,7 +32,7 @@ import playerinfo.*;
 
 public class Main extends Application implements Pauseable{
     public static int numberOfStars, obstacleShiftCounter, obstacleShiftCounterValue;
-    public static String savePath = "/home/parth20/Desktop/slot1.ser";
+    public static String savePath = "/Users/sjohari/Desktop/slot1.ser";
     private ArrayList<BooleanBinding> bindings;
     private Player player;
     private ArrayList<Color> colorCode;
@@ -94,21 +94,21 @@ public class Main extends Application implements Pauseable{
                 try {
                     Stage pauseStage = new Stage();
                     enableBlur(true);
-                    Button exitToMain = new Button("Save and Exit");
+                    Button saveAndExit = new Button("Save and Exit");
                     Button resumeGame = new Button("Resume game");
                     resumeGame.setLayoutX(350);
                     resumeGame.setLayoutY(345);
                     resumeGame.setMaxSize(150,250);
                     resumeGame.setFocusTraversable(false);
-                    exitToMain.setLayoutX(350);
-                    exitToMain.setLayoutY(415);
-                    exitToMain.setMaxSize(150,250);
-                    exitToMain.setFocusTraversable(false);
+                    saveAndExit.setLayoutX(350);
+                    saveAndExit.setLayoutY(415);
+                    saveAndExit.setMaxSize(150,250);
+                    saveAndExit.setFocusTraversable(false);
                     for(Pauseable pauseable: pauseables){
                         pauseable.pause();
                     }
 
-                    exitToMain.setOnAction(new EventHandler<ActionEvent>(){
+                    saveAndExit.setOnAction(new EventHandler<ActionEvent>(){
                         @Override
                         public void handle(ActionEvent event) {
                             try {
@@ -160,7 +160,7 @@ public class Main extends Application implements Pauseable{
                         }
                     });
                     Group tempRoot = new Group();
-                    tempRoot.getChildren().add(exitToMain);
+                    tempRoot.getChildren().add(saveAndExit);
                     tempRoot.getChildren().add(resumeGame);
                     Scene s = new Scene(tempRoot, 800,800);
                     s.setFill(Color.rgb(41,41,41));
