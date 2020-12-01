@@ -32,7 +32,7 @@ import playerinfo.*;
 
 public class Main extends Application implements Pauseable{
     public static int numberOfStars, obstacleShiftCounter, obstacleShiftCounterValue;
-    public static String savePath = "/Users/sjohari/Desktop/slot1.ser";
+    private String savePath, saveSlot, finalPath;
     private ArrayList<BooleanBinding> bindings;
     private Player player;
     private ArrayList<Color> colorCode;
@@ -70,21 +70,26 @@ public class Main extends Application implements Pauseable{
     public Color getColor(int code){
         return colorCode.get(code);
     }
-    public void game (Stage gameStage, boolean loaded){
+    public void game (Stage gameStage, boolean loaded, String slot){
         this.isLoaded = loaded;
+        savePath = "/home/parth20/Desktop/";
+        saveSlot = slot;
+        finalPath = savePath + slot;
         Button pauseButton = new Button("Pause");
         pauseButton.setFocusTraversable(false);
         pauseButton.setMaxSize(100,200);
         pauseButton.setLayoutY(20);
         pauseButton.setLayoutX(700);
         pauseButton.setFocusTraversable(false);
-        saveObstacles = new ArrayList<Integer>();
-        obstacles = new ArrayList<Obstacle>();
-        saveInitialTransform = new ArrayList<Double>();
-        saveInitialTranslates = new ArrayList<Double>();
         obstaclesOrderList = new ArrayList<Obstacle>();
-        saveChangerStatus = new ArrayList<Boolean>();
-        saveStarStatus = new ArrayList<Boolean>();
+        obstacles = new ArrayList<Obstacle>();
+//        saveObstacles = new ArrayList<Integer>();
+//        obstacles = new ArrayList<Obstacle>();
+//        saveInitialTransform = new ArrayList<Double>();
+//        saveInitialTranslates = new ArrayList<Double>();
+//        obstaclesOrderList = new ArrayList<Obstacle>();
+//        saveChangerStatus = new ArrayList<Boolean>();
+//        saveStarStatus = new ArrayList<Boolean>();
         createObstaclesOrderList();
 
 
@@ -94,24 +99,37 @@ public class Main extends Application implements Pauseable{
                 try {
                     Stage pauseStage = new Stage();
                     enableBlur(true);
-                    Button saveAndExit = new Button("Save and Exit");
+                    Button saveGame = new Button("Save");
                     Button resumeGame = new Button("Resume game");
+                    Button exitGame = new Button("Exit");
                     resumeGame.setLayoutX(350);
                     resumeGame.setLayoutY(345);
                     resumeGame.setMaxSize(150,250);
                     resumeGame.setFocusTraversable(false);
-                    saveAndExit.setLayoutX(350);
-                    saveAndExit.setLayoutY(415);
-                    saveAndExit.setMaxSize(150,250);
-                    saveAndExit.setFocusTraversable(false);
+
+                    saveGame.setLayoutX(350);
+                    saveGame.setLayoutY(415);
+                    saveGame.setMaxSize(150,250);
+                    saveGame.setFocusTraversable(false);
+
+                    exitGame.setLayoutX(350);
+                    exitGame.setLayoutY(485);
+                    exitGame.setMaxSize(150,250);
+                    exitGame.setFocusTraversable(false);
+
                     for(Pauseable pauseable: pauseables){
                         pauseable.pause();
                     }
 
-                    saveAndExit.setOnAction(new EventHandler<ActionEvent>(){
+                    saveGame.setOnAction(new EventHandler<ActionEvent>(){
                         @Override
                         public void handle(ActionEvent event) {
                             try {
+                                saveObstacles = new ArrayList<Integer>();
+                                saveInitialTransform = new ArrayList<Double>();
+                                saveInitialTranslates = new ArrayList<Double>();
+                                saveChangerStatus = new ArrayList<Boolean>();
+                                saveStarStatus = new ArrayList<Boolean>();
                                 for(Obstacle obs: obstacles){
                                     saveObstacles.add(obstaclesOrderList.indexOf(obs));
                                     saveInitialTransform.add(obs.getSpecialValue());
@@ -124,20 +142,30 @@ public class Main extends Application implements Pauseable{
                                 System.out.println(saveInitialTranslates);
                                 Data saveData = new Data(saveInitialTranslates, saveObstacles, saveChangerStatus, saveStarStatus, saveInitialTransform, (int)sub.getLayoutY(), (int)player.getIcon().getCenterX(), (int)player.getIcon().getCenterY(), getColorCode(player.getColor()), numberOfStars, obstacleShiftCounter);
                                 try{
-                                    FileOutputStream outputStream = new FileOutputStream(savePath);
+                                    FileOutputStream outputStream = new FileOutputStream(finalPath);
                                     ObjectOutputStream out = new ObjectOutputStream(outputStream);
                                     out.writeObject(saveData);
                                     out.close();
                                     outputStream.close();
                                     System.out.println("Data serialized");
                                 }
-                                catch (Exception e){
+                                catch (Exception e) {
 //                                    throw e;
                                 }
+                            }
+                            catch(Exception e){
+
+                            }
+                        }
+                    });
+                    exitGame.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent actionEvent) {
+                            try {
                                 pauseStage.hide();
                                 start(gameStage);
                             }
-                            catch(Exception e){
+                            catch (Exception e){
 
                             }
                         }
@@ -160,8 +188,9 @@ public class Main extends Application implements Pauseable{
                         }
                     });
                     Group tempRoot = new Group();
-                    tempRoot.getChildren().add(saveAndExit);
+                    tempRoot.getChildren().add(exitGame);
                     tempRoot.getChildren().add(resumeGame);
+                    tempRoot.getChildren().add(saveGame);
                     Scene s = new Scene(tempRoot, 800,800);
                     s.setFill(Color.rgb(41,41,41));
                     s.setFill(Color.TRANSPARENT);
@@ -183,7 +212,7 @@ public class Main extends Application implements Pauseable{
         loadData = new Data(new ArrayList<Double>(), new ArrayList<Integer>(), new ArrayList<Boolean>(), new ArrayList<Boolean>(), new ArrayList<Double>(), 0, 400, 750, 0, 0, 0);
         if(isLoaded) {
             try {
-                FileInputStream inputStream = new FileInputStream(savePath);
+                FileInputStream inputStream = new FileInputStream(finalPath);
                 ObjectInputStream in = new ObjectInputStream(inputStream);
                 System.out.println("working");
                 loadData = (Data) in.readObject();

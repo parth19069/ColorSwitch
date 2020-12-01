@@ -124,19 +124,22 @@ public class MainMenu extends Application {
                 saveSlot1.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-
+                        newGame(primaryStage, false, "slot1");
+                        slotsStage.hide();
                     }
                 });
                 saveSlot2.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-
+                        newGame(primaryStage, false, "slot2");
+                        slotsStage.hide();
                     }
                 });
                 saveSlot3.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-
+                        newGame(primaryStage, false, "slot3");
+                        slotsStage.hide();
                     }
                 });
                 Group slotSaveGroup = new Group();
@@ -244,20 +247,22 @@ public class MainMenu extends Application {
                 slot1.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, true);
+                        newGame(primaryStage, true, "slot1");
                         loadGameStage.hide();
                     }
                 });
                 slot2.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-
+                        newGame(primaryStage, true, "slot2");
+                        loadGameStage.hide();
                     }
                 });
                 slot3.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-
+                        newGame(primaryStage, true, "slot3");
+                        loadGameStage.hide();
                     }
                 });
             }
@@ -270,9 +275,9 @@ public class MainMenu extends Application {
         primaryStage.setScene(scene2);
         primaryStage.show();
     }
-    public void newGame(Stage primaryStage, boolean isLoaded){
+    public void newGame(Stage primaryStage, boolean isLoaded, String slot){
         Main mainGame = new Main();
-        mainGame.game(primaryStage, isLoaded);
+        mainGame.game(primaryStage, isLoaded, slot);
     }
     public void exitGame(){
         System.exit(0);
