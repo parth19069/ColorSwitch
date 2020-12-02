@@ -1,11 +1,15 @@
 package menu;
 
+import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -14,6 +18,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import mainPackage.Main;
 import obstacles.ConcentricRingObstacle;
 import obstacles.Obstacle;
@@ -21,6 +26,7 @@ import obstacles.PlusObstacle;
 import obstacles.RingObstacle;
 import playerinfo.Player;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -37,6 +43,7 @@ public class MainMenu extends Application {
     private Group sub;
 
     private Button newGameButton,resumeButton,exitButton;
+
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -83,22 +90,138 @@ public class MainMenu extends Application {
         t2.setFont(Font.font("Roboto",80));
         textFlow.getChildren().add(t2);
 
+        /* Main menu images */
 
-        newGameButton = new Button("New Game");
+        Image img = new Image(new FileInputStream("images/Play-Button-715x715.png"),131,131,true,true);
+        ImageView view = new ImageView(img);
+        view.preserveRatioProperty();
+        Image img2 = new Image(new FileInputStream("images/exit.png"),131,131,true,true);
+        ImageView view2 = new ImageView(img2);
+        view2.preserveRatioProperty();
+        Image img3 = new Image(new FileInputStream("images/resumeButton.png"),131,131,true,true);
+        ImageView view3 = new ImageView(img3);
+        view2.preserveRatioProperty();
+
+        /* New game button Details */
+
+        newGameButton = new Button();
+        newGameButton.setGraphic(view);
+        newGameButton.setShape(new Circle(15));
+        newGameButton.setContentDisplay(ContentDisplay.CENTER);
+        newGameButton.setMaxSize(15,15);
+        newGameButton.setLayoutX(335);
+        newGameButton.setLayoutY(495);
         newGameButton.setFocusTraversable(false);
-        resumeButton= new Button("Resume Game");
+        ScaleTransition st = new ScaleTransition(Duration.millis(150),newGameButton);
+        st.setToX(0.9);
+        st.setToY(0.9);
+        ScaleTransition st1 = new ScaleTransition(Duration.millis(150),newGameButton);
+        st1.setToX(1);
+        st1.setToY(1);
+        newGameButton.setStyle(
+                "-fx-background-radius: 500em; " +
+                        "-fx-min-width: 130px; " +
+                        "-fx-min-height: 130px; " +
+                        "-fx-max-width: 130px; " +
+                        "-fx-max-height: 130px;"+
+                        "-fx-background-color: -fx-shadow-highlight-color;"
+        );
+        newGameButton.setOnMouseEntered(e -> newGameButton.setStyle("-fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;"+
+                "-fx-background-radius: 500em; " +
+                "-fx-min-width: 130px; " +
+                "-fx-min-height: 130px; " +
+                "-fx-max-width: 130px; " +
+                "-fx-max-height: 130px;"));
+        newGameButton.setOnMouseEntered(e -> st.play()) ;
+
+        newGameButton.setOnMouseExited(e -> newGameButton.setStyle("-fx-background-color: -fx-shadow-highlight-color;"+
+                "-fx-background-radius: 500em; " +
+                "-fx-min-width: 130px; " +
+                "-fx-min-height: 130px; " +
+                "-fx-max-width: 130px; " +
+                "-fx-max-height: 130px;"));
+        newGameButton.setOnMouseExited(e -> st1.play()) ;
+
+        /* Resume button Details */
+
+        resumeButton= new Button();
         resumeButton.setFocusTraversable(false);
-        exitButton = new Button("Exit Game");
+        resumeButton.setGraphic(view3);
+        resumeButton.setShape(new Circle(15));
+        resumeButton.setContentDisplay(ContentDisplay.CENTER);
+        resumeButton.setLayoutX(95);
+        resumeButton.setLayoutY(495);
+        ScaleTransition st2 = new ScaleTransition(Duration.millis(150),resumeButton);
+        st2.setToX(0.9);
+        st2.setToY(0.9);
+        ScaleTransition st3 = new ScaleTransition(Duration.millis(150),resumeButton);
+        st3.setToX(1);
+        st3.setToY(1);
+        resumeButton.setStyle(
+                "-fx-background-radius: 500em; " +
+                        "-fx-min-width: 130px; " +
+                        "-fx-min-height: 130px; " +
+                        "-fx-max-width: 130px; " +
+                        "-fx-max-height: 130px;"+
+                        "-fx-background-color: -fx-shadow-highlight-color;"
+        );
+        resumeButton.setOnMouseEntered(e -> resumeButton.setStyle("-fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;"+
+                "-fx-background-radius: 500em; " +
+                "-fx-min-width: 130px; " +
+                "-fx-min-height: 130px; " +
+                "-fx-max-width: 130px; " +
+                "-fx-max-height: 130px;"));
+        resumeButton.setOnMouseEntered(e -> st2.play()); ;
+
+
+        resumeButton.setOnMouseExited(e -> resumeButton.setStyle("-fx-background-color: -fx-shadow-highlight-color;"+
+                "-fx-background-radius: 500em; " +
+                "-fx-min-width: 130px; " +
+                "-fx-min-height: 130px; " +
+                "-fx-max-width: 130px; " +
+                "-fx-max-height: 130px;"));
+        resumeButton.setOnMouseExited(e -> st3.play()); ;
+
+        /* Exit button Details */
+
+        exitButton = new Button();
+        exitButton.setGraphic(view2);
+        exitButton.setShape(new Circle(15));
+        exitButton.setContentDisplay(ContentDisplay.CENTER);
+        exitButton.setMaxSize(15,15);
         exitButton.setFocusTraversable(false);
-        newGameButton.setLayoutX(360);
-        newGameButton.setLayoutY(545);
-        newGameButton.setMaxSize(150,250);
-        resumeButton.setLayoutX(107);
-        resumeButton.setLayoutY(545);
-        resumeButton.setMaxSize(150,250);
-        exitButton.setLayoutX(600);
-        exitButton.setLayoutY(545);
-        exitButton.setMaxSize(150,250);
+        exitButton.setLayoutX(575);
+        exitButton.setLayoutY(495);
+        ScaleTransition st4 = new ScaleTransition(Duration.millis(150),exitButton);
+        st4.setToX(0.9);
+        st4.setToY(0.9);
+        ScaleTransition st5 = new ScaleTransition(Duration.millis(150),exitButton);
+        st5.setToX(1);
+        st5.setToY(1);
+        exitButton.setStyle(
+                "-fx-background-radius: 500em; " +
+                        "-fx-min-width: 130px; " +
+                        "-fx-min-height: 130px; " +
+                        "-fx-max-width: 130px; " +
+                        "-fx-max-height: 130px;"+
+                        "-fx-background-color: -fx-shadow-highlight-color;"
+
+        );
+        exitButton.setOnMouseEntered(e -> exitButton.setStyle("-fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;"+
+                "-fx-background-radius: 500em; " +
+                "-fx-min-width: 130px; " +
+                "-fx-min-height: 130px; " +
+                "-fx-max-width: 130px; " +
+                "-fx-max-height: 130px;")) ;
+        exitButton.setOnMouseEntered(e -> st4.play()) ;
+
+        exitButton.setOnMouseExited(e -> exitButton.setStyle("-fx-background-color: -fx-shadow-highlight-color;"+
+                "-fx-background-radius: 500em; " +
+                "-fx-min-width: 130px; " +
+                "-fx-min-height: 130px; " +
+                "-fx-max-width: 130px; " +
+                "-fx-max-height: 130px;"));
+        exitButton.setOnMouseExited(e -> st5.play()); ;
         newGameButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
@@ -273,11 +396,19 @@ public class MainMenu extends Application {
         Scene scene2 = new Scene(root2, 800,540);
         scene2.setFill(Color.rgb(41,41,41));
         primaryStage.setScene(scene2);
+
         primaryStage.show();
+
+
     }
     public void newGame(Stage primaryStage, boolean isLoaded, String slot){
-        Main mainGame = new Main();
-        mainGame.game(primaryStage, isLoaded, slot);
+        try {
+            Main mainGame = new Main();
+            mainGame.game(primaryStage, isLoaded, slot);
+        }
+        catch(Exception e){
+
+        }
     }
     public void exitGame(){
         System.exit(0);

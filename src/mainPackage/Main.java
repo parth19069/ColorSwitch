@@ -6,9 +6,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.*;
@@ -35,6 +39,7 @@ import playerinfo.*;
 
 
 public class Main extends Application implements Pauseable, Blurrable {
+
     public static int numberOfStars, obstacleShiftCounter, obstacleShiftCounterValue;
     private String savePath, saveSlot, finalPath;
     private ArrayList<BooleanBinding> bindings;
@@ -76,19 +81,57 @@ public class Main extends Application implements Pauseable, Blurrable {
     public Color getColor(int code){
         return colorCode.get(code);
     }
-    public void game (Stage gameStage, boolean loaded, String slot){
+    public void game (Stage gameStage, boolean loaded, String slot) throws Exception{
+
         timeline = new Timeline();
         stage = gameStage;
         this.isLoaded = loaded;
-        savePath = "/home/parth20/Desktop/ColorSwitchData/";
+        savePath = "/Users/sjohari/Desktop/";
         saveSlot = slot;
         finalPath = savePath + slot;
-        Button pauseButton = new Button("Pause");
+
+        Image img = new Image(new FileInputStream("images/pause.png"),73,73,true,true);
+        ImageView view = new ImageView(img);
+        view.preserveRatioProperty();
+        Button pauseButton = new Button();
+        pauseButton.setGraphic(view);
+        pauseButton.setShape(new Circle(15));
+        pauseButton.setContentDisplay(ContentDisplay.CENTER);
+        pauseButton.setMaxSize(15,15);
+        pauseButton.setLayoutY(12);
+        pauseButton.setLayoutX(710);
         pauseButton.setFocusTraversable(false);
-        pauseButton.setMaxSize(100,200);
-        pauseButton.setLayoutY(20);
-        pauseButton.setLayoutX(700);
-        pauseButton.setFocusTraversable(false);
+        ScaleTransition st = new ScaleTransition(Duration.millis(200),pauseButton);
+        st.setToX(0.9);
+        st.setToY(0.9);
+        ScaleTransition st1 = new ScaleTransition(Duration.millis(200),pauseButton);
+        st1.setToX(1);
+        st1.setToY(1);
+        pauseButton.setStyle(
+                "-fx-background-radius: 500em; " +
+                        "-fx-min-width: 65px; " +
+                        "-fx-min-height: 65px; " +
+                        "-fx-max-width: 65px; " +
+                        "-fx-max-height: 65px;"+
+                        "-fx-background-color: -fx-shadow-highlight-color;"
+        );
+        pauseButton.setOnMouseEntered(e -> pauseButton.setStyle("-fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;"+
+                "-fx-background-radius: 500em; " +
+                "-fx-min-width: 65px; " +
+                "-fx-min-height: 65px; " +
+                "-fx-max-width: 65px; " +
+                "-fx-max-height: 65px;"));
+        pauseButton.setOnMouseEntered(e -> st.play()) ;
+
+        pauseButton.setOnMouseExited(e -> pauseButton.setStyle("-fx-background-color: -fx-shadow-highlight-color;"+
+                "-fx-background-radius: 500em; " +
+                "-fx-min-width: 65px; " +
+                "-fx-min-height: 65px; " +
+                "-fx-max-width: 65px; " +
+                "-fx-max-height: 65px;"));
+        pauseButton.setOnMouseExited(e -> st1.play()) ;
+
+
         obstaclesOrderList = new ArrayList<Obstacle>();
         obstacles = new ArrayList<Obstacle>();
         pauseables = new ArrayList<Pauseable>();
@@ -101,23 +144,33 @@ public class Main extends Application implements Pauseable, Blurrable {
                 try {
                     Stage pauseStage = new Stage();
                     enableBlur(true);
-                    Button saveGame = new Button("Save");
-                    Button resumeGame = new Button("Resume game");
+                    Button saveGame = new Button("SAVE");
+                    Button resumeGame = new Button("RESUME GAME");
                     Button exitGame = new Button("Exit");
-                    resumeGame.setLayoutX(350);
-                    resumeGame.setLayoutY(345);
-                    resumeGame.setMaxSize(150,250);
+                    resumeGame.setLayoutX(305);
+                    resumeGame.setLayoutY(325);
+                    resumeGame.setMaxSize(250,350);
                     resumeGame.setFocusTraversable(false);
-
+                    resumeGame.setFont(Font.font("Sans Serif",20));
+                    resumeGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+                    resumeGame.setOnMouseEntered(e -> resumeGame.setStyle("-fx-background-color: green;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+                    resumeGame.setOnMouseExited(e -> resumeGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
                     saveGame.setLayoutX(350);
                     saveGame.setLayoutY(415);
-                    saveGame.setMaxSize(150,250);
+                    saveGame.setMaxSize(250,350);
                     saveGame.setFocusTraversable(false);
-
-                    exitGame.setLayoutX(350);
-                    exitGame.setLayoutY(485);
-                    exitGame.setMaxSize(150,250);
+                    saveGame.setFont(Font.font("Sans Serif",20));
+                    saveGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+                    saveGame.setOnMouseEntered(e -> saveGame.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+                    saveGame.setOnMouseExited(e -> saveGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+                    exitGame.setLayoutX(357);
+                    exitGame.setLayoutY(505);
+                    exitGame.setMaxSize(250,350);
                     exitGame.setFocusTraversable(false);
+                    exitGame.setFont(Font.font("Sans Serif",20));
+                    exitGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+                    exitGame.setOnMouseEntered(e -> exitGame.setStyle("-fx-background-color: #FF0000 ;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+                    exitGame.setOnMouseExited(e -> exitGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
 
                     for(Pauseable pauseable: pauseables){
                         pauseable.pause();
@@ -196,9 +249,11 @@ public class Main extends Application implements Pauseable, Blurrable {
                     tempRoot.getChildren().add(resumeGame);
                     tempRoot.getChildren().add(saveGame);
                     Scene s = new Scene(tempRoot, 800,800);
+
                     s.setFill(Color.rgb(41,41,41));
                     s.setFill(Color.TRANSPARENT);
                     pauseStage.initStyle(StageStyle.TRANSPARENT);
+
                     pauseStage.setScene(s);
 
                     pauseStage.show();
