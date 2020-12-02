@@ -261,7 +261,7 @@ public class MainMenu extends Application {
                 slot3.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, true, "slot3.ser  ");
+                        newGame(primaryStage, true, "slot3.ser");
                         loadGameStage.hide();
                     }
                 });

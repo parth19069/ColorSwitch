@@ -215,6 +215,7 @@ public class Main extends Application implements Pauseable, Blurrable {
         loadData = new Data(new ArrayList<Double>(), new ArrayList<Integer>(), new ArrayList<Boolean>(), new ArrayList<Boolean>(), new ArrayList<Double>(), 0, 400, 750, 0, 0, 0);
         if(isLoaded) {
             try {
+                System.out.println(finalPath);
                 FileInputStream inputStream = new FileInputStream(finalPath);
                 ObjectInputStream in = new ObjectInputStream(inputStream);
                 System.out.println("working");
@@ -509,6 +510,7 @@ public class Main extends Application implements Pauseable, Blurrable {
             out.writeObject(saveData);
             out.close();
             outputStream.close();
+            System.out.println(finalPath);
             System.out.println("Data serialized");
         }
         catch (Exception e) {
