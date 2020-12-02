@@ -33,6 +33,7 @@ public class TangentialRingObstacle extends Obstacle {
         ring2.setYTranslate(y);
     }
     public void showOnNode(Group root){
+        setRoot(root);
         ring1.showOnNode(root);
         ring2.showOnNode(root);
     }
@@ -76,5 +77,17 @@ public class TangentialRingObstacle extends Obstacle {
     public void initBindings(ArrayList<BooleanBinding> bindings, Player player){
         ring1.initBindings(bindings, player);
         ring2.initBindings(bindings, player);
+
+        ring1.setStage(getStage());
+        ring2.setStage(getStage());
+
+        ring1.setPauseables(getPauseables());
+        ring2.setPauseables(getPauseables());
+
+        ring1.setObstacles(getObstacles());
+        ring2.setObstacles(getObstacles());
+
+        ring1.setRootTimeline(getRootTimeline());
+        ring2.setRootTimeline(getRootTimeline());
     }
 }

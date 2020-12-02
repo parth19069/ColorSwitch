@@ -4,13 +4,31 @@ import collectable.ColorChanger;
 import collectable.Star;
 import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanBinding;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import mainPackage.Main;
+import menu.Blurrable;
+import playerinfo.Data;
 import playerinfo.Player;
 
+import java.awt.event.KeyEvent;
+import java.io.*;
 import java.util.ArrayList;
 
-public abstract class Obstacle implements Pauseable {
+import static mainPackage.Main.numberOfStars;
+import static mainPackage.Main.obstacleShiftCounter;
+
+public abstract class Obstacle implements Pauseable, Blurrable {
+    public static boolean alreadyOver;
     private int centreX, centreY;
     private Timeline timeline;
     private Player player;
@@ -19,12 +37,25 @@ public abstract class Obstacle implements Pauseable {
     private Translate initialTranslate;
     private double initialTransformState;
     private ArrayList<String> colorCode;
+    private ArrayList<Color> convertColorCode;
     private boolean changerPresent, starPresent;
+    private ArrayList<Obstacle> obstacles, obstaclesOrderList;
+    private String savePath, saveSlot, saveUser;
+    private ArrayList<Pauseable> pauseables;
+    private Group root;
+    private Stage stage;
+    private Timeline rootTimeline;
+    private Scene scene;
     public Obstacle(int centreX, int centreY){
         this.centreX = centreX;
         this.centreY = centreY;
         colorChanger = new ColorChanger();
         star = new Star();
+        convertColorCode = new ArrayList<Color>();
+        convertColorCode.add(Color.CYAN);
+        convertColorCode.add(Color.PURPLE);
+        convertColorCode.add(Color.YELLOW);
+        convertColorCode.add(Color.rgb(250, 22, 151));
     }
     abstract public void initBindings(ArrayList<BooleanBinding> bindings, Player player);
     abstract public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted, boolean showChanger, boolean showStar);
@@ -47,6 +78,109 @@ public abstract class Obstacle implements Pauseable {
             getStar().getStar().getTransforms().add(getInitialTranslate());
             getStar().initBindings(bindings, player, 0);
             starPresent = true;
+        }
+    }
+    public int getColorCode(Color color){
+        int code = -1;
+        int idx = 0;
+        for(Color c: convertColorCode){
+            if(c.equals(color)){
+                code = idx;
+                break;
+            }
+            idx++;
+        }
+        return code;
+    }
+    public void collision() {
+        try {
+            if(alreadyOver){
+                return;
+            }
+            alreadyOver = true;
+            getStage().hide();
+            for(Pauseable pauseable: pauseables){
+                pauseable.pause();
+            }
+
+            Stage pauseStage = new Stage();
+//            enableBlur(true);
+            Button saveGame = new Button( "Save");
+            Button resumeGame = new Button("Resume using stars");
+            Button exitGame = new Button("Exit");
+            resumeGame.setLayoutX(350);
+            resumeGame.setLayoutY(345);
+            resumeGame.setMaxSize(150,250);
+            resumeGame.setFocusTraversable(false);
+
+            saveGame.setLayoutX(350);
+            saveGame.setLayoutY(415);
+            saveGame.setMaxSize(150,250);
+            saveGame.setFocusTraversable(false);
+
+            exitGame.setLayoutX(350);
+            exitGame.setLayoutY(485);
+            exitGame.setMaxSize(150,250);
+            exitGame.setFocusTraversable(false);
+
+            getPlayer().getTimeline().stop();
+            getPlayer().getTimeline().getKeyFrames().clear();
+            getPlayer().setFall(false);
+
+            Group tempRoot = new Group();
+            tempRoot.getChildren().add(exitGame);
+            tempRoot.getChildren().add(resumeGame);
+            tempRoot.getChildren().add(saveGame);
+            Scene s = new Scene(tempRoot, 800,800);
+            s.setFill(Color.rgb(57, 54, 54));
+//            s.setFill(Color.TRANSPARENT);
+            pauseStage.setScene(s);
+
+            pauseStage.show();
+
+
+
+            resumeGame.setOnAction(new EventHandler<ActionEvent>(){
+                @Override
+                public void handle(ActionEvent event) {
+                    getPlayer().stop();
+                    getPlayer().getTimeline().getKeyFrames().clear();
+                    pauseables.get(0).stop();
+                    rootTimeline.getKeyFrames().clear();
+                    getPlayer().getIcon().setCenterY(getPlayer().getIcon().getCenterY() + 300);
+                    for(Pauseable pauseable: pauseables){
+                        if(pauseable != getPlayer() && pauseable != pauseables.get(0)){
+                            pauseable.start();
+                        }
+                    }
+                    getStage().show();
+                    pauseStage.hide();
+                    alreadyOver = false;
+                }
+            });
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    @Override
+    public void enableBlur(Boolean blurringEffect){
+        ColorAdjust adj;
+        GaussianBlur blur;
+        if(blurringEffect) {
+            adj = new ColorAdjust(0, -0.05, -0.2, 0);
+            blur = new GaussianBlur(2000);
+            adj.setInput(blur);
+            getPlayer().getRoot().setEffect(adj);
+
+        }
+        else{
+            blur = new GaussianBlur(0);
+            adj = new ColorAdjust();
+            adj.setInput(blur);
+            getPlayer().getRoot().setEffect(null);
         }
     }
     public void setPlayer(Player player){
@@ -116,5 +250,83 @@ public abstract class Obstacle implements Pauseable {
 
     public void setChangerPresent(boolean changerPresent) {
         this.changerPresent = changerPresent;
+    }
+
+    public ArrayList<Obstacle> getObstacles() {
+        return obstacles;
+    }
+
+    public void setObstacles(ArrayList<Obstacle> obstacles) {
+        this.obstacles = obstacles;
+    }
+
+    public ArrayList<Pauseable> getPauseables() {
+        return pauseables;
+    }
+
+    public void setPauseables(ArrayList<Pauseable> pauseables) {
+        this.pauseables = pauseables;
+    }
+    public Group getRoot(){
+        return root;
+    }
+    public void setRoot(Group root) {
+        this.root = root;
+    }
+
+    public ArrayList<Obstacle> getObstaclesOrderList() {
+        return obstaclesOrderList;
+    }
+
+    public void setObstaclesOrderList(ArrayList<Obstacle> obstaclesOrderList) {
+        this.obstaclesOrderList = obstaclesOrderList;
+    }
+
+    public String getSavePath() {
+        return savePath;
+    }
+
+    public void setSavePath(String savePath) {
+        this.savePath = savePath;
+    }
+
+    public String getSaveSlot() {
+        return saveSlot;
+    }
+
+    public void setSaveSlot(String saveSlot) {
+        this.saveSlot = saveSlot;
+    }
+
+    public String getSaveUser() {
+        return saveUser;
+    }
+
+    public void setSaveUser(String saveUser) {
+        this.saveUser = saveUser;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public Timeline getRootTimeline() {
+        return rootTimeline;
+    }
+
+    public void setRootTimeline(Timeline rootTimeline) {
+        this.rootTimeline = rootTimeline;
+    }
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
     }
 }

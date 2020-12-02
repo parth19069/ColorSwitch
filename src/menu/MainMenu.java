@@ -124,21 +124,21 @@ public class MainMenu extends Application {
                 saveSlot1.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, false, "slot1");
+                        newGame(primaryStage, false, "slot1.ser");
                         slotsStage.hide();
                     }
                 });
                 saveSlot2.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, false, "slot2");
+                        newGame(primaryStage, false, "slot2.ser");
                         slotsStage.hide();
                     }
                 });
                 saveSlot3.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, false, "slot3");
+                        newGame(primaryStage, false, "slot3.ser");
                         slotsStage.hide();
                     }
                 });
@@ -247,21 +247,21 @@ public class MainMenu extends Application {
                 slot1.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, true, "slot1");
+                        newGame(primaryStage, true, "slot1.ser");
                         loadGameStage.hide();
                     }
                 });
                 slot2.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, true, "slot2");
+                        newGame(primaryStage, true, "slot2.ser");
                         loadGameStage.hide();
                     }
                 });
                 slot3.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, true, "slot3");
+                        newGame(primaryStage, true, "slot3.ser  ");
                         loadGameStage.hide();
                     }
                 });
