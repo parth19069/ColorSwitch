@@ -232,18 +232,35 @@ public class MainMenu extends Application {
                 Button saveSlot1 = new Button("Save Slot1");
                 Button saveSlot2 = new Button("Save Slot2");
                 Button saveSlot3 = new Button("Save Slot3");
-                saveSlot1.setLayoutX(350);
+                saveSlot1.setLayoutX(220);
                 saveSlot1.setLayoutY(100);
-                saveSlot2.setLayoutX(350);
-                saveSlot2.setLayoutY(150);
-                saveSlot3.setLayoutX(350);
-                saveSlot3.setLayoutY(200);
-                saveSlot1.setMaxSize(300,350);
-                saveSlot2.setMaxSize(300,350);
-                saveSlot3.setMaxSize(300,350);
+                saveSlot1.setPrefWidth(350);
+                saveSlot1.setPrefHeight(80);
+                saveSlot2.setLayoutX(220);
+                saveSlot2.setLayoutY(200);
+                saveSlot2.setPrefWidth(350);
+                saveSlot2.setPrefHeight(80);
+                saveSlot3.setLayoutX(220);
+                saveSlot3.setLayoutY(300);
+                saveSlot3.setPrefWidth(350);
+                saveSlot3.setPrefHeight(80);
                 saveSlot1.setFocusTraversable(false);
                 saveSlot2.setFocusTraversable(false);
                 saveSlot3.setFocusTraversable(false);
+                saveSlot1.setFont(Font.font("Sans Serif",20));
+                saveSlot1.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+                saveSlot1.setOnMouseEntered(e -> saveSlot1.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+                saveSlot1.setOnMouseExited(e -> saveSlot1.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+                saveSlot2.setFont(Font.font("Sans Serif",20));
+                saveSlot2.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+                saveSlot2.setOnMouseEntered(e -> saveSlot2.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+                saveSlot2.setOnMouseExited(e -> saveSlot2.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+                saveSlot3.setFont(Font.font("Sans Serif",20));
+                saveSlot3.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+                saveSlot3.setOnMouseEntered(e -> saveSlot3.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+                saveSlot3.setOnMouseExited(e -> saveSlot3.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+
+
                 saveSlot1.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
