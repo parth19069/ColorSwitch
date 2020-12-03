@@ -84,13 +84,6 @@ public class ConcentricRingObstacle extends Obstacle {
         }
         if(showCollectables) {
             setColorChanger();
-//            getColorChanger().setCollectable(getCentreX(), getCentreY() + rings.get(0).getRadius() + 100, root, bindings, player);
-//            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
-//
-//            getStar().setCollectable(getCentreX(), getCentreY(), root, bindings, player);
-//            getStar().initBindings(bindings, player, 0);
-//            getStar().getStar().getTransforms().add(getInitialTranslate());
-
             setCollectables(getCentreX(), getCentreY() + rings.get(0).getRadius() + 100, getCentreX(), getCentreY(), player, bindings, root, showChanger, showStar);
         }
         if(!isShifted) {

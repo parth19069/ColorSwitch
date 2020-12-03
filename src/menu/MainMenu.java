@@ -225,8 +225,6 @@ public class MainMenu extends Application {
         newGameButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
-//                newGame(primaryStage, false);
-
                 Stage slotsStage = new Stage();
                 primaryStage.hide();
                 Button saveSlot1 = new Button("Save Slot1");
@@ -291,7 +289,6 @@ public class MainMenu extends Application {
                 slotsStage.setTitle("Slot Stage");
                 slotsStage.setScene(slotSaveScene);
                 slotsStage.show();
-
             }
         });
         resumeButton.setOnAction(new EventHandler<ActionEvent>() {

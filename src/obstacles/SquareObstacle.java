@@ -146,12 +146,6 @@ public class SquareObstacle extends Obstacle{
             setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         }
         if(showCollectables) {
-//            getColorChanger().setCollectable(400, getCentreY() + radius + 200, root, bindings, player);
-//            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
-//
-//            getStar().setCollectable(400, getCentreY(), root, bindings, player);
-//            getStar().getStar().getTransforms().add(getInitialTranslate());
-//            getStar().initBindings(bindings, player, 0);
             setCollectables(400, getCentreY() + radius + 200, 400, getCentreY(), player, bindings, root, showChanger, showStar);
         }
         if(!isShifted)start();
@@ -169,102 +163,6 @@ public class SquareObstacle extends Obstacle{
     @Override
     public void initBindings(ArrayList<BooleanBinding> bindings, Player player){
         setPlayer(player);
-//        //Segment 1
-//        bindings.add(Bindings.createBooleanBinding(new Callable<Boolean>() {
-//            @Override
-//            public Boolean call() throws Exception {
-//                Shape intersect = Shape.intersect(getPlayer().getIcon(), getSegment(0));
-//                return intersect.getBoundsInLocal().getWidth() != -1;
-//            }
-//        }, getPlayer().getIcon().centerYProperty(), getRotate().angleProperty()));
-//        bindings.get(bindings.size() - 1).addListener(new ChangeListener<Boolean>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-//                if(t1){
-//                    System.out.println(getColorCode().get(0) + " IN");
-//                    if(getPlayer().getColor() != colors[0]){
-//                        System.out.println("OVER");
-//                        getPlayer().setColor(colors[0]);
-//                    }
-//                }
-//                else{
-//                    System.out.println(getColorCode().get(0) + " OUT");
-//                }
-//            }
-//        });
-//
-//        //Segment 2
-//        bindings.add(Bindings.createBooleanBinding(new Callable<Boolean>() {
-//            @Override
-//            public Boolean call() throws Exception {
-//                Shape intersect = Shape.intersect(getPlayer().getIcon(), getSegment(1));
-//                return intersect.getBoundsInLocal().getWidth() != -1;
-//            }
-//        }, getPlayer().getIcon().centerYProperty(), getRotate().angleProperty()));
-//        bindings.get(bindings.size() - 1).addListener(new ChangeListener<Boolean>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-//                if(t1){
-//                    System.out.println(getColorCode().get(1) + " IN");
-//                    if(getPlayer().getColor() != colors[1]){
-//                        System.out.println("OVER");
-//                        getPlayer().setColor(colors[1]);
-//                    }
-//                }
-//                else{
-//                    System.out.println(getColorCode().get(1) + " OUT");
-//                }
-//            }
-//        });
-//
-//        //Segment 3
-//        bindings.add(Bindings.createBooleanBinding(new Callable<Boolean>() {
-//            @Override
-//            public Boolean call() throws Exception {
-//                Shape intersect = Shape.intersect(getPlayer().getIcon(), getSegment(2));
-//                return intersect.getBoundsInLocal().getWidth() != -1;
-//            }
-//        }, getPlayer().getIcon().centerYProperty(), getRotate().angleProperty()));
-//        bindings.get(bindings.size() - 1).addListener(new ChangeListener<Boolean>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-//                if(t1){
-//                    System.out.println(getColorCode().get(2) + " IN");
-//                    if(getPlayer().getColor() != colors[2]){
-//                        System.out.println("OVER");
-//                        getPlayer().setColor(colors[2]);
-//                    }
-//                }
-//                else{
-//                    System.out.println(getColorCode().get(2) + " OUT");
-//                }
-//            }
-//        });
-//
-//        //Segment 4
-//        bindings.add(Bindings.createBooleanBinding(new Callable<Boolean>() {
-//            @Override
-//            public Boolean call() throws Exception {
-//                Shape intersect = Shape.intersect(getPlayer().getIcon(), getSegment(3));
-//                return intersect.getBoundsInLocal().getWidth() != -1;
-//            }
-//        }, getPlayer().getIcon().centerYProperty(), getRotate().angleProperty()));
-//        bindings.get(bindings.size() - 1).addListener(new ChangeListener<Boolean>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-//                if(t1){
-//                    System.out.println(getColorCode().get(3) + " IN");
-//                    if(getPlayer().getColor() != colors[3]){
-//                        System.out.println("OVER");
-//                        getPlayer().setColor(colors[3]);
-//                    }
-//                }
-//                else{
-//                    System.out.println(getColorCode().get(3) + " OUT");
-//                }
-//            }
-//        });
-
         bindings.add(Bindings.createBooleanBinding(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {

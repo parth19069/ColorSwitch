@@ -86,7 +86,7 @@ public class Main extends Application implements Pauseable, Blurrable {
         timeline = new Timeline();
         stage = gameStage;
         this.isLoaded = loaded;
-        savePath = "/Users/sjohari/Desktop/";
+        savePath = "/home/parth20/Desktop/ColorSwitchData/";
         saveSlot = slot;
         finalPath = savePath + slot;
 
@@ -174,7 +174,7 @@ public class Main extends Application implements Pauseable, Blurrable {
                     exitGame.setFocusTraversable(false);
                     exitGame.setFont(Font.font("Sans Serif",20));
                     exitGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
-                    exitGame.setOnMouseEntered(e -> exitGame.setStyle("-fx-background-color: #FF0000 ;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+                    exitGame.setOnMouseEntered(e -> exitGame.setStyle("-fx-background-color: #FF0000 ;"+"-fx-text-fill: #ffffff;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
                     exitGame.setOnMouseExited(e -> exitGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
 
                     for(Pauseable pauseable: pauseables){
@@ -185,38 +185,10 @@ public class Main extends Application implements Pauseable, Blurrable {
                         @Override
                         public void handle(ActionEvent event) {
                             try {
-//                                saveObstacles = new ArrayList<Integer>();
-//                                saveInitialTransform = new ArrayList<Double>();
-//                                saveInitialTranslates = new ArrayList<Double>();
-//                                saveChangerStatus = new ArrayList<Boolean>();
-//                                saveStarStatus = new ArrayList<Boolean>();
-//                                for(Obstacle obs: obstacles){
-//                                    saveObstacles.add(obstaclesOrderList.indexOf(obs));
-//                                    saveInitialTransform.add(obs.getSpecialValue());
-//                                    saveInitialTranslates.add(obs.getInitialTranslate().getY());
-//                                    saveChangerStatus.add(obs.isChangerPresent());
-//                                    saveStarStatus.add(obs.isStarPresent());
-//                                }
-//                                System.out.println(saveObstacles);
-//                                System.out.println(saveInitialTransform);
-//                                System.out.println(saveInitialTranslates);
-//                                Data saveData = new Data(saveInitialTranslates, saveObstacles, saveChangerStatus, saveStarStatus, saveInitialTransform, (int)sub.getLayoutY(), (int)player.getIcon().getCenterX(), (int)player.getIcon().getCenterY(), getColorCode(player.getColor()), numberOfStars, obstacleShiftCounter);
-//                                try{
-//                                    FileOutputStream outputStream = new FileOutputStream(finalPath);
-//                                    ObjectOutputStream out = new ObjectOutputStream(outputStream);
-//                                    out.writeObject(saveData);
-//                                    out.close();
-//                                    outputStream.close();
-//                                    System.out.println("Data serialized");
-//                                }
-//                                catch (Exception e) {
-//
-//                                }
-
                                 save(finalPath);
                             }
                             catch(Exception e){
-
+                                System.out.println("Could not save");
                             }
                         }
                     });
@@ -228,7 +200,7 @@ public class Main extends Application implements Pauseable, Blurrable {
                                 start(gameStage);
                             }
                             catch (Exception e){
-
+                                System.out.println("Could not start game/ hide pauseStage");
                             }
                         }
                     });
@@ -390,7 +362,6 @@ public class Main extends Application implements Pauseable, Blurrable {
             player.getTimeline().getKeyFrames().clear();
             player.getTimeline().setCycleCount(1);
             player.getTimeline().getKeyFrames().addAll(new KeyFrame(Duration.millis(300), new KeyValue(player.getIcon().centerYProperty(), temp - 120, interpolator)));
-//                timeline.getKeyFrames().addAll(new KeyFrame(Duration.millis(300), new KeyValue(player.getIcon().centerYProperty(),temp - 20, interpolator)));
             player.getTimeline().play();
             player.getTimeline().setOnFinished(actionEvent -> {
                 player.getTimeline().stop();

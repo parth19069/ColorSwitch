@@ -24,8 +24,6 @@ import java.awt.event.KeyEvent;
 import java.io.*;
 import java.util.ArrayList;
 
-import static mainPackage.Main.numberOfStars;
-import static mainPackage.Main.obstacleShiftCounter;
 
 public abstract class Obstacle implements Pauseable, Blurrable {
     public static boolean alreadyOver;

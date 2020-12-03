@@ -60,12 +60,6 @@ public class TangentialRingObstacle extends Obstacle {
         }
         if(showCollectables) {
             setColorChanger();
-//            getColorChanger().setCollectable(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 250, root, bindings, player);
-//            getColorChanger().getChanger().getTransforms().add(getInitialTranslate());
-//
-//            getStar().setCollectable(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 100, root, bindings, player);
-//            getStar().getStar().getTransforms().add(getInitialTranslate());
-//            getStar().initBindings(bindings, player, 0);
             setCollectables(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 250, getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 100, player, bindings, root, showChanger, showStar);
         }
 
