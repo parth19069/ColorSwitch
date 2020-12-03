@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -103,23 +104,38 @@ public abstract class Obstacle implements Pauseable, Blurrable {
 
             Stage pauseStage = new Stage();
 //            enableBlur(true);
-            Button saveGame = new Button( "Save");
-            Button resumeGame = new Button("Resume using stars");
-            Button exitGame = new Button("Exit");
-            resumeGame.setLayoutX(350);
-            resumeGame.setLayoutY(345);
-            resumeGame.setMaxSize(150,250);
+            Button saveGame = new Button( "SAVE");
+            Button resumeGame = new Button("RESUME USING STARS");
+            Button exitGame = new Button("EXIT");
+            resumeGame.setLayoutX(245);
+            resumeGame.setLayoutY(140);
             resumeGame.setFocusTraversable(false);
+            resumeGame.setPrefWidth(320);
+            resumeGame.setPrefHeight(80);
+            resumeGame.setFont(Font.font("Sans Serif",20));
+            resumeGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+            resumeGame.setOnMouseEntered(e -> resumeGame.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+            resumeGame.setOnMouseExited(e -> resumeGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
 
-            saveGame.setLayoutX(350);
-            saveGame.setLayoutY(415);
-            saveGame.setMaxSize(150,250);
+            saveGame.setLayoutX(245);
+            saveGame.setLayoutY(250);
             saveGame.setFocusTraversable(false);
+            saveGame.setPrefWidth(320);
+            saveGame.setPrefHeight(80);
+            saveGame.setFont(Font.font("Sans Serif",20));
+            saveGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+            saveGame.setOnMouseEntered(e -> saveGame.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+            saveGame.setOnMouseExited(e -> saveGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
 
-            exitGame.setLayoutX(350);
-            exitGame.setLayoutY(485);
-            exitGame.setMaxSize(150,250);
+            exitGame.setLayoutX(245);
+            exitGame.setLayoutY(360);
             exitGame.setFocusTraversable(false);
+            exitGame.setPrefWidth(320);
+            exitGame.setPrefHeight(80);
+            exitGame.setFont(Font.font("Sans Serif",20));
+            exitGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+            exitGame.setOnMouseEntered(e -> exitGame.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+            exitGame.setOnMouseExited(e -> exitGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
 
             getPlayer().getTimeline().stop();
             getPlayer().getTimeline().getKeyFrames().clear();
