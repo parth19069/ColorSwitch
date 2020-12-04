@@ -3,6 +3,7 @@ package obstacles;
 import collectable.ColorChanger;
 import collectable.Star;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,6 +17,7 @@ import javafx.scene.text.Font;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import mainPackage.Main;
 import menu.Blurrable;
 import playerinfo.Data;
@@ -343,4 +345,6 @@ public abstract class Obstacle implements Pauseable, Blurrable {
     public void setScene(Scene scene) {
         this.scene = scene;
     }
+
+
 }

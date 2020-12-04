@@ -1,6 +1,7 @@
 package menu;
 
 import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
@@ -58,10 +59,10 @@ public class MainMenu extends Application {
         /*
         Obstacle and player declarations
          */
-        Obstacle obs = new RingObstacle(160, 560, 70, 22, true, new Translate(),0);
-        Obstacle obs1 = new RingObstacle(640, 560, 70, 22, false, new Translate(), 0);
+        Obstacle obs = new RingObstacle(160, 560, 75, 22, true, new Translate(),0);
+        Obstacle obs1 = new RingObstacle(640, 560, 75, 22, false, new Translate(), 0);
 
-        Obstacle obs2 = new ConcentricRingObstacle(400, 560, 100, 22, 2, true, true, new Translate(),0);
+        Obstacle obs2 = new ConcentricRingObstacle(400, 560, 102, 22, 2, true, true, new Translate(),0);
         Obstacle obs3 = new RingObstacle(347, 107, 23, 8, true, new Translate(),0);
         Obstacle obs4 = new RingObstacle(475, 107, 23, 8, false, new Translate(),0);
         Obstacle obs5 = new PlusObstacle(120,150,80,17,true,new Translate());
@@ -91,13 +92,13 @@ public class MainMenu extends Application {
 
         /* Main menu images */
 
-        Image img = new Image(new FileInputStream("images/Play-Button-715x715.png"),131,131,true,true);
+        Image img = new Image(new FileInputStream("images/Play-Button-715x715.png"),132,132,true,true);
         ImageView view = new ImageView(img);
         view.preserveRatioProperty();
-        Image img2 = new Image(new FileInputStream("images/exit.png"),131,131,true,true);
+        Image img2 = new Image(new FileInputStream("images/exitButton.png"),132,132,true,true);
         ImageView view2 = new ImageView(img2);
         view2.preserveRatioProperty();
-        Image img3 = new Image(new FileInputStream("images/resumeButton.png"),131,131,true,true);
+        Image img3 = new Image(new FileInputStream("images/resumeButton.png"),132,132,true,true);
         ImageView view3 = new ImageView(img3);
         view2.preserveRatioProperty();
 
@@ -260,7 +261,9 @@ public class MainMenu extends Application {
                 saveSlot3.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
                 saveSlot3.setOnMouseEntered(e -> saveSlot3.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
                 saveSlot3.setOnMouseExited(e -> saveSlot3.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
-
+                buttonTransition(saveSlot1,true);
+                buttonTransition(saveSlot2,false);
+                buttonTransition(saveSlot3,true);
 
                 saveSlot1.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
@@ -355,6 +358,9 @@ public class MainMenu extends Application {
         exitToMain.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
         exitToMain.setOnMouseEntered(e -> exitToMain.setStyle("-fx-background-color: #FF0000;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
         exitToMain.setOnMouseExited(e -> exitToMain.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+        buttonTransition(loadGame,true);
+        buttonTransition(exitToMain,false);
+
         exitToMain.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
@@ -381,6 +387,7 @@ public class MainMenu extends Application {
                 slot1.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
                 slot1.setOnMouseEntered(e -> slot1.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
                 slot1.setOnMouseExited(e -> slot1.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+                buttonTransition(slot1,true);
                 slot2.setLayoutX(220);
                 slot2.setLayoutY(200);
                 slot2.setPrefWidth(350);
@@ -390,6 +397,7 @@ public class MainMenu extends Application {
                 slot2.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
                 slot2.setOnMouseEntered(e -> slot2.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
                 slot2.setOnMouseExited(e -> slot2.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+                buttonTransition(slot2,false);
                 slot3.setLayoutX(220);
                 slot3.setLayoutY(300);
                 slot3.setPrefWidth(350);
@@ -399,6 +407,7 @@ public class MainMenu extends Application {
                 slot3.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
                 slot3.setOnMouseEntered(e -> slot3.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
                 slot3.setOnMouseExited(e -> slot3.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+                buttonTransition(slot3,true);
                 Group loadGameGroup = new Group();
                 loadGameGroup.getChildren().add(slot1);
                 loadGameGroup.getChildren().add(slot2);
@@ -455,4 +464,25 @@ public class MainMenu extends Application {
     public void exitGame(){
         System.exit(0);
     }
+    public void buttonTransition(Button b, Boolean leftToRight){
+        TranslateTransition t = new TranslateTransition();
+        t.setDuration(Duration.millis(400));
+        t.setNode(b);
+        if(leftToRight) {
+            t.setFromX(-801);
+            t.setFromY(0);
+            t.setToX(0);
+            t.setToY(0);
+            t.play();
+        }
+        else{
+            t.setFromX(801);
+            t.setFromY(0);
+            t.setToX(0);
+            t.setToY(0);
+            t.play();
+        }
+
+    }
+
 }

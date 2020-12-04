@@ -155,6 +155,7 @@ public class Main extends Application implements Pauseable, Blurrable {
                     resumeGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
                     resumeGame.setOnMouseEntered(e -> resumeGame.setStyle("-fx-background-color: green;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
                     resumeGame.setOnMouseExited(e -> resumeGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+                    buttonTransition(resumeGame,true);
                     saveGame.setLayoutX(300);
                     saveGame.setLayoutY(415);
                     saveGame.setPrefWidth(200);
@@ -165,6 +166,7 @@ public class Main extends Application implements Pauseable, Blurrable {
                     saveGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
                     saveGame.setOnMouseEntered(e -> saveGame.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
                     saveGame.setOnMouseExited(e -> saveGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+                    buttonTransition(saveGame,false);
                     exitGame.setLayoutX(300);
                     exitGame.setLayoutY(505);
                     exitGame.setPrefWidth(200);
@@ -175,7 +177,7 @@ public class Main extends Application implements Pauseable, Blurrable {
                     exitGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
                     exitGame.setOnMouseEntered(e -> exitGame.setStyle("-fx-background-color: #FF0000 ;"+"-fx-text-fill: #ffffff;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
                     exitGame.setOnMouseExited(e -> exitGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
-
+                    buttonTransition(exitGame,true);
                     for(Pauseable pauseable: pauseables){
                         pauseable.pause();
                     }
@@ -545,6 +547,29 @@ public class Main extends Application implements Pauseable, Blurrable {
         }
         catch (Exception e) {
 
+        }
+
+
+
+    }
+
+    public void buttonTransition(Button b, Boolean leftToRight){
+        TranslateTransition t = new TranslateTransition();
+        t.setDuration(Duration.millis(400));
+        t.setNode(b);
+        if(leftToRight) {
+            t.setFromX(-801);
+            t.setFromY(0);
+            t.setToX(0);
+            t.setToY(0);
+            t.play();
+        }
+        else{
+            t.setFromX(801);
+            t.setFromY(0);
+            t.setToX(0);
+            t.setToY(0);
+            t.play();
         }
 
     }
