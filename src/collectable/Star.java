@@ -38,7 +38,6 @@ public class Star extends Collectable{
         star.setLayoutX(centreX - 20);
         star.setLayoutY(centreY + 40);
         this.obstacle = obstacle;
-
         setRoot(root);
         root.getChildren().add(star);
     }

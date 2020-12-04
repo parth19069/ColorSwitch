@@ -39,7 +39,6 @@ import playerinfo.*;
 
 
 public class Main extends Application implements Pauseable, Blurrable {
-
     public static int numberOfStars, obstacleShiftCounter, obstacleShiftCounterValue;
     private String savePath, saveSlot, finalPath;
     private ArrayList<BooleanBinding> bindings;
@@ -86,7 +85,7 @@ public class Main extends Application implements Pauseable, Blurrable {
         timeline = new Timeline();
         stage = gameStage;
         this.isLoaded = loaded;
-        savePath = "/home/parth20/Desktop/ColorSwitchData/";
+        savePath = "ColorSwitchData/";
         saveSlot = slot;
         finalPath = savePath + slot;
 
@@ -121,7 +120,7 @@ public class Main extends Application implements Pauseable, Blurrable {
                 "-fx-min-height: 65px; " +
                 "-fx-max-width: 65px; " +
                 "-fx-max-height: 65px;"));
-        pauseButton.setOnMouseEntered(e -> st.play()) ;
+        pauseButton.setOnMouseEntered(e -> st.play());
 
         pauseButton.setOnMouseExited(e -> pauseButton.setStyle("-fx-background-color: -fx-shadow-highlight-color;"+
                 "-fx-background-radius: 500em; " +
@@ -129,7 +128,7 @@ public class Main extends Application implements Pauseable, Blurrable {
                 "-fx-min-height: 65px; " +
                 "-fx-max-width: 65px; " +
                 "-fx-max-height: 65px;"));
-        pauseButton.setOnMouseExited(e -> st1.play()) ;
+        pauseButton.setOnMouseExited(e -> st1.play());
 
 
         obstaclesOrderList = new ArrayList<Obstacle>();
