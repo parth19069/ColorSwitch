@@ -1,6 +1,5 @@
 package mainPackage;
 
-
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,6 +25,7 @@ import javafx.scene.transform.Translate;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
+import menu.AccountMenu;
 import menu.Blurrable;
 import menu.MainMenu;
 import obstacles.*;
@@ -198,7 +198,8 @@ public class Main extends Application implements Pauseable, Blurrable {
                         public void handle(ActionEvent actionEvent) {
                             try {
                                 pauseStage.hide();
-                                start(gameStage);
+                                gameStage.hide();
+                                startMainMenu(gameStage);
                             }
                             catch (Exception e){
                                 System.out.println("Could not start game/ hide pauseStage");
@@ -344,8 +345,8 @@ public class Main extends Application implements Pauseable, Blurrable {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        MainMenu mainmenu = new MainMenu();
-        mainmenu.start(primaryStage);
+        AccountMenu am = new AccountMenu();
+        am.start(primaryStage);
     }
 
     void handlePlayerMovement(){
@@ -572,5 +573,14 @@ public class Main extends Application implements Pauseable, Blurrable {
             t.play();
         }
 
+    }
+    public void startMainMenu(Stage stage){
+        try {
+            MainMenu mainMenu = new MainMenu();
+            mainMenu.startMainMenu(stage);
+        }
+        catch (Exception e){
+
+        }
     }
 }

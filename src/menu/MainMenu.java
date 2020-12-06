@@ -31,7 +31,7 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MainMenu extends Application {
+public class MainMenu {
 
     private ArrayList<BooleanBinding> bindings;
     private Player player;
@@ -45,9 +45,136 @@ public class MainMenu extends Application {
 
     private Button newGameButton,resumeButton,exitButton;
 
+    public void resumeGame(Stage primaryStage){
+        Button exitToMain = new Button("RETURN TO MAIN MAIN");
+        Button loadGame = new Button("LOAD GAME");
+        loadGame.setLayoutX(235);
+        loadGame.setLayoutY(40);
+        loadGame.setPrefWidth(320);
+        loadGame.setPrefHeight(80);
+        loadGame.setFocusTraversable(false);
+        loadGame.setFont(Font.font("Sans Serif",20));
+        loadGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+        loadGame.setOnMouseEntered(e -> loadGame.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+        loadGame.setOnMouseExited(e -> loadGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+        exitToMain.setLayoutX(235);
+        exitToMain.setLayoutY(150);
+        exitToMain.setPrefWidth(320);
+        exitToMain.setPrefHeight(80);
+        exitToMain.setFocusTraversable(false);
+        exitToMain.setFont(Font.font("Sans Serif",20));
+        exitToMain.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+        exitToMain.setOnMouseEntered(e -> exitToMain.setStyle("-fx-background-color: #FF0000;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+        exitToMain.setOnMouseExited(e -> exitToMain.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+        buttonTransition(loadGame,true);
+        buttonTransition(exitToMain,false);
 
-    @Override
-    public void start(Stage primaryStage) throws Exception{
+        exitToMain.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    startMainMenu(primaryStage);
+                }
+                catch(Exception e){
+                }
+            }
+        });
+        loadGame.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                primaryStage.hide();
+                Button slot1 = new Button("SLOT 1");
+                Button slot2 = new Button("SLOT 2");
+                Button slot3 = new Button("SLOT 3");
+                slot1.setLayoutX(220);
+                slot1.setLayoutY(100);
+                slot1.setPrefWidth(350);
+                slot1.setPrefHeight(80);
+                slot1.setFocusTraversable(false);
+                slot1.setFont(Font.font("Sans Serif",20));
+                slot1.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+                slot1.setOnMouseEntered(e -> slot1.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+                slot1.setOnMouseExited(e -> slot1.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+                buttonTransition(slot1,true);
+                slot2.setLayoutX(220);
+                slot2.setLayoutY(200);
+                slot2.setPrefWidth(350);
+                slot2.setPrefHeight(80);
+                slot2.setFocusTraversable(false);
+                slot2.setFont(Font.font("Sans Serif",20));
+                slot2.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+                slot2.setOnMouseEntered(e -> slot2.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+                slot2.setOnMouseExited(e -> slot2.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+                buttonTransition(slot2,false);
+                slot3.setLayoutX(220);
+                slot3.setLayoutY(300);
+                slot3.setPrefWidth(350);
+                slot3.setPrefHeight(80);
+                slot3.setFocusTraversable(false);
+                slot3.setFont(Font.font("Sans Serif",20));
+                slot3.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+                slot3.setOnMouseEntered(e -> slot3.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+                slot3.setOnMouseExited(e -> slot3.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+                buttonTransition(slot3,true);
+                Group loadGameGroup = new Group();
+                loadGameGroup.getChildren().add(slot1);
+                loadGameGroup.getChildren().add(slot2);
+                loadGameGroup.getChildren().add(slot3);
+                Stage loadGameStage = new Stage();
+                Scene loadGameScene = new Scene(loadGameGroup,800, 800);
+                loadGameScene.setFill(Color.rgb(41,41,41));
+                loadGameStage.setTitle("Load Game");
+                loadGameStage.setScene(loadGameScene);
+                loadGameStage.show();
+                slot1.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        newGame(primaryStage, true, "slot1.ser");
+                        loadGameStage.hide();
+                    }
+                });
+                slot2.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        newGame(primaryStage, true, "slot2.ser");
+                        loadGameStage.hide();
+                    }
+                });
+                slot3.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        newGame(primaryStage, true, "slot3.ser");
+                        loadGameStage.hide();
+                    }
+                });
+            }
+        });
+
+        Group root2 = new Group(exitToMain);
+        root2.getChildren().add(loadGame);
+        Scene scene2 = new Scene(root2, 800,540);
+        scene2.setFill(Color.rgb(41,41,41));
+        primaryStage.setScene(scene2);
+
+        primaryStage.show();
+
+
+    }
+    public void newGame(Stage primaryStage, boolean isLoaded, String slot){
+        try {
+            Main mainGame = new Main();
+            mainGame.game(primaryStage, isLoaded, slot);
+        }
+        catch(Exception e){
+
+        }
+    }
+    public void exitGame(){
+        System.exit(0);
+    }
+
+    public void startMainMenu(Stage stage) throws Exception{
+        Stage primaryStage = new Stage();
         bindings = new ArrayList<BooleanBinding>();
         colorCode = new ArrayList<Color>();
         rand = new Random();
@@ -336,134 +463,9 @@ public class MainMenu extends Application {
         primaryStage.setScene(menuScene);
         primaryStage.show();
 
-    }
-    public void resumeGame(Stage primaryStage){
-        Button exitToMain = new Button("RETURN TO MAIN MAIN");
-        Button loadGame = new Button("LOAD GAME");
-        loadGame.setLayoutX(235);
-        loadGame.setLayoutY(40);
-        loadGame.setPrefWidth(320);
-        loadGame.setPrefHeight(80);
-        loadGame.setFocusTraversable(false);
-        loadGame.setFont(Font.font("Sans Serif",20));
-        loadGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
-        loadGame.setOnMouseEntered(e -> loadGame.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
-        loadGame.setOnMouseExited(e -> loadGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
-        exitToMain.setLayoutX(235);
-        exitToMain.setLayoutY(150);
-        exitToMain.setPrefWidth(320);
-        exitToMain.setPrefHeight(80);
-        exitToMain.setFocusTraversable(false);
-        exitToMain.setFont(Font.font("Sans Serif",20));
-        exitToMain.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
-        exitToMain.setOnMouseEntered(e -> exitToMain.setStyle("-fx-background-color: #FF0000;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
-        exitToMain.setOnMouseExited(e -> exitToMain.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
-        buttonTransition(loadGame,true);
-        buttonTransition(exitToMain,false);
-
-        exitToMain.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    start(primaryStage);
-                }
-                catch(Exception e){
-                }
-            }
-        });
-        loadGame.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                primaryStage.hide();
-                Button slot1 = new Button("SLOT 1");
-                Button slot2 = new Button("SLOT 2");
-                Button slot3 = new Button("SLOT 3");
-                slot1.setLayoutX(220);
-                slot1.setLayoutY(100);
-                slot1.setPrefWidth(350);
-                slot1.setPrefHeight(80);
-                slot1.setFocusTraversable(false);
-                slot1.setFont(Font.font("Sans Serif",20));
-                slot1.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
-                slot1.setOnMouseEntered(e -> slot1.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
-                slot1.setOnMouseExited(e -> slot1.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
-                buttonTransition(slot1,true);
-                slot2.setLayoutX(220);
-                slot2.setLayoutY(200);
-                slot2.setPrefWidth(350);
-                slot2.setPrefHeight(80);
-                slot2.setFocusTraversable(false);
-                slot2.setFont(Font.font("Sans Serif",20));
-                slot2.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
-                slot2.setOnMouseEntered(e -> slot2.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
-                slot2.setOnMouseExited(e -> slot2.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
-                buttonTransition(slot2,false);
-                slot3.setLayoutX(220);
-                slot3.setLayoutY(300);
-                slot3.setPrefWidth(350);
-                slot3.setPrefHeight(80);
-                slot3.setFocusTraversable(false);
-                slot3.setFont(Font.font("Sans Serif",20));
-                slot3.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
-                slot3.setOnMouseEntered(e -> slot3.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
-                slot3.setOnMouseExited(e -> slot3.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
-                buttonTransition(slot3,true);
-                Group loadGameGroup = new Group();
-                loadGameGroup.getChildren().add(slot1);
-                loadGameGroup.getChildren().add(slot2);
-                loadGameGroup.getChildren().add(slot3);
-                Stage loadGameStage = new Stage();
-                Scene loadGameScene = new Scene(loadGameGroup,800, 800);
-                loadGameScene.setFill(Color.rgb(41,41,41));
-                loadGameStage.setTitle("Load Game");
-                loadGameStage.setScene(loadGameScene);
-                loadGameStage.show();
-                slot1.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, true, "slot1.ser");
-                        loadGameStage.hide();
-                    }
-                });
-                slot2.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, true, "slot2.ser");
-                        loadGameStage.hide();
-                    }
-                });
-                slot3.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, true, "slot3.ser");
-                        loadGameStage.hide();
-                    }
-                });
-            }
-        });
-
-        Group root2 = new Group(exitToMain);
-        root2.getChildren().add(loadGame);
-        Scene scene2 = new Scene(root2, 800,540);
-        scene2.setFill(Color.rgb(41,41,41));
-        primaryStage.setScene(scene2);
-
-        primaryStage.show();
-
 
     }
-    public void newGame(Stage primaryStage, boolean isLoaded, String slot){
-        try {
-            Main mainGame = new Main();
-            mainGame.game(primaryStage, isLoaded, slot);
-        }
-        catch(Exception e){
 
-        }
-    }
-    public void exitGame(){
-        System.exit(0);
-    }
     public void buttonTransition(Button b, Boolean leftToRight){
         TranslateTransition t = new TranslateTransition();
         t.setDuration(Duration.millis(400));
