@@ -45,7 +45,7 @@ public class MainMenu {
 
     private Button newGameButton,resumeButton,exitButton;
 
-    public void resumeGame(Stage primaryStage){
+    public void resumeGame(Stage primaryStage, String username){
         Button exitToMain = new Button("RETURN TO MAIN MAIN");
         Button loadGame = new Button("LOAD GAME");
         loadGame.setLayoutX(235);
@@ -73,7 +73,7 @@ public class MainMenu {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    startMainMenu(primaryStage);
+                    startMainMenu(primaryStage, username);
                 }
                 catch(Exception e){
                 }
@@ -129,21 +129,21 @@ public class MainMenu {
                 slot1.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, true, "slot1.ser");
+                        newGame(primaryStage, true, "slot1.ser", username);
                         loadGameStage.hide();
                     }
                 });
                 slot2.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, true, "slot2.ser");
+                        newGame(primaryStage, true, "slot2.ser", username);
                         loadGameStage.hide();
                     }
                 });
                 slot3.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, true, "slot3.ser");
+                        newGame(primaryStage, true, "slot3.ser", username);
                         loadGameStage.hide();
                     }
                 });
@@ -160,10 +160,10 @@ public class MainMenu {
 
 
     }
-    public void newGame(Stage primaryStage, boolean isLoaded, String slot){
+    public void newGame(Stage primaryStage, boolean isLoaded, String slot, String username){
         try {
             Main mainGame = new Main();
-            mainGame.game(primaryStage, isLoaded, slot);
+            mainGame.game(primaryStage, isLoaded, slot, username);
         }
         catch(Exception e){
 
@@ -173,7 +173,7 @@ public class MainMenu {
         System.exit(0);
     }
 
-    public void startMainMenu(Stage stage) throws Exception{
+    public void startMainMenu(Stage stage, String username) throws Exception{
         Stage primaryStage = new Stage();
         bindings = new ArrayList<BooleanBinding>();
         colorCode = new ArrayList<Color>();
@@ -229,7 +229,9 @@ public class MainMenu {
         ImageView view3 = new ImageView(img3);
         view2.preserveRatioProperty();
 
-        /* New game button Details */
+        /*
+        New game button Details
+        */
 
         newGameButton = new Button();
         newGameButton.setGraphic(view);
@@ -395,21 +397,21 @@ public class MainMenu {
                 saveSlot1.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, false, "slot1.ser");
+                        newGame(primaryStage, false, "slot1.ser", username);
                         slotsStage.hide();
                     }
                 });
                 saveSlot2.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, false, "slot2.ser");
+                        newGame(primaryStage, false, "slot2.ser", username);
                         slotsStage.hide();
                     }
                 });
                 saveSlot3.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        newGame(primaryStage, false, "slot3.ser");
+                        newGame(primaryStage, false, "slot3.ser", username);
                         slotsStage.hide();
                     }
                 });
@@ -427,7 +429,7 @@ public class MainMenu {
         resumeButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                resumeGame(primaryStage);
+                resumeGame(primaryStage, username);
             }
         }) ;
 

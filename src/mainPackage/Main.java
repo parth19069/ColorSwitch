@@ -40,7 +40,7 @@ import playerinfo.*;
 
 public class Main extends Application implements Pauseable, Blurrable {
     public static int numberOfStars, obstacleShiftCounter, obstacleShiftCounterValue;
-    private String savePath, saveSlot, finalPath;
+    private String savePath, saveSlot, username, finalPath;
     private ArrayList<BooleanBinding> bindings;
     private Player player;
     private ArrayList<Color> colorCode;
@@ -65,6 +65,7 @@ public class Main extends Application implements Pauseable, Blurrable {
     private Text starText;
     private IntegerProperty starsProperty;
     private Stage stage;
+    private boolean changedLoaded;
     public int getColorCode(Color color){
         int code = -1;
         int idx = 0;
@@ -80,14 +81,16 @@ public class Main extends Application implements Pauseable, Blurrable {
     public Color getColor(int code){
         return colorCode.get(code);
     }
-    public void game (Stage gameStage, boolean loaded, String slot) throws Exception{
+    public void game (Stage gameStage, boolean loaded, String slot, String username) throws Exception{
 
         timeline = new Timeline();
         stage = gameStage;
+        this.username = username;
         this.isLoaded = loaded;
         savePath = "ColorSwitchData/";
         saveSlot = slot;
-        finalPath = savePath + slot;
+        finalPath = savePath + username + "/" + slot;
+        changedLoaded = false;
 
         Image img = new Image(new FileInputStream("images/pause.png"),73,73,true,true);
         ImageView view = new ImageView(img);
@@ -259,9 +262,12 @@ public class Main extends Application implements Pauseable, Blurrable {
             } catch (IOException i) {
                 System.out.println("IO");
                 i.printStackTrace();
+                isLoaded = false;
+                changedLoaded = true;
             } catch (ClassNotFoundException c) {
                 System.out.println("ClassNotFound");
                 c.printStackTrace();
+                changedLoaded = true;
             }
         }
         if(loadData.getInitialTranslates().size() != 0)obsYTranslate = loadData.getInitialTranslates().get(0);
@@ -345,8 +351,8 @@ public class Main extends Application implements Pauseable, Blurrable {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        AccountMenu am = new AccountMenu();
-        am.start(primaryStage);
+        AccountMenu accountMenu = new AccountMenu();
+        accountMenu.start(primaryStage);
     }
 
     void handlePlayerMovement(){
@@ -418,6 +424,12 @@ public class Main extends Application implements Pauseable, Blurrable {
         /*
         Add any new obstacle here. Everything else is taken care of.
          */
+        if(changedLoaded){
+            for(Obstacle obs: obstaclesOrderList){
+                obstacles.add(obs);
+            }
+            return;
+        }
         if(isLoaded && loadData.isSaved()){
             ArrayList<Integer> indices = loadData.getIndices();
             ArrayList<Double> transformState = loadData.getInitialTransforms();
@@ -456,11 +468,11 @@ public class Main extends Application implements Pauseable, Blurrable {
         Only sets up obstacles that are added in addObstacles function
          */
         for(Obstacle obs: obstacles){
-            if(isLoaded)obs.quickSetup(sub, 8000, bindings, player, true, false, obs.isChangerPresent(), obs.isStarPresent());
+            if(isLoaded)obs.quickSetup(sub, 5000, bindings, player, true, false, obs.isChangerPresent(), obs.isStarPresent());
             else {
                 obs.setChangerPresent(true);
                 obs.setStarPresent(true);
-                obs.quickSetup(sub, 8000, bindings, player, true, false, true, true);
+                obs.quickSetup(sub, 5000, bindings, player, true, false, true, true);
             }
             obs.setYTranslate(obsYTranslate);
             obsYTranslate -= 800;
@@ -520,7 +532,7 @@ public class Main extends Application implements Pauseable, Blurrable {
         timeline.stop();
     }
 
-    public void save(String finalPath ){
+    public void save(String finalPath){
         saveObstacles = new ArrayList<Integer>();
         saveInitialTransform = new ArrayList<Double>();
         saveInitialTranslates = new ArrayList<Double>();
@@ -547,11 +559,8 @@ public class Main extends Application implements Pauseable, Blurrable {
             System.out.println("Data serialized");
         }
         catch (Exception e) {
-
+            e.printStackTrace();
         }
-
-
-
     }
 
     public void buttonTransition(Button b, Boolean leftToRight){
@@ -577,7 +586,7 @@ public class Main extends Application implements Pauseable, Blurrable {
     public void startMainMenu(Stage stage){
         try {
             MainMenu mainMenu = new MainMenu();
-            mainMenu.startMainMenu(stage);
+            mainMenu.startMainMenu(stage, username);
         }
         catch (Exception e){
 

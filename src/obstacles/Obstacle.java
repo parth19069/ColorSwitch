@@ -159,6 +159,17 @@ public abstract class Obstacle implements Pauseable, Blurrable {
             resumeGame.setOnAction(new EventHandler<ActionEvent>(){
                 @Override
                 public void handle(ActionEvent event) {
+                    /*
+                    Replace this part with alert
+                     */
+                    if(Main.numberOfStars < 10){
+                        System.out.println("Not enough stars");
+                        // Uncomment this when alert is made
+//                        return;
+                    }
+                    else{
+                        Main.numberOfStars -= 10;
+                    }
                     getPlayer().stop();
                     getPlayer().getTimeline().getKeyFrames().clear();
                     pauseables.get(0).stop();
