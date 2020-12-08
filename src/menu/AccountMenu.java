@@ -11,6 +11,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
@@ -28,7 +30,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class AccountMenu extends Application {
+public class AccountMenu extends Application implements Blurrable {
 
     private Image userImg, passwordImg;
     private ImageView userImgView, passwordImgView;
@@ -202,6 +204,7 @@ public class AccountMenu extends Application {
             @Override
             public void handle(ActionEvent event) {
 //                primaryStage.hide();
+
                 try {
 //                    MainMenu mainMenu = new MainMenu();
 //                    mainMenu.startMainMenu(new Stage());
@@ -243,6 +246,11 @@ public class AccountMenu extends Application {
         System.out.println(username);
         if(!username.matches("[A-Za-z0-9]+")){
             // alert(No such account (username must be alphanumeric))
+            enableBlur(true);
+            Alert a = new Alert(Alert.AlertType.WARNING,"No such account (Username not alphanumeric)");
+            a.setOnCloseRequest(e-> enableBlur(false));
+            a.show();
+
             System.out.println("No such account (Username not alphanumeric)");
             return;
         }
@@ -260,11 +268,21 @@ public class AccountMenu extends Application {
                 inputStream.close();
             } catch (IOException i) {
                 // alert("Some problem occured while signing in")
+                enableBlur(true);
+                Alert a = new Alert(Alert.AlertType.WARNING,"Some problem occured while signing in");
+                a.setOnCloseRequest(e-> enableBlur(false));
+                a.show();
+
                 System.out.println("IO");
                 i.printStackTrace();
                 return;
             } catch (ClassNotFoundException c) {
                 // alert("Some problem occured while signing in")
+                enableBlur(true);
+                Alert a = new Alert(Alert.AlertType.WARNING,"Some problem occured while signing in");
+                a.setOnCloseRequest(e-> enableBlur(false));
+                a.show();
+
                 System.out.println("ClassNotFound");
                 c.printStackTrace();
                 return;
@@ -273,6 +291,10 @@ public class AccountMenu extends Application {
             String loadedHash = loadData.getPasswordHash();
             if(!newHash.equals(loadedHash)){
                 // alert(Invalid username or password)
+                enableBlur(true);
+                Alert a = new Alert(Alert.AlertType.WARNING,"Invalid username or password");
+                a.setOnCloseRequest(e-> enableBlur(false));
+                a.show();
                 System.out.println("Invalid username or password");
                 return;
             }
@@ -285,6 +307,10 @@ public class AccountMenu extends Application {
         }
         else{
             // alert(Invalid username or password)
+            enableBlur(true);
+            Alert a = new Alert(Alert.AlertType.WARNING,"Invalid username or password");
+            a.setOnCloseRequest(e-> enableBlur(false));
+            a.show();
             System.out.println("Invalid username or password");
         }
         return;
@@ -294,17 +320,29 @@ public class AccountMenu extends Application {
         String password = passwordField.getText();
         if(!username.matches("[A-Za-z0-9]+")){
             // alert(username must be alphanumeric)
+            enableBlur(true);
+            Alert a = new Alert(Alert.AlertType.WARNING,"Username must be alphanumeric");
+            a.setOnCloseRequest(e-> enableBlur(false));
+            a.show();
             System.out.println("Username not alphanumeric");
             return;
         }
         if(password.length() == 0){
             // alert(Enter password)
+            enableBlur(true);
+            Alert a = new Alert(Alert.AlertType.WARNING,"No password entered");
+            a.setOnCloseRequest(e-> enableBlur(false));
+            a.show();
             System.out.println("No password entered");
             return;
         }
         File userDirectory = new File("ColorSwitchData/" + username);
         if(userDirectory.exists() && userDirectory.isDirectory()){
             // alert(username is already taken)
+            enableBlur(true);
+            Alert a = new Alert(Alert.AlertType.WARNING,"Username is already taken");
+            a.setOnCloseRequest(e-> enableBlur(false));
+            a.show();
             System.out.println("Username is already taken");
             return;
         }
@@ -313,10 +351,19 @@ public class AccountMenu extends Application {
         boolean createdAccount = createAccount(username, getSHA256(password), "ColorSwitchData/" + username + "/accountData.ser");
         if(!createdAccount){
             // alert("Account could not be created")
+            enableBlur(true);
+            Alert a = new Alert(Alert.AlertType.WARNING,"Account could not be created");
+            a.setOnCloseRequest(e-> enableBlur(false));
+            a.show();
             System.out.println("Account could not be created");
             return;
         }
         // alert(Account created successfully)
+        enableBlur(true);
+        Alert a = new Alert(Alert.AlertType.WARNING,"Account created successfully");
+        a.setOnCloseRequest(e-> enableBlur(false));
+        a.show();
+
         return;
     }
     public String getSHA256(String password) throws NoSuchAlgorithmException{
@@ -352,5 +399,24 @@ public class AccountMenu extends Application {
         accountMenuStage.hide();
         MainMenu mainMenu = new MainMenu();
         mainMenu.startMainMenu(new Stage(), username);
+    }
+    @Override
+    public void enableBlur(Boolean blurringEffect){
+        ColorAdjust adj;
+        GaussianBlur blur;
+        if(blurringEffect) {
+            adj = new ColorAdjust(0, -0.05, -0.2, 0);
+            blur = new GaussianBlur(20);
+            adj.setInput(blur);
+            accountGroup.setEffect(adj);
+
+        }
+        else{
+            blur = new GaussianBlur(0);
+            adj = new ColorAdjust();
+            adj.setInput(blur);
+            accountGroup.setEffect(null);
+        }
+
     }
 }
