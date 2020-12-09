@@ -3,12 +3,12 @@ package obstacles;
 import collectable.ColorChanger;
 import collectable.Star;
 import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.GaussianBlur;
@@ -16,15 +16,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import mainPackage.Main;
 import menu.Blurrable;
-import playerinfo.Data;
+import menu.MainMenu;
 import playerinfo.Player;
 
-import java.awt.event.KeyEvent;
-import java.io.*;
 import java.util.ArrayList;
 
 
@@ -106,8 +102,8 @@ public abstract class Obstacle implements Pauseable, Blurrable {
 
             Stage pauseStage = new Stage();
 //            enableBlur(true);
-            Button saveGame = new Button( "SAVE");
-            Button resumeGame = new Button("RESUME USING STARS");
+            Button restartGame = new Button( "RESTART");
+            Button resumeGame = new Button("RESUME USING 10 STARS");
             Button exitGame = new Button("EXIT");
             resumeGame.setLayoutX(245);
             resumeGame.setLayoutY(140);
@@ -119,15 +115,15 @@ public abstract class Obstacle implements Pauseable, Blurrable {
             resumeGame.setOnMouseEntered(e -> resumeGame.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
             resumeGame.setOnMouseExited(e -> resumeGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
 
-            saveGame.setLayoutX(245);
-            saveGame.setLayoutY(250);
-            saveGame.setFocusTraversable(false);
-            saveGame.setPrefWidth(320);
-            saveGame.setPrefHeight(80);
-            saveGame.setFont(Font.font("Sans Serif",20));
-            saveGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
-            saveGame.setOnMouseEntered(e -> saveGame.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
-            saveGame.setOnMouseExited(e -> saveGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+            restartGame.setLayoutX(245);
+            restartGame.setLayoutY(250);
+            restartGame.setFocusTraversable(false);
+            restartGame.setPrefWidth(320);
+            restartGame.setPrefHeight(80);
+            restartGame.setFont(Font.font("Sans Serif",20));
+            restartGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+            restartGame.setOnMouseEntered(e -> restartGame.setStyle("-fx-background-color: #FF4500;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+            restartGame.setOnMouseExited(e -> restartGame.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
 
             exitGame.setLayoutX(245);
             exitGame.setLayoutY(360);
@@ -146,7 +142,7 @@ public abstract class Obstacle implements Pauseable, Blurrable {
             Group tempRoot = new Group();
             tempRoot.getChildren().add(exitGame);
             tempRoot.getChildren().add(resumeGame);
-            tempRoot.getChildren().add(saveGame);
+            tempRoot.getChildren().add(restartGame);
             Scene s = new Scene(tempRoot, 800,800);
             s.setFill(Color.rgb(57, 54, 54));
 //            s.setFill(Color.TRANSPARENT);
@@ -159,13 +155,10 @@ public abstract class Obstacle implements Pauseable, Blurrable {
             resumeGame.setOnAction(new EventHandler<ActionEvent>(){
                 @Override
                 public void handle(ActionEvent event) {
-                    /*
-                    Replace this part with alert
-                     */
                     if(Main.numberOfStars < 10){
-                        System.out.println("Not enough stars");
-                        // Uncomment this when alert is made
-//                        return;
+                        Alert a = new Alert(Alert.AlertType.INFORMATION,"Not enough stars");
+                        a.show();
+                        return;
                     }
                     else{
                         Main.numberOfStars -= 10;
@@ -183,6 +176,34 @@ public abstract class Obstacle implements Pauseable, Blurrable {
                     getStage().show();
                     pauseStage.hide();
                     alreadyOver = false;
+                }
+            });
+            restartGame.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    // Add to total stars collected here
+                    pauseStage.hide();
+                    Main main = new Main();
+                    alreadyOver = false;
+                    try{
+                        main.game(new Stage(), false, getSaveSlot(), getSaveUser());
+                    } catch (Exception e){
+                        System.out.println("Restart error");
+                    }
+                }
+            });
+            exitGame.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    // Add to total stars collected here
+                    pauseStage.hide();
+                    MainMenu mainMenu = new MainMenu();
+                    alreadyOver = false;
+                    try{
+                        mainMenu.startMainMenu(new Stage(), getSaveUser());
+                    } catch (Exception e){
+                        System.out.println("exit game error");
+                    }
                 }
             });
 

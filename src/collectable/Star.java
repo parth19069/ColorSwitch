@@ -60,6 +60,8 @@ public class Star extends Collectable{
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if(t1){
 //                    System.out.println("IN CHANGER");
+                    Main.starPlayer.seek(Duration.millis(200));
+                    Main.starPlayer.play();
                     getRoot().getChildren().remove(star);
                     getBinding().removeListener(getListener());
                     System.out.println("IN STAR");

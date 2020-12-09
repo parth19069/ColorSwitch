@@ -10,6 +10,8 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -66,6 +68,8 @@ public class Main extends Application implements Pauseable, Blurrable {
     private IntegerProperty starsProperty;
     private Stage stage;
     private boolean changedLoaded;
+    public static Media music, starSound, changerSound;
+    public static MediaPlayer musicPlayer, starPlayer, changerPlayer;
     public int getColorCode(Color color){
         int code = -1;
         int idx = 0;
@@ -144,6 +148,7 @@ public class Main extends Application implements Pauseable, Blurrable {
             @Override
             public void handle(ActionEvent event) {
                 try {
+                    pauseButton.setVisible(false);
                     Stage pauseStage = new Stage();
                     enableBlur(true);
                     Button saveGame = new Button("SAVE");
@@ -214,6 +219,7 @@ public class Main extends Application implements Pauseable, Blurrable {
                         @Override
                         public void handle(ActionEvent event) {
                             try {
+                                pauseButton.setVisible(true);
                                 enableBlur(false);
                                 for(Pauseable pauseable: pauseables){
                                     pauseable.start();
@@ -351,6 +357,27 @@ public class Main extends Application implements Pauseable, Blurrable {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        try {
+            String musicPath = "audio/music/StayInsideMe.wav";
+            String starSoundPath = "audio/sound/ColorSwitchStarSoundSample.wav";
+            String changerSoundPath = "audio/sound/UndertaleNoticeSoundSample.wav";
+            music = new Media(new File(musicPath).toURI().toString());
+            starSound = new Media(new File(starSoundPath).toURI().toString());
+            changerSound = new Media(new File(changerSoundPath).toURI().toString());
+            musicPlayer = new MediaPlayer(music);
+            starPlayer = new MediaPlayer(starSound);
+            changerPlayer = new MediaPlayer(changerSound);
+
+            musicPlayer.setOnEndOfMedia(new Runnable() {
+                @Override
+                public void run() {
+                    musicPlayer.seek(Duration.ZERO);
+                }
+            });
+            musicPlayer.play();
+        } catch (Exception e){
+            System.out.println("Media error");
+        }
         AccountMenu accountMenu = new AccountMenu();
         accountMenu.start(primaryStage);
     }
@@ -515,6 +542,9 @@ public class Main extends Application implements Pauseable, Blurrable {
             obs.setObstaclesOrderList(obstaclesOrderList);
             obs.setStage(stage);
             obs.setRootTimeline(timeline);
+            obs.setSaveUser(username);
+            obs.setSaveSlot(saveSlot);
+            obs.setSavePath(savePath);
         }
         if(!isLoaded) {
             for (Obstacle obs : obstaclesOrderList) {

@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
+import mainPackage.Main;
 import obstacles.Obstacle;
 import obstacles.Pauseable;
 import obstacles.RingObstacle;
@@ -86,8 +87,9 @@ public class ColorChanger extends Collectable implements Pauseable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if(t1){
-                    boolean debug = getRoot().getChildren().remove(changer);
-                    System.out.println("DEBUG: " + debug);
+                    Main.changerPlayer.seek(Duration.millis(500));
+                    Main.changerPlayer.play();
+                    getRoot().getChildren().remove(changer);
                     getBinding().removeListener(getListener());
                     Color color = colors.get(rand.nextInt(size));
                     timeline.stop();

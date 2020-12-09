@@ -114,7 +114,7 @@ public class AccountMenu extends Application implements Blurrable {
         goButton.setOnMouseEntered(e -> goButton.setStyle("-fx-background-color: green;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
         goButton.setOnMouseExited(e -> goButton.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
 
-        toggleGroup = new ToggleGroup();
+        toggleGroup  = new ToggleGroup();
         signInButton = new ToggleButton("Sign In");
         signUpButton = new ToggleButton("Sign Up");
         signInButton.setToggleGroup(toggleGroup);
