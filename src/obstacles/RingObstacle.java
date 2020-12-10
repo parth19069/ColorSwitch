@@ -217,7 +217,12 @@ public class RingObstacle extends Obstacle {
                         if (intersect.getBoundsInLocal().getWidth() != -1) {
                             if(!colors[i].equals(getPlayer().getColor())){
                                 System.out.println("GAME OVER");
-                                collision();
+                                double playerCentreY = getPlayer().getIcon().getCenterY();
+                                double obstacleCentreY = getCentreY() + getInitialTranslate().getY() + getRoot().getLayoutY();
+                                double finalPlayerPos = playerCentreY;
+                                if(obstacleCentreY > playerCentreY) finalPlayerPos -= 200;
+                                else finalPlayerPos += 200;
+                                collision(finalPlayerPos);
                                 return;
                             }
                         }

@@ -83,5 +83,13 @@ public class TangentialRingObstacle extends Obstacle {
 
         ring1.setRootTimeline(getRootTimeline());
         ring2.setRootTimeline(getRootTimeline());
+
+        ring1.setSaveUser(getSaveUser());
+        ring1.setSavePath(getSavePath());
+        ring1.setSaveSlot(getSaveSlot());
+
+        ring2.setSaveUser(getSaveUser());
+        ring2.setSavePath(getSavePath());
+        ring2.setSaveSlot(getSaveSlot());
     }
 }

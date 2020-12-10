@@ -42,6 +42,10 @@ public class ConcentricRingObstacle extends Obstacle {
             rings.get(i).setPauseables(getPauseables());
             rings.get(i).setObstacles(getObstacles());
             rings.get(i).setRootTimeline(getRootTimeline());
+
+            rings.get(i).setSaveUser(getSaveUser());
+            rings.get(i).setSavePath(getSavePath());
+            rings.get(i).setSaveSlot(getSaveSlot());
         }
     }
     public void showOnNode(Group root){

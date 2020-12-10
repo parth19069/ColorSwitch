@@ -87,8 +87,7 @@ public class ColorChanger extends Collectable implements Pauseable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if(t1){
-                    Main.changerPlayer.seek(Duration.millis(500));
-                    Main.changerPlayer.play();
+                    Main.changerSound.play();
                     getRoot().getChildren().remove(changer);
                     getBinding().removeListener(getListener());
                     Color color = colors.get(rand.nextInt(size));

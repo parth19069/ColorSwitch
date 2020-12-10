@@ -61,6 +61,10 @@ public abstract class Obstacle implements Pauseable, Blurrable {
     abstract public void setYTranslate(double y);
     abstract public double getSpecialValue();
     abstract public void setSpecialValue(double value);
+    @Override
+    public String toString(){
+        return "Obstacle:" + this.getClass().getName() + " " + getSaveUser();
+    }
     public void setCollectables(int changerCentreX, int changerCentreY,
                                 int starCentreX, int starCentreY,
                                 Player player, ArrayList<BooleanBinding> bindings, Group root,
@@ -89,7 +93,7 @@ public abstract class Obstacle implements Pauseable, Blurrable {
         }
         return code;
     }
-    public void collision() {
+    public void collision(double playerCentreY) {
         try {
             if(alreadyOver){
                 return;
@@ -167,7 +171,7 @@ public abstract class Obstacle implements Pauseable, Blurrable {
                     getPlayer().getTimeline().getKeyFrames().clear();
                     pauseables.get(0).stop();
                     rootTimeline.getKeyFrames().clear();
-                    getPlayer().getIcon().setCenterY(getPlayer().getIcon().getCenterY() + 300);
+                    getPlayer().getIcon().setCenterY(playerCentreY);
                     for(Pauseable pauseable: pauseables){
                         if(pauseable != getPlayer() && pauseable != pauseables.get(0)){
                             pauseable.start();
@@ -189,6 +193,7 @@ public abstract class Obstacle implements Pauseable, Blurrable {
                         main.game(new Stage(), false, getSaveSlot(), getSaveUser());
                     } catch (Exception e){
                         System.out.println("Restart error");
+                        e.printStackTrace();
                     }
                 }
             });
@@ -199,10 +204,12 @@ public abstract class Obstacle implements Pauseable, Blurrable {
                     pauseStage.hide();
                     MainMenu mainMenu = new MainMenu();
                     alreadyOver = false;
+                    System.out.println("----" + getSaveUser() + "----");
                     try{
                         mainMenu.startMainMenu(new Stage(), getSaveUser());
                     } catch (Exception e){
-                        System.out.println("exit game error");
+                        System.out.println("Exit game error");
+                        e.printStackTrace();
                     }
                 }
             });

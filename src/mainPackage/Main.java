@@ -10,6 +10,7 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -68,8 +69,9 @@ public class Main extends Application implements Pauseable, Blurrable {
     private IntegerProperty starsProperty;
     private Stage stage;
     private boolean changedLoaded;
-    public static Media music, starSound, changerSound;
-    public static MediaPlayer musicPlayer, starPlayer, changerPlayer;
+    public static Media musicSound;
+    public static AudioClip starSound, changerSound, jumpSound;
+    public static MediaPlayer musicPlayer;
     public int getColorCode(Color color){
         int code = -1;
         int idx = 0;
@@ -359,15 +361,16 @@ public class Main extends Application implements Pauseable, Blurrable {
     public void start(Stage primaryStage) throws Exception{
         try {
             String musicPath = "audio/music/StayInsideMe.wav";
-            String starSoundPath = "audio/sound/ColorSwitchStarSoundSample.wav";
-            String changerSoundPath = "audio/sound/UndertaleNoticeSoundSample.wav";
-            music = new Media(new File(musicPath).toURI().toString());
-            starSound = new Media(new File(starSoundPath).toURI().toString());
-            changerSound = new Media(new File(changerSoundPath).toURI().toString());
-            musicPlayer = new MediaPlayer(music);
-            starPlayer = new MediaPlayer(starSound);
-            changerPlayer = new MediaPlayer(changerSound);
+            String starSoundPath = "audio/sound/star.wav";
+            String changerSoundPath = "audio/sound/colorswitch.wav";
+            String jumpSoundPath = "audio/sound/jump.wav";
+            musicSound = new Media(new File(musicPath).toURI().toString());
+            starSound = new AudioClip(new File(starSoundPath).toURI().toString());
+            changerSound = new AudioClip(new File(changerSoundPath).toURI().toString());
+            jumpSound = new AudioClip(new File(jumpSoundPath).toURI().toString());
 
+            musicPlayer = new MediaPlayer(musicSound);
+//            jumpPlayer = new MediaPlayer(jumpSound);
             musicPlayer.setOnEndOfMedia(new Runnable() {
                 @Override
                 public void run() {
@@ -383,6 +386,9 @@ public class Main extends Application implements Pauseable, Blurrable {
     }
 
     void handlePlayerMovement(){
+//        jumpPlayer.seek(Duration.ZERO);
+//        jumpPlayer.play();
+        jumpSound.play();
         double temp = player.getIcon().getCenterY();
         Interpolator interpolator = new Interpolator() {
             @Override
@@ -522,7 +528,9 @@ public class Main extends Application implements Pauseable, Blurrable {
             obs.quickSetup(sub, 6000, bindings, player, true, true, true, true);
             obsYTranslate -= 800;
         }
-        System.out.println(obsYTranslate);
+        for(Obstacle obs: obstaclesOrderList){
+            System.out.println(obs);
+        }
     }
     public void createObstaclesOrderList(){
         obstaclesOrderList.add(new LineObstacle(800, 200, 30,  true, new Translate(), 0));
@@ -537,8 +545,6 @@ public class Main extends Application implements Pauseable, Blurrable {
         for(Obstacle obs: obstaclesOrderList){
             obs.setObstacles(obstacles);
             obs.setPauseables(pauseables);
-            obs.setSavePath(savePath);
-            obs.setSaveSlot(saveSlot);
             obs.setObstaclesOrderList(obstaclesOrderList);
             obs.setStage(stage);
             obs.setRootTimeline(timeline);
