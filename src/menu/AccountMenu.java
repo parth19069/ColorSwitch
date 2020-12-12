@@ -63,9 +63,9 @@ public class AccountMenu extends Application implements Blurrable {
         passwordImgView.setLayoutY(410);
 
 
-        mainText = new Text("Sign In / Up");
-        mainText.setFont(Font.font("Sans Serif",35));
-        mainText.setX(300);
+        mainText = new Text("SIGN IN / UP");
+        mainText.setFont(Font.font("Sans Serif",45));
+        mainText.setX(270);
         mainText.setY(125);
         mainText.setFill(Color.WHITE);
 

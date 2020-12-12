@@ -72,6 +72,7 @@ public class Main extends Application implements Pauseable, Blurrable {
     public static Media musicSound;
     public static AudioClip starSound, changerSound, jumpSound;
     public static MediaPlayer musicPlayer;
+    private Text pauseText;
     public int getColorCode(Color color){
         int code = -1;
         int idx = 0;
@@ -153,6 +154,11 @@ public class Main extends Application implements Pauseable, Blurrable {
                     pauseButton.setVisible(false);
                     Stage pauseStage = new Stage();
                     enableBlur(true);
+                    pauseText = new Text("PAUSE");
+                    pauseText.setFont(Font.font("Sans Serif",45));
+                    pauseText.setX(328);
+                    pauseText.setY(125);
+                    pauseText.setFill(Color.WHITE);
                     Button saveGame = new Button("SAVE");
                     Button resumeGame = new Button("RESUME GAME");
                     Button exitGame = new Button("Exit");
@@ -238,6 +244,7 @@ public class Main extends Application implements Pauseable, Blurrable {
                     tempRoot.getChildren().add(exitGame);
                     tempRoot.getChildren().add(resumeGame);
                     tempRoot.getChildren().add(saveGame);
+                    tempRoot.getChildren().add(pauseText);
                     Scene s = new Scene(tempRoot, 800,800);
 
                     s.setFill(Color.rgb(41,41,41));
