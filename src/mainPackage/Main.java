@@ -298,6 +298,8 @@ public class Main extends Application implements Pauseable, Blurrable {
                     pauseStage.show();
 
                 }
+
+
                 catch(Exception e){
 
                 }
