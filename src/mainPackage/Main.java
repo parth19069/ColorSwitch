@@ -102,6 +102,9 @@ public class Main extends Application implements Pauseable, Blurrable {
         Image img = new Image(new FileInputStream("images/pause.png"),73,73,true,true);
         ImageView view = new ImageView(img);
         view.preserveRatioProperty();
+        Image img2 = new Image(new FileInputStream("images/saveButton.png"),73,73,true,true);
+        ImageView view2 = new ImageView(img2);
+        view2.preserveRatioProperty();
         Button pauseButton = new Button();
         pauseButton.setGraphic(view);
         pauseButton.setShape(new Circle(15));
@@ -110,6 +113,14 @@ public class Main extends Application implements Pauseable, Blurrable {
         pauseButton.setLayoutY(12);
         pauseButton.setLayoutX(710);
         pauseButton.setFocusTraversable(false);
+        Button saveButton = new Button();
+        saveButton.setGraphic(view2);
+        saveButton.setShape(new Circle(15));
+        saveButton.setContentDisplay(ContentDisplay.CENTER);
+        saveButton.setMaxSize(15,15);
+        saveButton.setLayoutY(92);
+        saveButton.setLayoutX(710);
+        saveButton.setFocusTraversable(false);
         ScaleTransition st = new ScaleTransition(Duration.millis(200),pauseButton);
         st.setToX(0.9);
         st.setToY(0.9);
@@ -139,6 +150,37 @@ public class Main extends Application implements Pauseable, Blurrable {
                 "-fx-max-width: 65px; " +
                 "-fx-max-height: 65px;"));
         pauseButton.setOnMouseExited(e -> st1.play());
+
+        ScaleTransition st2 = new ScaleTransition(Duration.millis(200),saveButton);
+        st2.setToX(0.9);
+        st2.setToY(0.9);
+        ScaleTransition st3 = new ScaleTransition(Duration.millis(200),saveButton);
+        st3.setToX(1);
+        st3.setToY(1);
+        saveButton.setStyle(
+                "-fx-background-radius: 500em; " +
+                        "-fx-min-width: 65px; " +
+                        "-fx-min-height: 65px; " +
+                        "-fx-max-width: 65px; " +
+                        "-fx-max-height: 65px;"+
+                        "-fx-background-color: -fx-shadow-highlight-color;"
+        );
+        saveButton.setOnMouseEntered(e -> saveButton.setStyle("-fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;"+
+                "-fx-background-radius: 500em; " +
+                "-fx-min-width: 65px; " +
+                "-fx-min-height: 65px; " +
+                "-fx-max-width: 65px; " +
+                "-fx-max-height: 65px;"));
+        saveButton.setOnMouseEntered(e -> st2.play());
+
+        saveButton.setOnMouseExited(e -> saveButton.setStyle("-fx-background-color: -fx-shadow-highlight-color;"+
+                "-fx-background-radius: 500em; " +
+                "-fx-min-width: 65px; " +
+                "-fx-min-height: 65px; " +
+                "-fx-max-width: 65px; " +
+                "-fx-max-height: 65px;"));
+        saveButton.setOnMouseExited(e -> st3.play());
+
 
 
         obstaclesOrderList = new ArrayList<Obstacle>();
@@ -262,6 +304,13 @@ public class Main extends Application implements Pauseable, Blurrable {
 
             }
         });
+        saveButton.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+
         bindings = new ArrayList<BooleanBinding>();
         colorCode = new ArrayList<Color>();
         loadData = new Data(new ArrayList<Double>(), new ArrayList<Integer>(), new ArrayList<Boolean>(), new ArrayList<Boolean>(), new ArrayList<Double>(), 0, 400, 750, 0, 0, 0);
@@ -326,6 +375,7 @@ public class Main extends Application implements Pauseable, Blurrable {
         root.getChildren().add(player.getIcon());
         root.getChildren().add(sub);
         root.getChildren().add(pauseButton);
+        root.getChildren().add(saveButton);
         root.getChildren().add(starText);
 
         player.setRoot(root);
