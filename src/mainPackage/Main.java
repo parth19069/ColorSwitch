@@ -1,6 +1,5 @@
 package mainPackage;
 
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
@@ -30,10 +29,12 @@ import javafx.event.EventHandler;
 import javafx.util.Duration;
 import menu.AccountMenu;
 import menu.Blurrable;
+import menu.CrashMenu;
 import menu.MainMenu;
 import obstacles.*;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -59,14 +60,13 @@ public class Main extends Application implements Pauseable, Blurrable {
     private BooleanBinding starsBinding;
     private Translate translateSub;
     private Scene scene;
-    private ArrayList<Integer> saveObstacles;
+    private ArrayList<Integer> saveObstacles, saveDuration;
     private ArrayList<Double> saveInitialTransform, saveInitialTranslates;
     private ArrayList<Boolean> saveChangerStatus, saveStarStatus;
     private ArrayList<Obstacle> obstaclesOrderList;
     private Data loadData;
     private boolean isLoaded;
     private Text starText;
-    private IntegerProperty starsProperty;
     private Stage stage;
     private boolean changedLoaded;
     public static Media musicSound;
@@ -306,16 +306,22 @@ public class Main extends Application implements Pauseable, Blurrable {
 
             }
         });
-        saveButton.setOnAction(new EventHandler<ActionEvent>(){
+        saveButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) {
-
+            public void handle(ActionEvent actionEvent) {
+                try{
+                    System.out.println("here");
+                    save(finalPath);
+                }
+                catch (Exception e){
+                    System.out.println("Could not save");
+                }
             }
         });
 
         bindings = new ArrayList<BooleanBinding>();
         colorCode = new ArrayList<Color>();
-        loadData = new Data(new ArrayList<Double>(), new ArrayList<Integer>(), new ArrayList<Boolean>(), new ArrayList<Boolean>(), new ArrayList<Double>(), 0, 400, 750, 0, 0, 0);
+        loadData = new Data(new ArrayList<Double>(), new ArrayList<Integer>(), new ArrayList<Boolean>(), new ArrayList<Boolean>(), new ArrayList<Double>(), 0, 400, 750, 0, 0, 0, new ArrayList<Integer>());
         if(isLoaded) {
             try {
                 System.out.println(finalPath);
@@ -382,7 +388,7 @@ public class Main extends Application implements Pauseable, Blurrable {
 
         player.setRoot(root);
 
-        scene = new Scene(root, 800, 1000);
+        scene = new Scene(root, 800, 800);
 
         scene.setFill(Color.rgb(57, 54, 54));
 
@@ -414,6 +420,14 @@ public class Main extends Application implements Pauseable, Blurrable {
                 }
             }
         });
+        Timeline crashTimeline = new Timeline();
+        crashTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(100), ActionEvent -> {
+            if(player.getIcon().getCenterY() > 800){
+                obstacles.get(0).collision(790);
+            }
+        }));
+        crashTimeline.setCycleCount(Timeline.INDEFINITE);
+        crashTimeline.play();
     }
 
     @Override
@@ -467,8 +481,11 @@ public class Main extends Application implements Pauseable, Blurrable {
                 player.getTimeline().stop();
                 player.getTimeline().getKeyFrames().clear();
                 if(player.isFall()) {
-                    player.getTimeline().setCycleCount(1);
-                    player.getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis((1100 - player.getIcon().getCenterY()) * 3), new KeyValue(player.getIcon().centerYProperty(), 1000, interpolator)));
+                    player.getTimeline().setCycleCount(Timeline.INDEFINITE);
+                    player.setSpeed(0);
+                    player.getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(5), ActionEvent -> {
+                        player.fall();
+                    }));
                     player.getTimeline().play();
                 }
             });
@@ -477,8 +494,11 @@ public class Main extends Application implements Pauseable, Blurrable {
             player.setFall(true);
             player.getTimeline().stop();
             player.getTimeline().getKeyFrames().clear();
-            player.getTimeline().setCycleCount(1);
-            player.getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis((1100 - player.getIcon().getCenterY()) * 3), new KeyValue(player.getIcon().centerYProperty(), 1000, interpolator)));
+            player.getTimeline().setCycleCount(Timeline.INDEFINITE);
+            player.setSpeed(0);
+            player.getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(5), ActionEvent -> {
+                player.fall();
+            }));
             timeline.stop();
             timeline.getKeyFrames().clear();
             timeline.setCycleCount(1);
@@ -528,6 +548,7 @@ public class Main extends Application implements Pauseable, Blurrable {
             ArrayList<Double> translateY = loadData.getInitialTranslates();
             ArrayList<Boolean> changerStatus = loadData.getChangerStatus();
             ArrayList<Boolean> starStatus = loadData.getStarStatus();
+            ArrayList<Integer> duration = loadData.getDuration();
             System.out.println(indices);
             System.out.println(transformState);
             System.out.println(translateY);
@@ -537,6 +558,7 @@ public class Main extends Application implements Pauseable, Blurrable {
                 obstacles.get(obstacles.size() - 1).setSpecialValue(transformState.get(i));
                 obstacles.get(obstacles.size() - 1).setChangerPresent(changerStatus.get(i));
                 obstacles.get(obstacles.size() - 1).setStarPresent(starStatus.get(i));
+                obstacles.get(obstacles.size() - 1).setDuration(duration.get(i));
             }
         }
 
@@ -560,7 +582,9 @@ public class Main extends Application implements Pauseable, Blurrable {
         Only sets up obstacles that are added in addObstacles function
          */
         for(Obstacle obs: obstacles){
-            if(isLoaded)obs.quickSetup(sub, 5000, bindings, player, true, false, obs.isChangerPresent(), obs.isStarPresent());
+            if(isLoaded){
+                obs.quickSetup(sub, obs.getDuration(), bindings, player, true, false, obs.isChangerPresent(), obs.isStarPresent());
+            }
             else {
                 obs.setChangerPresent(true);
                 obs.setStarPresent(true);
@@ -584,7 +608,7 @@ public class Main extends Application implements Pauseable, Blurrable {
             obs.setYTranslate(obsYTranslate);
             obs.setChangerPresent(true);
             obs.setStarPresent(true);
-            obs.quickSetup(sub, 6000, bindings, player, true, true, true, true);
+            obs.quickSetup(sub, Math.max(obs.getDuration() - 1000, 1000), bindings, player, true, true, true, true);
             obsYTranslate -= 800;
         }
         for(Obstacle obs: obstaclesOrderList){
@@ -592,15 +616,27 @@ public class Main extends Application implements Pauseable, Blurrable {
         }
     }
     public void createObstaclesOrderList(){
-        obstaclesOrderList.add(new LineObstacle(800, 200, 30,  true, new Translate(), 0));
-        obstaclesOrderList.add(new PlusObstacle(250, 300, 190, 30, false, new Translate()));
-        obstaclesOrderList.add(new SquareObstacle(400, 300, 190, 30, true , new Translate()));
-        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
-        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 2, true, true, new Translate(), 45));
-        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 3, false, true, new Translate(), 45));
-        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
         obstaclesOrderList.add(new RingObstacle(400, 300, 190, 30, true, new Translate(), 0));
-        obstaclesOrderList.add(new SquareObstacle(400, 300, 120, 20, true , new Translate()));
+        obstaclesOrderList.add(new PlusObstacle(250, 300, 190, 30, false, new Translate()));
+        obstaclesOrderList.add(new LineObstacle(800, 200, 30,  true, new Translate(), 0));
+        obstaclesOrderList.add(new SquareObstacle(400, 300, 120, 30, true , new Translate()));
+        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 3, false, true, new Translate(), 45));
+        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 150, 150, 25, true, new Translate(), 45));
+        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 2, true, true, new Translate(), 45));
+        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 150, 130, 25, true, new Translate(), 45));
+        obstaclesOrderList.add(new SquareObstacle(400, 300, 120, 30, true , new Translate()));
+        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 240, 30, 4, false, true, new Translate(), 45));
+
+
+//        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
+//        obstaclesOrderList.add(new RingObstacle(400, 300, 190, 30, true, new Translate(), 0));
+//        obstaclesOrderList.add(new PlusObstacle(250, 300, 190, 30, false, new Translate()));
+//        obstaclesOrderList.add(new LineObstacle(800, 200, 30,  true, new Translate(), 0));
+//        obstaclesOrderList.add(new SquareObstacle(400, 300, 120, 20, true , new Translate()));
+//        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 3, false, true, new Translate(), 45));
+//        obstaclesOrderList.add(new SquareObstacle(400, 300, 120, 30, true , new Translate()));
+//        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 2, true, true, new Translate(), 45));
+//        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
         for(Obstacle obs: obstaclesOrderList){
             obs.setObstacles(obstacles);
             obs.setPauseables(pauseables);
@@ -633,17 +669,19 @@ public class Main extends Application implements Pauseable, Blurrable {
         saveInitialTranslates = new ArrayList<Double>();
         saveChangerStatus = new ArrayList<Boolean>();
         saveStarStatus = new ArrayList<Boolean>();
+        saveDuration = new ArrayList<Integer>();
         for(Obstacle obs: obstacles){
             saveObstacles.add(obstaclesOrderList.indexOf(obs));
             saveInitialTransform.add(obs.getSpecialValue());
             saveInitialTranslates.add(obs.getInitialTranslate().getY());
             saveChangerStatus.add(obs.isChangerPresent());
             saveStarStatus.add(obs.isStarPresent());
+            saveDuration.add(obs.getDuration());
         }
         System.out.println(saveObstacles);
         System.out.println(saveInitialTransform);
         System.out.println(saveInitialTranslates);
-        Data saveData = new Data(saveInitialTranslates, saveObstacles, saveChangerStatus, saveStarStatus, saveInitialTransform, (int)sub.getLayoutY(), (int)player.getIcon().getCenterX(), (int)player.getIcon().getCenterY(), getColorCode(player.getColor()), numberOfStars, obstacleShiftCounter);
+        Data saveData = new Data(saveInitialTranslates, saveObstacles, saveChangerStatus, saveStarStatus, saveInitialTransform, (int)sub.getLayoutY(), (int)player.getIcon().getCenterX(), (int)player.getIcon().getCenterY(), getColorCode(player.getColor()), numberOfStars, obstacleShiftCounter, saveDuration);
         try{
             FileOutputStream outputStream = new FileOutputStream(finalPath);
             ObjectOutputStream out = new ObjectOutputStream(outputStream);

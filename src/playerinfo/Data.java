@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Data implements Serializable {
-    private ArrayList<Integer> indices;
+    private ArrayList<Integer> indices, duration;
     private ArrayList<Double> initialTransforms, initialTranslates;
     private int subLayoutY, playerX, playerY;
     private int playerColor;
@@ -16,7 +16,9 @@ public class Data implements Serializable {
     public Data(ArrayList<Double> initialTranslates, ArrayList<Integer> indices,
                 ArrayList<Boolean> changerStatus, ArrayList<Boolean> starStatus,
                 ArrayList<Double> initialTransforms, int subLayoutY, int playerX,
-                int playerY, int playerColor, int numberOfStars, int obstacleShiftCounter){
+                int playerY, int playerColor, int numberOfStars, int obstacleShiftCounter,
+                ArrayList<Integer> duration){
+        this.duration = duration;
         this.indices = indices;
         this.initialTransforms = initialTransforms;
         this.changerStatus = changerStatus;
@@ -78,5 +80,13 @@ public class Data implements Serializable {
 
     public ArrayList<Boolean> getStarStatus() {
         return starStatus;
+    }
+
+    public ArrayList<Integer> getDuration() {
+        return duration;
+    }
+
+    public void setDuration(ArrayList<Integer> duration) {
+        this.duration = duration;
     }
 }

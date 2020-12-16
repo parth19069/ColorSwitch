@@ -15,7 +15,9 @@ public class Player implements Pauseable {
     private Timeline timeline;
     private Group root;
     private boolean fall;
+    private double speed;
     public Player(int centreX, int centreY, int radius, Color color){
+        speed = 0;
         icon = new Circle(centreX, centreY, radius);
         icon.setStrokeWidth(0);
         colorCode = new ArrayList<Color>();
@@ -65,4 +67,18 @@ public class Player implements Pauseable {
     public void setFall(boolean fall) {
         this.fall = fall;
     }
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+    public void fall(){
+        double y = icon.getCenterY();
+        y += speed;
+        speed += 0.05;
+        icon.setCenterY(y);
+    }
+
 }

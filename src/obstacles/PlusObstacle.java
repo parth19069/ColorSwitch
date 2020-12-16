@@ -88,6 +88,7 @@ public class PlusObstacle extends Obstacle{
         getTimeline().setCycleCount(Animation.INDEFINITE);
         if(rotationDirection)getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), rotate.getAngle() + 360)));
         else getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), rotate.getAngle() -360)));
+        start();
     }
     public void setColors(Color c1, Color c2, Color c3, Color c4){
         segments.get(0).setFill(c1);
@@ -146,14 +147,17 @@ public class PlusObstacle extends Obstacle{
     public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted, boolean showChanger, boolean showStar){
         if(!isShifted) {
             showOnNode(root);
-            makeRotation(duration);
-            initBindings(bindings, player);
-            setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         }
+        makeRotation(duration);
+        setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
+        setDuration(duration);
         if(showCollectables) {
             setCollectables(400, getCentreY() + radius + 100, 400, getCentreY(), player, bindings, root, showChanger, showStar);
         }
-        if(!isShifted) start();
+        if(!isShifted) {
+            initBindings(bindings, player);
+            start();
+        }
     }
 
     @Override

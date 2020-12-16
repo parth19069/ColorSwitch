@@ -52,12 +52,15 @@ public class TangentialRingObstacle extends Obstacle {
     public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted, boolean showChanger, boolean showStar){
         if(!isShifted) {
             showOnNode(root);
-            ring1.makeRotation(duration);
-            ring1.setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
-
-            ring2.makeRotation(duration);
-            ring2.setColors(Color.CYAN, Color.rgb(250, 22, 151), Color.YELLOW, Color.PURPLE);
         }
+        ring1.makeRotation(duration);
+        ring1.setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
+
+        ring2.makeRotation(duration);
+        ring2.setColors(Color.CYAN, Color.rgb(250, 22, 151), Color.YELLOW, Color.PURPLE);
+        ring1.setDuration(duration);
+        ring2.setDuration(duration);
+        setDuration(duration);
         if(showCollectables) {
             setColorChanger();
             setCollectables(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 250, getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 100, player, bindings, root, showChanger, showStar);

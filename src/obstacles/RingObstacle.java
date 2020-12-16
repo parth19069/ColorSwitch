@@ -107,6 +107,7 @@ public class RingObstacle extends Obstacle {
         getTimeline().setCycleCount(Animation.INDEFINITE);
         if(rotationDirection)getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), rotate.getAngle() + 360)));
         else getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), rotate.getAngle() - 360)));
+        start();
     }
     public boolean getRotationDirection(){
         return rotationDirection;
@@ -161,14 +162,17 @@ public class RingObstacle extends Obstacle {
     public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted, boolean showChanger, boolean showStar){
         if(!isShifted) {
             showOnNode(root);
-            makeRotation(duration);
-            initBindings(bindings, player);
-            setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         }
+        makeRotation(duration);
+        setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
+        setDuration(duration);
         if(showCollectables) {
             setCollectables(getCentreX(), getCentreY() + radius + 100, getCentreX(), getCentreY(), player, bindings, root, showChanger, showStar);
         }
-        if(!isShifted)start();
+        if(!isShifted){
+            initBindings(bindings, player);
+            start();
+        }
     }
     public boolean getRotationStatus(){
         return rotationStatus;

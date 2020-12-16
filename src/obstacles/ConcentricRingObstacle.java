@@ -81,11 +81,13 @@ public class ConcentricRingObstacle extends Obstacle {
     public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted, boolean showChanger, boolean showStar){
         if(!isShifted) {
             showOnNode(root);
-            for (int i = 0; i < numberOfRings; i++) {
-                rings.get(i).makeRotation(duration);
-                rings.get(i).setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
-            }
         }
+        for (int i = 0; i < numberOfRings; i++) {
+            rings.get(i).makeRotation(duration);
+            rings.get(i).setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
+            rings.get(i).setDuration(duration);
+        }
+        setDuration(duration);
         if(showCollectables) {
             setColorChanger();
             setCollectables(getCentreX(), getCentreY() + rings.get(0).getRadius() + 100, getCentreX(), getCentreY(), player, bindings, root, showChanger, showStar);
