@@ -217,7 +217,7 @@ public class AccountMenu extends Application implements Blurrable {
                     }
                 }
                 catch (Exception e){
-
+                    System.out.println("Unexpected error");
                 }
 
             }
@@ -274,7 +274,7 @@ public class AccountMenu extends Application implements Blurrable {
                 a.show();
 
                 System.out.println("IO");
-                i.printStackTrace();
+//                i.printStackTrace();
                 return;
             } catch (ClassNotFoundException c) {
                 // alert("Some problem occured while signing in")
@@ -284,7 +284,7 @@ public class AccountMenu extends Application implements Blurrable {
                 a.show();
 
                 System.out.println("ClassNotFound");
-                c.printStackTrace();
+//                c.printStackTrace();
                 return;
             }
             String newHash = getSHA256(password);
@@ -390,7 +390,7 @@ public class AccountMenu extends Application implements Blurrable {
             System.out.println("Account data serialized");
         }
         catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             return false;
         }
         return true;

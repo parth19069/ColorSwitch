@@ -142,6 +142,12 @@ public class PlusObstacle extends Obstacle{
     public void setColorChanger(){
         getColorChanger().setColors(colors[0], colors[1], colors[2], colors[3]);
     }
+    public Color getColors(int i){
+        return colors[i];
+    }
+    public int getRadius(){
+        return radius;
+    }
 
     @Override
     public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted, boolean showChanger, boolean showStar){

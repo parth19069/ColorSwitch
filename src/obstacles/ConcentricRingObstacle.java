@@ -36,6 +36,7 @@ public class ConcentricRingObstacle extends Obstacle {
         }
     }
     public void initBindings(ArrayList<BooleanBinding> bindings, Player player){
+        setPlayer(player);
         for(int i = 0; i < numberOfRings; i++){
             rings.get(i).initBindings(bindings, player);
             rings.get(i).setStage(getStage());

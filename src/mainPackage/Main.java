@@ -70,7 +70,7 @@ public class Main extends Application implements Pauseable, Blurrable {
     private Stage stage;
     private boolean changedLoaded;
     public static Media musicSound;
-    public static AudioClip starSound, changerSound, jumpSound;
+    public static AudioClip starSound, changerSound, jumpSound, deadSound;
     public static MediaPlayer musicPlayer;
     private Text pauseText;
     public int getColorCode(Color color){
@@ -188,7 +188,14 @@ public class Main extends Application implements Pauseable, Blurrable {
         pauseables = new ArrayList<Pauseable>();
         createObstaclesOrderList();
 
-
+        /*
+        Note that even though we could have made a separate
+        class for pause menu, it would be useless as most of
+        the work is using data members of this class and also
+        Since we don't remove the game stage, it makes more
+        intuitive sense to not include a separate class for
+        this
+         */
         pauseButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
@@ -278,7 +285,7 @@ public class Main extends Application implements Pauseable, Blurrable {
                                 gameStage.show();
                             }
                             catch(Exception e){
-
+                                System.out.println("Unexpected error");
                             }
                         }
                     });
@@ -301,7 +308,7 @@ public class Main extends Application implements Pauseable, Blurrable {
 
 
                 catch(Exception e){
-
+                    System.out.println("Unexpected error");
                 }
 
             }
@@ -333,12 +340,12 @@ public class Main extends Application implements Pauseable, Blurrable {
                 inputStream.close();
             } catch (IOException i) {
                 System.out.println("IO");
-                i.printStackTrace();
+//                i.printStackTrace();
                 isLoaded = false;
                 changedLoaded = true;
             } catch (ClassNotFoundException c) {
                 System.out.println("ClassNotFound");
-                c.printStackTrace();
+//                c.printStackTrace();
                 changedLoaded = true;
             }
         }
@@ -358,7 +365,7 @@ public class Main extends Application implements Pauseable, Blurrable {
         rand = new Random();
         translateSub = new Translate();
         offset = 0;
-        obstacleShiftCounterValue = 4;
+        obstacleShiftCounterValue = 8;
         colorCode.add(Color.CYAN);
         colorCode.add(Color.PURPLE);
         colorCode.add(Color.YELLOW);
@@ -437,13 +444,14 @@ public class Main extends Application implements Pauseable, Blurrable {
             String starSoundPath = "audio/sound/star.wav";
             String changerSoundPath = "audio/sound/colorswitch.wav";
             String jumpSoundPath = "audio/sound/jump.wav";
+            String deadSoundPath = "audio/sound/dead.wav";
             musicSound = new Media(new File(musicPath).toURI().toString());
             starSound = new AudioClip(new File(starSoundPath).toURI().toString());
             changerSound = new AudioClip(new File(changerSoundPath).toURI().toString());
             jumpSound = new AudioClip(new File(jumpSoundPath).toURI().toString());
+            deadSound = new AudioClip(new File(deadSoundPath).toURI().toString());
 
             musicPlayer = new MediaPlayer(musicSound);
-//            jumpPlayer = new MediaPlayer(jumpSound);
             musicPlayer.setOnEndOfMedia(new Runnable() {
                 @Override
                 public void run() {
@@ -561,8 +569,6 @@ public class Main extends Application implements Pauseable, Blurrable {
                 obstacles.get(obstacles.size() - 1).setDuration(duration.get(i));
             }
         }
-
-
     }
     public void addPauseables(){
         /*
@@ -588,7 +594,7 @@ public class Main extends Application implements Pauseable, Blurrable {
             else {
                 obs.setChangerPresent(true);
                 obs.setStarPresent(true);
-                obs.quickSetup(sub, 5000, bindings, player, true, false, true, true);
+                obs.quickSetup(sub, 6000, bindings, player, true, false, true, true);
             }
             obs.setYTranslate(obsYTranslate);
             obsYTranslate -= 800;
@@ -617,26 +623,21 @@ public class Main extends Application implements Pauseable, Blurrable {
     }
     public void createObstaclesOrderList(){
         obstaclesOrderList.add(new RingObstacle(400, 300, 190, 30, true, new Translate(), 0));
+        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 150, 150, 25, true, new Translate(), 45));
+        obstaclesOrderList.add(new TangentialPlusObstacle(400, 300, 150, 150, 25, true, new Translate()));
         obstaclesOrderList.add(new PlusObstacle(250, 300, 190, 30, false, new Translate()));
         obstaclesOrderList.add(new LineObstacle(800, 200, 30,  true, new Translate(), 0));
         obstaclesOrderList.add(new SquareObstacle(400, 300, 120, 30, true , new Translate()));
         obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 3, false, true, new Translate(), 45));
-        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 150, 150, 25, true, new Translate(), 45));
         obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 2, true, true, new Translate(), 45));
         obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 150, 130, 25, true, new Translate(), 45));
         obstaclesOrderList.add(new SquareObstacle(400, 300, 120, 30, true , new Translate()));
         obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 240, 30, 4, false, true, new Translate(), 45));
+        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
+        obstaclesOrderList.add(new PlusObstacle(250, 300, 190, 30, false, new Translate()));
+        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
+        obstaclesOrderList.add(new TangentialPlusObstacle(400, 300, 150, 150, 25, true, new Translate()));
 
-
-//        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
-//        obstaclesOrderList.add(new RingObstacle(400, 300, 190, 30, true, new Translate(), 0));
-//        obstaclesOrderList.add(new PlusObstacle(250, 300, 190, 30, false, new Translate()));
-//        obstaclesOrderList.add(new LineObstacle(800, 200, 30,  true, new Translate(), 0));
-//        obstaclesOrderList.add(new SquareObstacle(400, 300, 120, 20, true , new Translate()));
-//        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 3, false, true, new Translate(), 45));
-//        obstaclesOrderList.add(new SquareObstacle(400, 300, 120, 30, true , new Translate()));
-//        obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 2, true, true, new Translate(), 45));
-//        obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
         for(Obstacle obs: obstaclesOrderList){
             obs.setObstacles(obstacles);
             obs.setPauseables(pauseables);
@@ -692,7 +693,7 @@ public class Main extends Application implements Pauseable, Blurrable {
             System.out.println("Data serialized");
         }
         catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 
@@ -722,7 +723,7 @@ public class Main extends Application implements Pauseable, Blurrable {
             mainMenu.startMainMenu(stage, username);
         }
         catch (Exception e){
-
+            System.out.println("Unexpected error");
         }
     }
 }

@@ -41,6 +41,7 @@ public class CrashMenu {
             if(Obstacle.alreadyOver){
                 return;
             }
+            Main.deadSound.play();
             Obstacle.alreadyOver = true;
             stage.hide();
             for(Pauseable pauseable: pauseables){
@@ -141,7 +142,7 @@ public class CrashMenu {
                         main.game(new Stage(), false, saveSlot, saveUser);
                     } catch (Exception e){
                         System.out.println("Restart error");
-                        e.printStackTrace();
+//                        e.printStackTrace();
                     }
                 }
             });
@@ -158,14 +159,15 @@ public class CrashMenu {
                         mainMenu.startMainMenu(new Stage(), saveUser);
                     } catch (Exception e){
                         System.out.println("Exit game error");
-                        e.printStackTrace();
+//                        e.printStackTrace();
                     }
                 }
             });
 
         }
         catch(Exception e){
-            e.printStackTrace();
+            System.out.println("Unexpected error");
+//            e.printStackTrace();
         }
     }
     public void buttonTransition(Button b, Boolean leftToRight){

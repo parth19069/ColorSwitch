@@ -82,6 +82,7 @@ public class MainMenu {
                     startMainMenu(primaryStage, username);
                 }
                 catch(Exception e){
+                    System.out.println("Unexpected error");
                 }
             }
         });
@@ -179,7 +180,7 @@ public class MainMenu {
             mainGame.game(primaryStage, isLoaded, slot, username);
         }
         catch(Exception e){
-
+            System.out.println("Unexpected error");
         }
     }
     public void exitGame(){

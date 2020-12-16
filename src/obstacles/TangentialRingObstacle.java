@@ -63,7 +63,7 @@ public class TangentialRingObstacle extends Obstacle {
         setDuration(duration);
         if(showCollectables) {
             setColorChanger();
-            setCollectables(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 250, getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 100, player, bindings, root, showChanger, showStar);
+            setCollectables(getCentreX(), getCentreY() + Math.max(ring1.getRadius(), ring2.getRadius()) + 100, getCentreX(), getCentreY() - Math.max(ring1.getRadius(), ring2.getRadius()) - 100, player, bindings, root, showChanger, showStar);
         }
 
         if(!isShifted){
@@ -72,6 +72,7 @@ public class TangentialRingObstacle extends Obstacle {
         }
     }
     public void initBindings(ArrayList<BooleanBinding> bindings, Player player){
+        setPlayer(player);
         ring1.initBindings(bindings, player);
         ring2.initBindings(bindings, player);
 
