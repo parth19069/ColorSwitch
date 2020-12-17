@@ -36,7 +36,7 @@ public class AccountMenu extends Application implements Blurrable {
     private ImageView userImgView, passwordImgView;
     private Text mainText;
     private TextField userField, passwordField;
-    private Button goButton;
+    private Button goButton, exitButton;
     private Path tick, cross;
     private ToggleGroup toggleGroup;
     private ToggleButton signInButton, signUpButton;
@@ -113,6 +113,17 @@ public class AccountMenu extends Application implements Blurrable {
         goButton.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
         goButton.setOnMouseEntered(e -> goButton.setStyle("-fx-background-color: green;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
         goButton.setOnMouseExited(e -> goButton.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
+
+        exitButton = new Button("EXIT");
+        exitButton.setLayoutX(300);
+        exitButton.setLayoutY(600);
+        exitButton.setFocusTraversable(false);
+        exitButton.setFont(Font.font("Sans Serif",20));
+        exitButton.setPrefWidth(190);
+        exitButton.setPrefHeight(50);
+        exitButton.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;"+"-fx-border-width: 2;");
+        exitButton.setOnMouseEntered(e -> exitButton.setStyle("-fx-background-color: red;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")) ;
+        exitButton.setOnMouseExited(e -> exitButton.setStyle("-fx-background-color: transparent;"+"-fx-text-fill: #FFFFFF;-fx-border-color: #FFFFFF;-fx-border-width: 2;")); ;
 
         toggleGroup  = new ToggleGroup();
         signInButton = new ToggleButton("Sign In");
@@ -222,12 +233,21 @@ public class AccountMenu extends Application implements Blurrable {
 
             }
         });
+
+        exitButton.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);
+            }
+        });
+
         accountGroup = new Group();
         accountGroup.getChildren().add(signInButton);
         accountGroup.getChildren().add(signUpButton);
         accountGroup.getChildren().add(userField);
         accountGroup.getChildren().add(passwordField);
         accountGroup.getChildren().add(goButton);
+        accountGroup.getChildren().add(exitButton);
         accountGroup.getChildren().add(mainText);
         accountGroup.getChildren().add(userImgView);
         accountGroup.getChildren().add(passwordImgView);
