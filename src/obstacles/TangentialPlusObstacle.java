@@ -10,10 +10,10 @@ import java.util.ArrayList;
 
 public class TangentialPlusObstacle extends Obstacle {
     private PlusObstacle plus1, plus2;
-    public TangentialPlusObstacle(int centreX, int centreY, int radius1, int radius2, int thickness, boolean clockwise, Translate initialTranslate){
+    public TangentialPlusObstacle(int centreX, int centreY, int radius1, int radius2, int thickness, boolean clockwise, Translate initialTranslate, int initialTransformState){
         super(centreX, centreY);
-        plus1 = new PlusObstacle(centreX - radius1 - thickness/2, centreY, radius1, thickness, clockwise, initialTranslate);
-        plus2 = new PlusObstacle(centreX + radius2 + thickness/2, centreY, radius2, thickness, !clockwise, initialTranslate);
+        plus1 = new PlusObstacle(centreX - radius1 - thickness/2, centreY, radius1, thickness, clockwise, initialTranslate, initialTransformState);
+        plus2 = new PlusObstacle(centreX + radius2 + thickness/2, centreY, radius2, thickness, !clockwise, initialTranslate, initialTransformState);
         setInitialTranslate(initialTranslate);
     }
     public void start(){
@@ -47,7 +47,7 @@ public class TangentialPlusObstacle extends Obstacle {
     @Override
     public void setSpecialValue(double angle){
         plus1.setSpecialValue(angle);
-        plus2.setSpecialValue(90-angle);
+        plus2.setSpecialValue(-angle);
     }
     public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted, boolean showChanger, boolean showStar){
         if(!isShifted) {
@@ -63,7 +63,7 @@ public class TangentialPlusObstacle extends Obstacle {
         setDuration(duration);
         if(showCollectables) {
             setColorChanger();
-            setCollectables(getCentreX(), getCentreY() + Math.max(plus1.getRadius(), plus2.getRadius()) + 200, getCentreX(), getCentreY() + Math.max(plus1.getRadius(), plus2.getRadius()) - 100, player, bindings, root, showChanger, showStar);
+            setCollectables(getCentreX(), getCentreY() + Math.max(plus1.getRadius(), plus2.getRadius()) + 100, getCentreX(), getCentreY() - Math.max(plus1.getRadius(), plus2.getRadius()) - 100, player, bindings, root, showChanger, showStar);
         }
 
         if(!isShifted){

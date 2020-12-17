@@ -210,7 +210,7 @@ public class Main extends Application implements Pauseable, Blurrable {
                     pauseText.setFill(Color.WHITE);
                     Button saveGame = new Button("SAVE");
                     Button resumeGame = new Button("RESUME GAME");
-                    Button exitGame = new Button("Exit");
+                    Button exitGame = new Button("EXIT");
                     resumeGame.setLayoutX(300);
                     resumeGame.setLayoutY(325);
                     resumeGame.setPrefWidth(200);
@@ -317,7 +317,6 @@ public class Main extends Application implements Pauseable, Blurrable {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try{
-                    System.out.println("here");
                     save(finalPath);
                 }
                 catch (Exception e){
@@ -331,20 +330,18 @@ public class Main extends Application implements Pauseable, Blurrable {
         loadData = new Data(new ArrayList<Double>(), new ArrayList<Integer>(), new ArrayList<Boolean>(), new ArrayList<Boolean>(), new ArrayList<Double>(), 0, 400, 750, 0, 0, 0, new ArrayList<Integer>());
         if(isLoaded) {
             try {
-                System.out.println(finalPath);
                 FileInputStream inputStream = new FileInputStream(finalPath);
                 ObjectInputStream in = new ObjectInputStream(inputStream);
-                System.out.println("working");
                 loadData = (Data) in.readObject();
                 in.close();
                 inputStream.close();
             } catch (IOException i) {
-                System.out.println("IO");
+                System.out.println("New load created");
 //                i.printStackTrace();
                 isLoaded = false;
                 changedLoaded = true;
             } catch (ClassNotFoundException c) {
-                System.out.println("ClassNotFound");
+                System.out.println("Unexpected error");
 //                c.printStackTrace();
                 changedLoaded = true;
             }
@@ -361,7 +358,6 @@ public class Main extends Application implements Pauseable, Blurrable {
         updateStarCountOnScreen.setCycleCount(Timeline.INDEFINITE);
         updateStarCountOnScreen.play();
 
-        System.out.println("After loading: " + obsYTranslate);
         rand = new Random();
         translateSub = new Translate();
         offset = 0;
@@ -418,10 +414,6 @@ public class Main extends Application implements Pauseable, Blurrable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if(t1){
-                    for(Obstacle obs: obstacles){
-                        System.out.println(obs.getInitialTranslate().getY());
-                    }
-                    System.out.println("obsYtrans = " + obsYTranslate);
                     shiftObstacles(sub);
                     obstacleShiftCounter = obstacleShiftCounterValue/2;
                 }
@@ -557,9 +549,6 @@ public class Main extends Application implements Pauseable, Blurrable {
             ArrayList<Boolean> changerStatus = loadData.getChangerStatus();
             ArrayList<Boolean> starStatus = loadData.getStarStatus();
             ArrayList<Integer> duration = loadData.getDuration();
-            System.out.println(indices);
-            System.out.println(transformState);
-            System.out.println(translateY);
             sub.setLayoutY(loadData.getSubLayoutY());
             for(int i = 0; i < indices.size(); i++){
                 obstacles.add(obstaclesOrderList.get(indices.get(i)));
@@ -622,10 +611,11 @@ public class Main extends Application implements Pauseable, Blurrable {
         }
     }
     public void createObstaclesOrderList(){
+
         obstaclesOrderList.add(new RingObstacle(400, 300, 190, 30, true, new Translate(), 0));
         obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 150, 150, 25, true, new Translate(), 45));
-        obstaclesOrderList.add(new TangentialPlusObstacle(400, 300, 150, 150, 25, true, new Translate()));
-        obstaclesOrderList.add(new PlusObstacle(250, 300, 190, 30, false, new Translate()));
+        obstaclesOrderList.add(new TangentialPlusObstacle(400, 300, 150, 150, 25, true, new Translate(), 0));
+        obstaclesOrderList.add(new PlusObstacle(250, 300, 190, 30, false, new Translate(), 0));
         obstaclesOrderList.add(new LineObstacle(800, 200, 30,  true, new Translate(), 0));
         obstaclesOrderList.add(new SquareObstacle(400, 300, 120, 30, true , new Translate()));
         obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 190, 30, 3, false, true, new Translate(), 45));
@@ -634,9 +624,9 @@ public class Main extends Application implements Pauseable, Blurrable {
         obstaclesOrderList.add(new SquareObstacle(400, 300, 120, 30, true , new Translate()));
         obstaclesOrderList.add(new ConcentricRingObstacle(400, 300, 240, 30, 4, false, true, new Translate(), 45));
         obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
-        obstaclesOrderList.add(new PlusObstacle(250, 300, 190, 30, false, new Translate()));
+        obstaclesOrderList.add(new PlusObstacle(250, 300, 190, 30, false, new Translate(), 0));
         obstaclesOrderList.add(new TangentialRingObstacle(400, 300, 120, 120, 30, true, new Translate(), 45));
-        obstaclesOrderList.add(new TangentialPlusObstacle(400, 300, 150, 150, 25, true, new Translate()));
+        obstaclesOrderList.add(new TangentialPlusObstacle(400, 300, 150, 150, 25, true, new Translate(), 0));
 
         for(Obstacle obs: obstaclesOrderList){
             obs.setObstacles(obstacles);
@@ -679,9 +669,6 @@ public class Main extends Application implements Pauseable, Blurrable {
             saveStarStatus.add(obs.isStarPresent());
             saveDuration.add(obs.getDuration());
         }
-        System.out.println(saveObstacles);
-        System.out.println(saveInitialTransform);
-        System.out.println(saveInitialTranslates);
         Data saveData = new Data(saveInitialTranslates, saveObstacles, saveChangerStatus, saveStarStatus, saveInitialTransform, (int)sub.getLayoutY(), (int)player.getIcon().getCenterX(), (int)player.getIcon().getCenterY(), getColorCode(player.getColor()), numberOfStars, obstacleShiftCounter, saveDuration);
         try{
             FileOutputStream outputStream = new FileOutputStream(finalPath);
@@ -689,11 +676,10 @@ public class Main extends Application implements Pauseable, Blurrable {
             out.writeObject(saveData);
             out.close();
             outputStream.close();
-            System.out.println(finalPath);
-            System.out.println("Data serialized");
         }
         catch (Exception e) {
 //            e.printStackTrace();
+            System.out.println("Unexpected error");
         }
     }
 

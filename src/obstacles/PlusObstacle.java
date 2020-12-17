@@ -29,7 +29,7 @@ public class PlusObstacle extends Obstacle{
     private boolean rotationDirection;
     private Color colors[];
 
-    public PlusObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise, Translate initialTranslate){
+    public PlusObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise, Translate initialTranslate, int initialTransformState){
         super(centreX, centreY);
         this.radius = radius;
         this.thickness = thickness;
@@ -77,6 +77,8 @@ public class PlusObstacle extends Obstacle{
         rotate.setPivotX(centreX);
         rotate.setPivotY(centreY);
         setInitialTranslate(initialTranslate);
+        setInitialTransformState(initialTransformState);
+        rotate.setAngle(getInitialTransformState());
         for(int i = 0; i < 4; i++){
             segments.get(i).getTransforms().add(rotate);
             segments.get(i).getTransforms().add(initialTranslate);
@@ -108,7 +110,7 @@ public class PlusObstacle extends Obstacle{
     @Override
     public void setSpecialValue(double angle){
         setInitialTransformState(angle);
-        rotate.setAngle(angle);
+        rotate.setAngle(getInitialTransformState());
         makeRotation(6000);
     }
     public void setYTranslate(double y){
@@ -158,7 +160,7 @@ public class PlusObstacle extends Obstacle{
         setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
         setDuration(duration);
         if(showCollectables) {
-            setCollectables(400, getCentreY() + radius + 100, 400, getCentreY(), player, bindings, root, showChanger, showStar);
+            setCollectables(400, getCentreY() + radius + 100, 400, getCentreY() - radius - 100, player, bindings, root, showChanger, showStar);
         }
         if(!isShifted) {
             initBindings(bindings, player);

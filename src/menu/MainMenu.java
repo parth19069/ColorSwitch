@@ -206,8 +206,8 @@ public class MainMenu {
         Obstacle obs2 = new ConcentricRingObstacle(400, 560, 102, 22, 2, true, true, new Translate(),0);
         Obstacle obs3 = new RingObstacle(347, 107, 23, 8, true, new Translate(),0);
         Obstacle obs4 = new RingObstacle(475, 107, 23, 8, false, new Translate(),0);
-        Obstacle obs5 = new PlusObstacle(120,150,80,17,true,new Translate());
-        Obstacle obs6 = new PlusObstacle(680,150,80,17,false,new Translate());
+        Obstacle obs5 = new PlusObstacle(120,150,80,17,true,new Translate(), 0);
+        Obstacle obs6 = new PlusObstacle(680,150,80,17,false,new Translate(), 0);
         player = new Player(400, 750, 15, null);
         Circle c1,c2,c3,c4,c5,c6;
         c1 = new Circle(150,300,30,Color.CYAN);
