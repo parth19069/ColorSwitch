@@ -11,6 +11,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
+import mainPackage.Main;
+import obstacles.Obstacle;
 import obstacles.Pauseable;
 import obstacles.RingObstacle;
 import playerinfo.Player;
@@ -27,6 +29,7 @@ public class ColorChanger extends Collectable implements Pauseable {
     private Timeline timeline;
     private int colorPtr;
     private int rvalue, gvalue, bvalue, x, y, z;
+    private Obstacle obstacle;
     public ColorChanger(Color ... a){
         colors = new ArrayList<Color>();
         colorPtr = 0;
@@ -37,16 +40,26 @@ public class ColorChanger extends Collectable implements Pauseable {
             colors.add(a[i]);
         }
         timeline = new Timeline();
+        changer = null;
     }
     public void setColors(Color ... a){
         for(int i = 0; i < a.length; i++){
             colors.add(a[i]);
         }
     }
-    public void setCollectable(int centreX, int centreY, Group root, ArrayList<BooleanBinding> bindings, Player player){
+    public Circle getChanger(){
+        return changer;
+    }
+    @Override
+    public void setCollectable(int centreX, int centreY, Group root, ArrayList<BooleanBinding> bindings, Player player, Obstacle obstacle){
+        Circle tempCircle = changer;
+        if(changer != null) root.getChildren().remove(changer);
         changer = new Circle(centreX, centreY, 25);
         changer.setStrokeWidth(0);
+        timeline.stop();
+        timeline.getKeyFrames().clear();
         timeline.setCycleCount(Timeline.INDEFINITE);
+        this.obstacle = obstacle;
         timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5), e -> {
             if(rvalue + x > 255 || rvalue + x < 120) x *= -1;
             if(gvalue + y > 255 || gvalue + y < 120) y *= -1;
@@ -74,11 +87,12 @@ public class ColorChanger extends Collectable implements Pauseable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if(t1){
-//                    System.out.println("IN CHANGER");
+                    Main.changerSound.play();
                     getRoot().getChildren().remove(changer);
                     getBinding().removeListener(getListener());
                     Color color = colors.get(rand.nextInt(size));
                     timeline.stop();
+                    obstacle.setChangerPresent(false);
                     while(color.equals(player.getColor())) color = colors.get(rand.nextInt(size));
                     player.setColor(color);
                 }

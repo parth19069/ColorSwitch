@@ -15,7 +15,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import playerinfo.Player;
 
@@ -30,10 +32,11 @@ public class RingObstacle extends Obstacle {
     private boolean rotationDirection;
     private Color colors[];
 
-    public RingObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise){
+    public RingObstacle(int centreX, int centreY, int radius, int thickness, boolean clockwise, Translate initialTranslate, int initialTransformState){
         super(centreX, centreY);
         this.radius = radius;
         this.thickness = thickness;
+
         setColorCode(new ArrayList<String>());
         getColorCode().add("Cyan");
         getColorCode().add("Purple");
@@ -56,10 +59,27 @@ public class RingObstacle extends Obstacle {
         segments.add(segment4);
         rotate.setPivotX(centreX);
         rotate.setPivotY(centreY);
-        rotate.setAngle(45);
+        setInitialTranslate(initialTranslate);
+        if(clockwise)setInitialTransformState(initialTransformState);
+        else setInitialTransformState(initialTransformState);
+        rotate.setAngle(getInitialTransformState());
         for(int i = 0; i < 4; i++){
             segments.get(i).getTransforms().add(rotate);
+            segments.get(i).getTransforms().add(initialTranslate);
         }
+    }
+    @Override
+    public double getSpecialValue(){
+        System.out.println(rotate.getAngle());
+        if(rotationDirection)return rotate.getAngle();
+        return rotate.getAngle();
+    }
+    @Override
+    public void setSpecialValue(double angle){
+        if(rotationDirection)setInitialTransformState(angle);
+        else setInitialTransformState(angle);
+        rotate.setAngle(getInitialTransformState());
+        makeRotation(6000);
     }
     private Path makeSegment(int startx, int starty, int innerx, int innery, int outerx, int outery, int vLine, int hLine, int innerRadius, int outerRadius, boolean innerFlag, boolean outerFlag){
         Path segment = new Path();
@@ -80,27 +100,36 @@ public class RingObstacle extends Obstacle {
         inner.setSweepFlag(innerFlag);
         segment.getElements().addAll(begin, inner, horz, outer, vert);
         return segment;
-//        this is a push
     }
     public void makeRotation(int durationPerRotation){
+        getTimeline().stop();
+        getTimeline().getKeyFrames().clear();
         getTimeline().setCycleCount(Animation.INDEFINITE);
-        if(rotationDirection)getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), 405)));
-        else getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), -315)));
+        if(rotationDirection)getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), rotate.getAngle() + 360)));
+        else getTimeline().getKeyFrames().add(new KeyFrame(Duration.millis(durationPerRotation), new KeyValue(rotate.angleProperty(), rotate.getAngle() - 360)));
+        start();
     }
+    public boolean getRotationDirection(){
+        return rotationDirection;
+    }
+    @Override
     public void start(){
         getTimeline().play();
         rotationStatus = true;
     }
+    @Override
     public void stop(){
         getTimeline().stop();
         rotationStatus = false;
     }
+    @Override
     public void pause(){
         getTimeline().pause();
         rotationStatus = false;
     }
     @Override
     public void showOnNode(Group group){
+        setRoot(group);
         for(int i = 0; i < 4; i++){
             group.getChildren().add(segments.get(i));
         }
@@ -116,24 +145,34 @@ public class RingObstacle extends Obstacle {
         colors[3] = c4;
         setColorChanger();
     }
+    @Override
     public void setColorChanger(){
         getColorChanger().setColors(colors[0], colors[1], colors[2], colors[3]);
     }
     public Color getColors(int i){
         return colors[i];
     }
+    public void setYTranslate(double y){
+        getInitialTranslate().setY(y);
+        getRotate().setPivotY(getCentreY() + getInitialTranslate().getY());
+    }
     // Sets duration to 3 seconds, sets colors to dafault(those found in original game) andstarts timiline
     // Added to children of root
     @Override
-    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player){
-        showOnNode(root);
+    public void quickSetup(Group root, int duration, ArrayList<BooleanBinding> bindings, Player player, boolean showCollectables, boolean isShifted, boolean showChanger, boolean showStar){
+        if(!isShifted) {
+            showOnNode(root);
+        }
         makeRotation(duration);
-        initBindings(bindings, player);
         setColors(Color.CYAN, Color.PURPLE, Color.YELLOW, Color.rgb(250, 22, 151));
-        getColorChanger().setCollectable(getCentreX(), getCentreY() + radius + 100, root, bindings, player);
-        getStar().setCollectable(getCentreX(), getCentreY(), root, bindings, player);
-        getStar().initBindings(bindings, player, 0);
-        start();
+        setDuration(duration);
+        if(showCollectables) {
+            setCollectables(getCentreX(), getCentreY() + radius + 100, getCentreX(), getCentreY(), player, bindings, root, showChanger, showStar);
+        }
+        if(!isShifted){
+            initBindings(bindings, player);
+            start();
+        }
     }
     public boolean getRotationStatus(){
         return rotationStatus;
@@ -151,98 +190,48 @@ public class RingObstacle extends Obstacle {
     @Override
     public void initBindings(ArrayList<BooleanBinding> bindings, Player player){
         setPlayer(player);
-        //Segment 1
         bindings.add(Bindings.createBooleanBinding(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                Shape intersect = Shape.intersect(getPlayer().getIcon(), getSegment(0));
-                return intersect.getBoundsInLocal().getWidth() != -1;
+                Shape intersect;
+                int i = 0;
+//                System.out.println(i);
+                for(Path segment: segments){
+                    intersect = Shape.intersect(getPlayer().getIcon(), segment);
+                    if(intersect.getBoundsInLocal().getWidth() != -1){
+//                        System.out.println(getColorCode().get(i) + " IN");
+                        if(!colors[i].equals(getPlayer().getColor())){
+                            return true;
+                        }
+                    }
+                    i++;
+                }
+                return false;
             }
-        }, getPlayer().getIcon().centerYProperty(), getRotate().angleProperty()));
+        }, getRotate().angleProperty()));
         bindings.get(bindings.size() - 1).addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                if(t1){
-                    System.out.println(getColorCode().get(0) + " IN");
-                    if(getPlayer().getColor() != colors[0]){
-                        System.out.println("OVER");
-                        getPlayer().setColor(colors[0]);
+                if(t1) {
+                    int i = 0;
+//                System.out.println(i);
+                    Shape intersect;
+                    for (Path segment : segments) {
+                        intersect = Shape.intersect(getPlayer().getIcon(), segment);
+                        if (intersect.getBoundsInLocal().getWidth() != -1) {
+                            if(!colors[i].equals(getPlayer().getColor())){
+                                System.out.println("GAME OVER");
+                                double playerCentreY = getPlayer().getIcon().getCenterY();
+                                double obstacleCentreY = getCentreY() + getInitialTranslate().getY() + getRoot().getLayoutY();
+                                double finalPlayerPos = playerCentreY;
+                                if(obstacleCentreY > playerCentreY) finalPlayerPos -= 200;
+                                else finalPlayerPos += 200;
+                                collision(finalPlayerPos);
+                                return;
+                            }
+                        }
+                        i++;
                     }
-                }
-                else{
-                    System.out.println(getColorCode().get(0) + " OUT");
-                }
-            }
-        });
-
-        //Segment 2
-        bindings.add(Bindings.createBooleanBinding(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                Shape intersect = Shape.intersect(getPlayer().getIcon(), getSegment(1));
-                return intersect.getBoundsInLocal().getWidth() != -1;
-            }
-        }, getPlayer().getIcon().centerYProperty(), getRotate().angleProperty()));
-        bindings.get(bindings.size() - 1).addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                if(t1){
-                    System.out.println(getColorCode().get(1) + " IN");
-                    if(getPlayer().getColor() != colors[1]){
-                        System.out.println("OVER");
-                        getPlayer().setColor(colors[1]);
-                    }
-                }
-                else{
-                    System.out.println(getColorCode().get(1) + " OUT");
-                }
-            }
-        });
-
-        //Segment 3
-        bindings.add(Bindings.createBooleanBinding(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                Shape intersect = Shape.intersect(getPlayer().getIcon(), getSegment(2));
-                return intersect.getBoundsInLocal().getWidth() != -1;
-            }
-        }, getPlayer().getIcon().centerYProperty(), getRotate().angleProperty()));
-        bindings.get(bindings.size() - 1).addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                if(t1){
-                    System.out.println(getColorCode().get(2) + " IN");
-                    if(getPlayer().getColor() != colors[2]){
-                        System.out.println("OVER");
-                        getPlayer().setColor(colors[2]);
-                    }
-                }
-                else{
-                    System.out.println(getColorCode().get(2) + " OUT");
-                }
-            }
-        });
-
-        //Segment 4
-        bindings.add(Bindings.createBooleanBinding(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                Shape intersect = Shape.intersect(getPlayer().getIcon(), getSegment(3));
-                return intersect.getBoundsInLocal().getWidth() != -1;
-            }
-        }, getPlayer().getIcon().centerYProperty(), getRotate().angleProperty()));
-        bindings.get(bindings.size() - 1).addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                if(t1){
-                    System.out.println(getColorCode().get(3) + " IN");
-                    if(getPlayer().getColor() != colors[3]){
-                        System.out.println("OVER");
-                        getPlayer().setColor(colors[3]);
-                    }
-                }
-                else{
-                    System.out.println(getColorCode().get(3) + " OUT");
                 }
             }
         });

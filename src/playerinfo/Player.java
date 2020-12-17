@@ -1,6 +1,7 @@
 package playerinfo;
 
 import javafx.animation.Timeline;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import obstacles.Pauseable;
@@ -12,7 +13,11 @@ public class Player implements Pauseable {
     private ArrayList<Color> colorCode;
     private Color color;
     private Timeline timeline;
+    private Group root;
+    private boolean fall;
+    private double speed;
     public Player(int centreX, int centreY, int radius, Color color){
+        speed = 0;
         icon = new Circle(centreX, centreY, radius);
         icon.setStrokeWidth(0);
         colorCode = new ArrayList<Color>();
@@ -21,6 +26,7 @@ public class Player implements Pauseable {
         colorCode.add(Color.PURPLE);
         colorCode.add(Color.YELLOW);
         colorCode.add(Color.rgb(250, 22, 151));
+        fall = true;
         this.color = color;
     }
     public void setColor(Color color){
@@ -45,4 +51,34 @@ public class Player implements Pauseable {
     public void pause(){
         timeline.pause();
     }
+
+    public Group getRoot() {
+        return root;
+    }
+
+    public void setRoot(Group root) {
+        this.root = root;
+    }
+
+    public boolean isFall() {
+        return fall;
+    }
+
+    public void setFall(boolean fall) {
+        this.fall = fall;
+    }
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+    public void fall(){
+        double y = icon.getCenterY();
+        y += speed;
+        speed += 0.05;
+        icon.setCenterY(y);
+    }
+
 }
